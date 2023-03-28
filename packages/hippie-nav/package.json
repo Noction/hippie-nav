@@ -9,6 +9,7 @@
     "src"
   ],
   "scripts": {
+    "mydev": "vite",
     "dev": "NODE_ENV=development vite build --watch",
     "build:light": "NODE_ENV=development vite build",
     "build": "NODE_ENV=production vite build && tsc -d --emitDeclarationOnly && vue-typegen gen -s src -o dist",
