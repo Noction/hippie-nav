@@ -1,23 +1,29 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import {onKeyboardShortcut} from "./util/keyboard";
+import SearchModal from "./components/SearchModal.vue";
+import SearchPan from './components/SearchPan.vue'
+import {onMounted, ref} from "vue";
+import {useRoute, useRouter} from "vue-router";
+
+const showModal = ref(false);
+const route = useRoute()
+const router = useRouter()
+
+onKeyboardShortcut(['ctrl+k', 'meta+k'], (event) => {
+  showModal.value = true;
+  event.preventDefault()
+})
+onMounted(() => {
+  console.log("asdas", {router, route})
+})
+
 </script>
 
 <template>
-  <h1>Our Magic Hippie nav</h1>
-  <HelloWorld msg="Vite + Vue" />
+  <SearchModal :shown="showModal" @close="showModal = false">
+    <SearchPan @close="showModal = false"/>
+  </SearchModal>
 </template>
-
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+
 </style>
