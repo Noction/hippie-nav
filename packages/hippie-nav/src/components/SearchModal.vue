@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import {defineProps} from "vue";
-defineProps({
+import {defineProps, onMounted, PropType} from "vue";
+const { shown} = defineProps({
   shown: {
     type: Boolean,
     default: false,
-  },
+  }
 })
 const emit = defineEmits({
   close: () => true,
@@ -35,7 +35,8 @@ function close () {
 }
 
 .modal__content {
-  margin: auto;
+  margin: 150px auto auto;
+  /*margin: auto;*/
   background: white;
   border-radius: 12px;
   min-height: 50px;

@@ -1,29 +1,27 @@
 <template>
   <div class="search-panel">
     <img class="search-panel__icon" src="../assets/glass.svg" alt="">
-    {{ searchInput }}
     <input
-        v-model="searchInput"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
         class="search-panel__input"
         type="text"
-        @keydown.esc="close"
+        @keydown.esc="$emit('close')"
+        @keydown.down.stop="$emit('next')"
+        @keydown.up="$emit('previous')"
+        @keydown.enter="$emit('goto')"
         placeholder="Search"
     />
   </div>
 </template>
 
-<script lang="ts" setup>
-import {onMounted, ref, watch} from 'vue';
+<script lang="ts">
+import {defineComponent} from "vue";
 
-const emit = defineEmits({
-  close: () => true,
-});
-
-function close() {
-  emit('close')
-}
-
-const searchInput = ref('');
+export default defineComponent({
+  props: ['modelValue'],
+  emits: ['close', 'update:modelValue', 'next', 'previous', 'goto'],
+})
 
 
 </script>
