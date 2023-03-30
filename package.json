@@ -18,6 +18,7 @@
   "dependencies": {
     "@types/node": "^18.15.10",
     "@vueuse/core": "^9.13.0",
+    "flexsearch": "^0.7.31",
     "vue-router": "^4.1.6"
   }
 }
