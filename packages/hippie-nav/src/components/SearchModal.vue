@@ -15,7 +15,7 @@ function close () {
 </script>
 
 <template>
-  <div class="modal" v-show="shown" @click.stop="close">
+  <div class="modal" v-if="shown" @click.stop="close">
     <div class="modal__content" @click.stop>
       <slot >
       </slot>
