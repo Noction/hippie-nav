@@ -48,10 +48,13 @@ export default defineComponent({
       }
       this.current--
     },
-    goto() {
-      this.$router.push(this.results[this.current].path)
-      const setRecentResults = new Set()
-      
+    goto(index: number) {
+      if (index) {
+        this.$router.push(this.results[index].path)
+      } else {
+        this.$router.push(this.results[this.current].path)
+      }
+      this.recentResults.push(this.results[this.current])
       this.showModal = false
     }
   },
