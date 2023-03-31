@@ -4,8 +4,8 @@ import SearchModal from "./components/SearchModal.vue";
 import SearchPan from './components/SearchPan.vue'
 import {defineComponent, PropType} from "vue";
 import {HippieNavConfig} from "./types";
-
-const {Index} = require("flexsearch");
+import {useFlexSearch} from "./util/useFlexSearch.js";
+import {Document} from "flexsearch";
 
 export default defineComponent({
   components: {
@@ -30,7 +30,8 @@ export default defineComponent({
       showModal: false,
       searchInput: "",
       results: [] as HippieNavConfig,
-      current: -1
+      current: -1,
+      index: {} as Document<any>
     }
   },
   methods: {
@@ -52,21 +53,19 @@ export default defineComponent({
       this.showModal = true;
       event.preventDefault();
     })
-    const index = new Index({
-      encode: 'balance',
-      tokenize: 'forward',
-      threshold: 1,
-      resolution: 3,
-      depth: 2,
-      doc: {
-        id: 'path',
-        field: ['name', 'aliases'],
-      },
+    this.index = new Document({
+      preset: "match",
+      tokenize: "full",
+      document: {
+        id: "id",
+        index: [{
+          field: "name",
+        }]
+      }
     })
-    this.validConfig.forEach((item) => {
-      index.add(item);
-    });
-
+    this.validConfig.forEach((route, idx) => {
+      this.index.add({id: idx, name: route.name})
+    })
   },
   computed: {
     validConfig() {
@@ -79,21 +78,8 @@ export default defineComponent({
     }
   },
   watch: {
-    searchInput() {
-      const resultsSet = new Set();
-      this.validConfig.forEach((route) => {
-        if (route.name.toLowerCase().includes(this.searchInput.toLowerCase())) {
-          resultsSet.add(route)
-        }
-        if (route.aliases.includes(this.searchInput.toLowerCase())) {
-          resultsSet.add(route)
-        }
-      })
-      this.results = Array.from(resultsSet) as HippieNavConfig
-      if (this.searchInput === "") {
-        this.results = []
-      }
-      this.current = -1
+    searchInput(value) {
+      const results = useFlexSearch(value, this.index, this.validConfig)
     }
   }
 })
