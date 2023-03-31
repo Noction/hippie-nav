@@ -3,7 +3,7 @@ import {onKeyboardShortcut} from "./util/keyboard";
 import SearchModal from "./components/SearchModal.vue";
 import SearchPan from './components/SearchPan.vue'
 import {defineComponent, PropType} from "vue";
-import {HippieNavConfig} from "./types";
+import {HippieNavConfig, HippieNavConfigRoute} from "./types";
 import {useFlexSearch} from "./util/useFlexSearch.js";
 import {Document} from "flexsearch";
 
@@ -30,8 +30,9 @@ export default defineComponent({
       showModal: false,
       searchInput: "",
       results: [] as HippieNavConfig,
+      recentResults: [] as HippieNavConfig,
       current: -1,
-      index: {} as Document<any>
+      index: {} as Document<Partial<HippieNavConfigRoute>>
     }
   },
   methods: {
@@ -46,6 +47,12 @@ export default defineComponent({
         return
       }
       this.current--
+    },
+    goto() {
+      this.$router.push(this.results[this.current].path)
+      const setRecentResults = new Set()
+      
+      this.showModal = false
     }
   },
   mounted() {
@@ -58,13 +65,11 @@ export default defineComponent({
       tokenize: "full",
       document: {
         id: "id",
-        index: [{
-          field: "name",
-        }]
+        index: ["name", "aliases", "path"]
       }
     })
     this.validConfig.forEach((route, idx) => {
-      this.index.add({id: idx, name: route.name})
+      this.index.add({id: idx, name: route.name, aliases: route.aliases, path: route.path})
     })
   },
   computed: {
@@ -79,7 +84,11 @@ export default defineComponent({
   },
   watch: {
     searchInput(value) {
-      const results = useFlexSearch(value, this.index, this.validConfig)
+      if (value === "") {
+        this.results = []
+      }
+      this.results = useFlexSearch(value, this.index, this.validConfig)
+      this.current = -1
     }
   }
 })
@@ -92,11 +101,20 @@ export default defineComponent({
         @close="showModal = false"
         @next="next"
         @previous="previous"
+        @goto="goto"
         :modelValue="searchInput"
         @update:modelValue="newValue => searchInput = newValue"
     />
     <hr>
     <div>
+      <div v-if="recentResults.length > 0">
+        <h3 class="text">
+          Recent results
+        </h3>
+        <div v-for="(result) in recentResults" :key="result.name">
+          <h4 class="text">{{ result.name }}</h4>
+        </div>
+      </div>
       <h2 class="text">
         Results
       </h2>
