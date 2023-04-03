@@ -1,38 +1,39 @@
 <script lang="ts">
 import { Document } from 'flexsearch'
-import { PropType, defineComponent } from 'vue'
 import { RouteRecordNormalized } from 'vue-router'
 import SearchModal from './components/SearchModal.vue'
 import SearchPan from './components/SearchPan.vue'
 import SearchResult from './components/SearchResult.vue'
 import { filterExcludedPaths } from './util/filterExcludedPaths'
-import { indexAdd, indexSetup } from './util/indexSetup'
 import { onKeyboardShortcut } from './util/keyboard'
 import { useFlexSearch } from './util/useFlexSearch.js'
+import { PropType, defineComponent } from 'vue'
+import { indexAdd, indexSetup } from './util/indexSetup'
 
 export default defineComponent({
   components: {
-    SearchResult,
     SearchModal,
-    SearchPan
+    SearchPan,
+    SearchResult
   },
   props: {
+    excludedPaths: {
+      type: Array as PropType<string[]>,
+      default: [] as PropType<string[]>
+    },
     routes: {
       type: Array as PropType<RouteRecordNormalized[]>,
       required: true
-    },
-    excludedPaths: {
-      type: Array as PropType<string[]>
     }
   },
   data () {
     return {
-      showModal: false,
-      searchInput: '',
-      results: [] as RouteRecordNormalized[],
-      recentResults: [] as RouteRecordNormalized[],
       current: -1,
-      index: {} as Document<any>
+      index: {} as Document<any>,
+      recentResults: [] as RouteRecordNormalized[],
+      results: [] as RouteRecordNormalized[],
+      searchInput: '',
+      showModal: false
     }
   },
   computed: {
@@ -61,6 +62,13 @@ export default defineComponent({
     indexAdd(this.index, this.validConfig)
   },
   methods: {
+    goto () {
+      console.log(this.results[this.current].path)
+      this.$router.push(this.results[this.current].path)
+      this.recentResults.push(this.results[this.current])
+      this.recentResults = this.recentResults.slice(-3)
+      this.showModal = false
+    },
     next () {
       if (this.results.length - 1 === this.current) return
       this.current++
@@ -68,16 +76,6 @@ export default defineComponent({
     previous () {
       if (this.current === 0) return
       this.current--
-    },
-    goto (index: number) {
-      if (index) {
-        this.$router.push(this.results[index].path)
-      } else {
-        this.$router.push(this.results[this.current].path)
-      }
-      this.recentResults.push(this.results[this.current])
-      this.recentResults = this.recentResults.slice(-3)
-      this.showModal = false
     }
   }
 })
@@ -109,10 +107,6 @@ export default defineComponent({
         </h4>
       </div>
     </div>
-    <SearchResult :results="results" :current="current"/>
+    <search-result :results="results" :current="current" />
   </search-modal>
 </template>
-
-<style scoped>
-
-</style>

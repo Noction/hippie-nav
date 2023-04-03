@@ -1,12 +1,12 @@
 <template>
-  <h3 class="text" :class="{selected: colored}">
+  <h3 class="text" :class="{ selected: colored }">
     {{ result.name }}
   </h3>
 </template>
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { RouteRecordNormalized } from 'vue-router'
 
+<script lang="ts">
+import { PropType, defineComponent } from 'vue'
+import { RouteRecordNormalized } from 'vue-router'
 
 export default defineComponent({
   props: {
@@ -23,7 +23,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.selected {
-  background-color: #009175;
-}
+  .selected {
+    background-color: #009175;
+  }
 </style>
