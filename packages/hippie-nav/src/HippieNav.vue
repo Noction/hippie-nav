@@ -11,6 +11,7 @@ import { PropType, defineComponent } from 'vue'
 import { indexAdd, indexSetup } from './util/indexSetup'
 
 export default defineComponent({
+  name: 'HippieNav',
   components: {
     SearchModal,
     SearchPan,
