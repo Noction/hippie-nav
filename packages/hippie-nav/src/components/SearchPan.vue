@@ -41,25 +41,25 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.search-panel__icon {
-  width: 20px;
-  height: 20px;
-}
+  .search-panel__icon {
+    width: 20px;
+    height: 20px;
+  }
 
-.search-panel {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .search-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
 
-.search-panel__input {
-  margin-left: 20px;
-  background-color: white;
-  border: 0 white;
-  color: #1a1a1a;
-  font-size: 30px;
-  padding: 10px;
-  outline: none;
-}
+  .search-panel__input {
+    padding: 10px;
+    margin-left: 20px;
+    font-size: 30px;
+    color: #1a1a1a;
+    background-color: white;
+    border: 0 white;
+    outline: none;
+  }
 </style>
