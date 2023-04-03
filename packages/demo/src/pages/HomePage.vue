@@ -1,11 +1,13 @@
-<template />
+<template>
+  <div>
+    Home Page
+  </div>
+</template>
 
-<script>
-export default {
-  name: 'Home'
-}
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'HomePage'
+})
 </script>
-
-<style scoped>
-
-</style>

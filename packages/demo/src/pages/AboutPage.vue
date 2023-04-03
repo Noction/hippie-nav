@@ -1,11 +1,13 @@
 <template>
-  <div />
+  <div>About</div>
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   name: 'AboutPage'
-}
+})
 </script>
 
 <style scoped>
