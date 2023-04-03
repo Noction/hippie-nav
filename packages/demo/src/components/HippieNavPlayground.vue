@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <hippie-nav
       :routes="routes"
       :excluded-paths="excludedPaths"
@@ -13,10 +13,10 @@ import { RouteRecordNormalized } from 'vue-router'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'HomeView',
+  name: 'HippieNavPlayground',
   computed: {
     excludedPaths (): Array<string> {
-      return ['/about']
+      return []
     },
     routes (): Array<RouteRecordNormalized> {
       return this.$router.getRoutes()
@@ -26,5 +26,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+.container {
+  margin: 20px;
+}
 </style>

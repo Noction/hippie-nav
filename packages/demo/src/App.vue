@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import HomeView from "./components/HomeView.vue";
+import HippieNavPage from './components/HippieNavPage.vue'
 
 </script>
 
 <template>
-    <router-view>
-      <HomeView/>
-    </router-view>
+  <hippie-nav-page />
 </template>
-
-<style scoped>
-
-</style>
