@@ -1,14 +1,14 @@
+import { App } from 'vue'
 import PrivateHippieNav from './HippieNav.vue'
 
 export {
-    PrivateHippieNav
+  PrivateHippieNav
 }
 
-export function install(app, options)  {
-    app.component('HippieNav', PrivateHippieNav)
-    console.log(options)
+export function install (app: App)  {
+  app.component('HippieNav', PrivateHippieNav)
 }
 
 export default {
-    install
+  install
 }

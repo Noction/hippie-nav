@@ -1,24 +1,28 @@
 <script lang="ts" setup>
-import {defineProps} from "vue";
-const { shown} = defineProps({
+import { defineProps } from 'vue'
+const { shown } = defineProps({
   shown: {
     type: Boolean,
-    default: false,
+    default: false
   }
 })
 const emit = defineEmits({
-  close: () => true,
+  close: () => true
 })
+
 function close () {
   emit('close')
 }
 </script>
 
 <template>
-  <div class="modal" v-if="shown" @click.stop="close">
+  <div
+    v-if="shown"
+    class="modal"
+    @click.stop="close"
+  >
     <div class="modal__content" @click.stop>
-      <slot >
-      </slot>
+      <slot />
     </div>
   </div>
 </template>
