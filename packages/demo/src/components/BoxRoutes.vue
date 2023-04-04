@@ -3,49 +3,49 @@
     <h3 class="box-title">
       Routes
     </h3>
-    <div
+    <ul
       v-for="route in routes"
       :key="route.path"
       class="box-content"
     >
-      <div style="display: flex">
+      <li class="box-list">
         <h4>{{ route.name }}</h4>
-        <button v-if="route.children" @click.prevent="setShowChildPath(route.path)">
-          >
-        </button>
-      </div>
+        <hippie-button v-if="route.children" @action="setShowChildPath(route.path)" />
+      </li>
       <h5>{{ route.path }}</h5>
       <div v-if="showChildPath === route.path">
-        <div
+        <ul
           v-for="childRoute in route.children"
           :key="childRoute.path"
         >
-          <h5>{{ childRoute.name }}</h5>
-        </div>
+          <li><h5>{{ childRoute.name }}</h5></li>
+        </ul>
       </div>
-    </div>
+    </ul>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { RouteRecordRaw } from 'vue-router'
+import { PropType, defineComponent } from 'vue'
+import HippieButton from './HippieBtnCollapse.vue'
 
 export default defineComponent({
-  name: 'ConfigBoxRoutes',
+  name: 'BoxRoutes',
+  components: { HippieButton },
+  props: {
+    routes: {
+      type: Array as PropType<RouteRecordRaw[]>,
+      required: true
+    }
+  },
   data () {
     return {
       showChildPath: ''
     }
   },
-  computed: {
-    routes () {
-      console.log(this.$router.options.routes)
-      return this.$router.options.routes
-    }
-  },
   methods: {
     setShowChildPath (path: string) {
-      console.log(this.showChildPath === path)
       if (this.showChildPath === path) {
         this.showChildPath = ''
         return
@@ -56,10 +56,6 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-.box-content {
-  margin-left: 20px;
-  display: flex;
-  flex-direction: column;
-}
+<style>
+
 </style>
