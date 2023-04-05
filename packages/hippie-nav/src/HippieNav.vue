@@ -17,6 +17,7 @@ export default defineComponent({
     SearchPan,
     SearchResult
   },
+  expose: ['fullReindex'],
   props: {
     excludedPaths: {
       type: Array as PropType<string[]>,
@@ -59,12 +60,14 @@ export default defineComponent({
       this.showModal = true
       event.preventDefault()
     })
-    this.index = indexSetup()
-    indexAdd(this.index, this.validConfig)
+    this.fullReindex()
   },
   methods: {
+    fullReindex () {
+      this.index = indexSetup()
+      indexAdd(this.index, this.validConfig)
+    },
     goto () {
-      console.log(this.results[this.current].path)
       this.$router.push(this.results[this.current].path)
       this.recentResults.push(this.results[this.current])
       this.recentResults = this.recentResults.slice(-3)
@@ -78,6 +81,7 @@ export default defineComponent({
       if (this.current === 0) return
       this.current--
     }
+
   }
 })
 

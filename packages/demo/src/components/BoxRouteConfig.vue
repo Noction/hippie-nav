@@ -4,11 +4,11 @@
       Route Config
     </h3>
     <div class="box-content">
-      <ul v-for="route in routesFlatten" :key="route.name">
+      <ul v-for="route in _routesFlatten" :key="route.name">
         <li class="box-list">
           <div class="box-list-main">
             <h5>{{ route.name }}</h5>
-            <hippie-button @action="setShowRouteConfig(route.name)" />
+            <hippie-button :collapsed="route.name === showRouteConfig" @action="setShowRouteConfig(route.name)" />
           </div>
           <ul v-if="route.name === showRouteConfig" class="box-list-secondary">
             <li>displayName: {{ route.name }}</li>
@@ -24,9 +24,11 @@
 </template>
 
 <script lang="ts">
-import { RouteRecordRaw } from 'vue-router'
-import { PropType, defineComponent } from 'vue'
+import { routeNormalize } from '../util/routeNormalize'
+import { routesFlatten } from '../util/routesFlatten'
 import HippieButton from './HippieBtnCollapse.vue'
+import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
+import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'BoxRouteConfig',
@@ -43,19 +45,10 @@ export default defineComponent({
     }
   },
   computed: {
-    routesFlatten () {
-      const routesFlatten = [] as RouteRecordRaw[]
+    _routesFlatten () {
+      const routesWithoutChildPaths = routeNormalize(this.routes) as RouteRecordNormalized[]
 
-      this.routes.forEach(r => {
-        routesFlatten.push(r)
-        if (r.children) {
-          for (const child of r.children) {
-            routesFlatten.push(child)
-          }
-        }
-      })
-
-      return routesFlatten
+      return routesFlatten(routesFlatten(routesWithoutChildPaths))
     }
   },
   methods: {

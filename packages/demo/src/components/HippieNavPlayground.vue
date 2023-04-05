@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <hippie-nav
+      ref="hippieNav"
       :routes="routes"
       :excluded-paths="excludedPaths"
     />
@@ -9,12 +10,20 @@
         <router-view />
       </div>
       <div v-if="!showAddRoute" class="footer">
-        <box-routes :routes="routesWithMeta" />
-        <box-router-config :routes="routesWithMeta" />
+        <box-routes
+          :routes="routes"
+          @add-route="showAddRoute = !showAddRoute"
+          @add-child-route="addChildRoute"
+        />
+        <box-router-config :routes="routes" />
         <box-config :excluded-paths="excludedPaths" />
         <box-routes />
       </div>
-      <add-route v-if="showAddRoute" />
+      <add-route
+        v-if="showAddRoute"
+        :mom-route="momRoute"
+        @close="forceRender"
+      />
     </div>
   </div>
 </template>
@@ -22,29 +31,39 @@
 <script lang="ts">
 import AddRoute from './AddRoute.vue'
 import BoxConfig from './BoxConfig.vue'
+import { RouteRecordNormalized } from 'vue-router'
 import BoxRouterConfig from './BoxRouteConfig.vue'
 import BoxRoutes from './BoxRoutes.vue'
 import { defineComponent } from 'vue'
-import { RouteRecordNormalized, RouteRecordRaw  } from 'vue-router'
 
 export default defineComponent({
   name: 'HippieNavPlayground',
   components: { AddRoute, BoxConfig, BoxRouterConfig, BoxRoutes },
   data () {
     return {
-      showAddRoute: true
+      momRoute: {} as RouteRecordNormalized,
+      routes: this.$router.getRoutes(),
+      showAddRoute: false
     }
   },
   computed: {
     excludedPaths (): Array<string> {
       return ['/test', '/test1', 'test2', '/test3']
-    },
-    routes (): Array<RouteRecordNormalized> {
-      return this.$router.getRoutes()
-    },
-    routesWithMeta (): RouteRecordRaw[] {
-      return [...this.$router.options.routes]
     }
+  },
+  methods: {
+    addChildRoute (e: RouteRecordNormalized) {
+      this.momRoute = e
+      this.showAddRoute = !this.showAddRoute
+    },
+    async forceRender () {
+      this.showAddRoute = !this.showAddRoute
+      this.routes = this.$router.getRoutes()
+      await this.$nextTick()
+      this.$refs.hippieNav.fullReindex()
+      this.momRoute = {} as RouteRecordNormalized
+    }
+
   }
 })
 </script>
