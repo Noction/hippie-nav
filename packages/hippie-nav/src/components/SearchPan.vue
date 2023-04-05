@@ -6,7 +6,6 @@
       alt=""
     >
     <input
-      ref="searchPanInput"
       v-focus
       :value="modelValue"
       class="search-panel__input"
@@ -34,7 +33,12 @@ export default defineComponent({
   directives: {
     focus
   },
-  props: ['modelValue'],
+  props: {
+    modelValue: {
+      type: String,
+      required: true
+    }
+  },
   emits: ['close', 'update:modelValue', 'next', 'previous', 'goto']
 })
 

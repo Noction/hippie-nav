@@ -9,16 +9,16 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'HippieBtnCollapse',
-  emits: ['action'],
-  data () {
-    return {
-      collapsed: false
+  props: {
+    collapsed: {
+      type: Boolean,
+      required: true
     }
   },
+  emits: ['action'],
   methods: {
     action () {
       this.$emit('action')
-      this.collapsed = !this.collapsed
     }
   }
 })
