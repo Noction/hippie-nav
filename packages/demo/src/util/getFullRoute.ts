@@ -1,8 +1,6 @@
-import { RouteRecordNormalized, Router } from 'vue-router'
+import { RouteRecordNormalized } from 'vue-router'
 
-export const getFullPath = (name: RouteRecordNormalized['name'], router: Router) => {
-  const routes = router.getRoutes()
-
+export const getFullPath = (name: RouteRecordNormalized['name'], routes: RouteRecordNormalized[]) => {
   const route = routes.find(r => {
     if (r.name === name) {
       return r

@@ -8,6 +8,13 @@
       <span>["name", "aliases"]</span>
       <h5>Excluded paths</h5>
       <span>{{ excludedPaths }}</span>
+      <h5>Add excluded paths</h5>
+      <div class="flex">
+        <input v-model="excludedPathModel" type="text">
+        <button @click="addExcludedPath">
+          +
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -22,11 +29,19 @@ export default defineComponent({
       type: Array as PropType<string[]>,
       required: true
     }
+  },
+  emits: ['add-excluded-path'],
+  data () {
+    return {
+      excludedPathModel: ''
+    }
+  },
+  methods: {
+    addExcludedPath () {
+      this.$emit('add-excluded-path', this.excludedPathModel)
+      this.excludedPathModel = ''
+    }
   }
 
 })
 </script>
-
-<style scoped>
-
-</style>
