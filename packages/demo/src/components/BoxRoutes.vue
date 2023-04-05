@@ -106,12 +106,5 @@ export default defineComponent({
 </script>
 
 <style>
-.box-title {
-  margin-right: 10px;
-}
 
-.box__center {
-  justify-content: center;
-  align-items: center;
-}
 </style>

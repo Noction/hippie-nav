@@ -2,9 +2,11 @@
   <div class="footer add-route">
     <div class="flex">
       <h3 class="add-route-text">
-        {{ momRoute.name
-          ? `You are creating a child route for ${momRoute.name}`
-          : "You are creating a route" }}
+        {{
+          momRoute.name
+            ? `You are creating a child route for ${momRoute.name}`
+            : 'You are creating a route'
+        }}
       </h3>
       <button @click="momRoute.name !== '' ? addRoute(momRoute) : addRoute">
         +
@@ -29,8 +31,8 @@
 </template>
 
 <script lang="ts">
-import { RouteRecordNormalized } from 'vue-router'
 import { PropType, defineComponent } from 'vue'
+import { RouteRecordName, RouteRecordNormalized } from 'vue-router'
 import { getFullPath } from '../util/getFullRoute'
 import { slashCounter } from '../util/slashCounter'
 
@@ -57,13 +59,11 @@ export default defineComponent({
   },
   methods: {
     addRoute (momRoute: RouteRecordNormalized) {
-      const fullPathOfMomRoute = getFullPath(momRoute.name, this.$router)
-      const isChildOfChild = slashCounter(fullPathOfMomRoute as string) === 2
-
       const routes = this.$router.getRoutes()
+      const fullPathOfMomRoute = momRoute.name ? getFullPath(momRoute.name, routes) : undefined
+      const isChildOfChild = momRoute.name ? slashCounter(fullPathOfMomRoute as string) === 2 : false
       const component = { template: `<div>${this.route.displayName}</div>` }
       const aliases = this.route.aliases.split(',')
-
       const path = momRoute.path ? momRoute.path + this.route.path : this.route.path
 
       routes.forEach(r => {
@@ -77,32 +77,67 @@ export default defineComponent({
       if (this.wrongPath || this.wrongDisplayName) {
         return
       }
-      if (!momRoute.name) {
-        this.$router.addRoute({
-          component,
-          meta: { aliases },
-          name: this.route.displayName,
-          path: this.route.path
-        })
-      } else {
-        if (momRoute.name) {
-          const newChild = {
+      if (!isChildOfChild) {
+        if (!momRoute.name) {
+          this.$router.addRoute({
             component,
             meta: { aliases },
             name: this.route.displayName,
-            path: this.route.path.replace(/\//g, '')
-          }
-          const children = [...momRoute.children, newChild]
+            path: this.route.path
+          })
+        } else {
+          if (momRoute.name) {
+            const newChild = {
+              component,
+              meta: { aliases },
+              name: this.route.displayName,
+              path: this.route.path.replace(/\//g, '')
+            }
+            const children = [...momRoute.children, newChild]
 
-          this.$router.removeRoute(momRoute.name)
-          momRoute.children = children
-          this.$router.addRoute(momRoute)
+            this.$router.removeRoute(momRoute.name)
+            momRoute.children = children
+            this.$router.addRoute(momRoute)
+          }
+        }
+      } else {
+        if (fullPathOfMomRoute) {
+          const splittedRoute = fullPathOfMomRoute.split('/')
+          const parent = routes.find(r => r.path === `/${splittedRoute[1]}`) as RouteRecordNormalized
+          const childOfParent = parent.children.find(c => c.path === splittedRoute[2]) as RouteRecordNormalized
+
+          const route = {
+            ...parent,
+            children: [
+              ...parent.children,
+              {
+                ...childOfParent,
+                children: childOfParent.children ? [
+                  childOfParent?.children,
+                  {
+                    component,
+                    name: this.route.displayName,
+                    path: this.route.path.replace(/\//g, '')
+                  }
+                ] : [
+                  {
+                    component,
+                    name: this.route.displayName,
+                    path: this.route.path.replace(/\//g, '')
+                  }
+                ]
+              }
+            ]
+          }
+
+          this.$router.removeRoute(parent.name as RouteRecordName)
+          this.$router.addRoute(route as RouteRecordNormalized)
         }
       }
       this.route = {
         aliases: '',
         displayName: '',
-        path:''
+        path: ''
       }
       this.$emit('close')
     }

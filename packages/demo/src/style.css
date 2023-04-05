@@ -41,7 +41,17 @@ li {
 .flex {
   display: flex;
 }
+
 .flex-col {
   display: flex;
   flex-direction: column;
+}
+
+.box-title {
+  margin-right: 10px;
+}
+
+.box__center {
+  justify-content: center;
+  align-items: center;
 }
