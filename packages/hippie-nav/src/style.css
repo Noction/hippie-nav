@@ -1,70 +1,13 @@
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-align: left;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
+@import 'https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;700&display=swap';
 
 body {
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  margin: 0;
-}
-
-
-button {
-  padding: .6em 1.2em;
-  font-family: inherit;
-  font-size: 1em;
-  font-weight: 500;
-  cursor: pointer;
-  background-color: #1a1a1a;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  transition: border-color .25s;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
-}
-
-#app {
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #fff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 h1, h2, h3, h4 {
-  margin-left: 10px;
   color: black;
-  text-align: left;
 }
+
