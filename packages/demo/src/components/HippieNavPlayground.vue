@@ -32,7 +32,7 @@
 import AddRoute from './AddRoute.vue'
 import BoxConfig from './BoxConfig.vue'
 import BoxRouterConfig from './BoxRouteConfig.vue'
-import BoxRoutes from './BoxRoutes/BoxRoutes.vue'
+import BoxRoutes from './BoxRoutes.vue'
 import { RouteRecordNormalized } from 'vue-router'
 import { defineComponent } from 'vue'
 
@@ -41,7 +41,7 @@ export default defineComponent({
   components: { AddRoute, BoxConfig, BoxRouterConfig, BoxRoutes },
   data () {
     return {
-      excludedPaths: ['/test', '/test1', '/about'],
+      excludedPaths: ['/test', '/test1'],
       momRoute: {} as RouteRecordNormalized,
       routes: this.$router.getRoutes(),
       showAddRoute: false
@@ -71,10 +71,8 @@ export default defineComponent({
 <style>
 .container {
   margin: 20px;
-  -webkit-box-shadow: 0px 50px 71px 33px rgba(0,0,0,0.29);
-  -moz-box-shadow: 0px 50px 71px 33px rgba(0,0,0,0.29);
-  box-shadow: 0px 50px 71px 33px rgba(0,0,0,0.29);
-  border-radius: 30px;
+  -webkit-box-shadow: inset -1px 3px 8px 5px #1F87FF, 2px 5px 16px 0px #0B325E, 5px 5px 15px 5px rgba(202, 243, 255, 0);
+  box-shadow: inset -1px 3px 8px 5px #1F87FF, 2px 5px 16px 0px #0B325E, 5px 5px 15px 5px rgba(202, 243, 255, 0);
 }
 
 .main {
