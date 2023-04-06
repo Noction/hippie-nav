@@ -1,3 +1,5 @@
+@import 'https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;700&display=swap';
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -7,17 +9,22 @@
 :root {
   --primary-color: #fff;
   --secondary-color: rgb(173 173 173 / 90%);
+
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 .box {
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 20px;
+  padding: 10px;
   margin-right: 10px;
   overflow-y: auto;
-  background-color: var(--secondary-color);
-  border-radius: 10px
+  background-color: var(--primary-color);
+  border-color: #a8a8a8;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 10px;
 }
 
 .box-title {
@@ -52,6 +59,17 @@ li {
 }
 
 .box__center {
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+}
+
+.button-add {
+  font-weight: 900;
+  cursor: pointer;
+  background-color: transparent;
+  border-width: 0;
+}
+
+h1, h2, h3, h4, h5, p, span {
+  color: #170c0c;
 }

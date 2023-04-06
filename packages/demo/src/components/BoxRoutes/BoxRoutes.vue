@@ -4,8 +4,8 @@
       <h3 class="box-title ">
         Routes
       </h3>
-      <button @click="addRoute">
-        Add
+      <button class="button-add" @click="addRoute">
+        +
       </button>
     </div>
     <ul
@@ -13,18 +13,12 @@
       :key="route.path"
       class="box-content"
     >
-      <li class="box-list">
-        <h4>{{ route.name }}</h4>
-        <hippie-button
-          v-if="route.children?.length > 0"
-          :collapsed="showChildPath === route.path"
-          @action="setShowChildPath(route.path)"
-        />
-        <button v-if="route.path !== '/'" @click="$emit('add-child-route', route)">
-          add child
-        </button>
-      </li>
-      <h5>{{ route.path }}</h5>
+      <box-routes-item
+        :route="route"
+        :collapsed="showChildPath === route.path"
+        :has-children="route.children?.length > 0"
+        @set-show-child-path="setShowChildPath"
+      />
       <div v-if="showChildPath === route.path">
         <ul
           v-for="childRoute in route.children"
@@ -53,14 +47,15 @@
 </template>
 
 <script lang="ts">
-import HippieButton from './HippieBtnCollapse.vue'
+import BoxRoutesItem from './BoxRoutesItem.vue'
+import HippieButton from '../HippieBtnCollapse.vue'
 import { RouteRecordRaw } from 'vue-router'
-import { routeNormalize } from '../util/routeNormalize'
+import { routeNormalize } from '../../util/routeNormalize'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'BoxRoutes',
-  components: { HippieButton },
+  components: { BoxRoutesItem, HippieButton },
   props: {
     routes: {
       type: Array as PropType<RouteRecordRaw[]>,
@@ -87,6 +82,7 @@ export default defineComponent({
       this.$emit('add-route')
     },
     setShowChildOfChildPath (path: string) {
+      console.log(path)
       if (this.showChildOfChildPath === path) {
         this.showChildOfChildPath = ''
         return
@@ -105,6 +101,6 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 
 </style>

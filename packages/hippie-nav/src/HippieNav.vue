@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Document } from 'flexsearch'
+import NavButtons from './components/NavButtons.vue'
 import { RouteRecordNormalized } from 'vue-router'
 import SearchModal from './components/SearchModal.vue'
 import SearchPan from './components/SearchPan.vue'
@@ -13,6 +14,7 @@ import { indexAdd, indexSetup } from './util/indexSetup'
 export default defineComponent({
   name: 'HippieNav',
   components: {
+    NavButtons,
     SearchModal,
     SearchPan,
     SearchResult
@@ -30,7 +32,7 @@ export default defineComponent({
   },
   data () {
     return {
-      current: -1,
+      current: 0,
       index: {} as Document<any>,
       recentResults: [] as RouteRecordNormalized[],
       results: [] as RouteRecordNormalized[],
@@ -52,7 +54,7 @@ export default defineComponent({
         this.results = []
       }
       this.results = useFlexSearch(value, this.index, this.validConfig)
-      this.current = -1
+      this.current = 0
     }
   },
   mounted () {
@@ -76,6 +78,9 @@ export default defineComponent({
     next () {
       if (this.results.length - 1 === this.current) return
       this.current++
+    },
+    onMouseOver (e: RouteRecordNormalized) {
+      this.current = this.results?.findIndex(r => r.path === e.path)
     },
     previous () {
       if (this.current === 0) return
@@ -112,6 +117,39 @@ export default defineComponent({
         </h4>
       </div>
     </div>
-    <search-result :results="results" :current="current" />
+    <search-result
+      :results="results"
+      :current="current"
+      :input="searchInput"
+      @mouse-over="onMouseOver"
+      @close-modal="showModal = false"
+    />
+    <hr>
+    <nav-buttons />
   </search-modal>
 </template>
+
+<style>
+img {
+  width: 40px;
+  height: 40px;
+}
+
+hr {
+  margin: 2px;
+}
+
+.buttons {
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.margin-left {
+  margin-left: 5px;
+}
+
+.buttons--item {
+  display: flex;
+  align-items: center;
+}
+</style>
