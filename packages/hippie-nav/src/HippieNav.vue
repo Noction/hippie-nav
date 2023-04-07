@@ -123,7 +123,11 @@ export default defineComponent({
       :input="searchInput"
       @mouse-over="onMouseOver"
       @close-modal="showModal = false"
-    />
+    >
+      <template #resultItem="route">
+        <slot name="resultItem" v-bind="route" />
+      </template>
+    </search-result>
     <hr>
     <nav-buttons />
   </search-modal>

@@ -4,17 +4,13 @@
     @click="goto(result.path)"
     @mouseover="$emit('mouse-over', result)"
   >
-    <slot>
-      <h3 class="text search--result__item">
-        {{ result.name }}
-      </h3>
-    </slot>
+    <slot name="routeItem" v-bind="result" />
   </div>
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from 'vue'
 import { RouteRecordNormalized } from 'vue-router'
+import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SearchResultItem',
@@ -41,13 +37,5 @@ export default defineComponent({
 <style scoped>
 .selected {
   background-color: rgba(110, 107, 107, 0.65);
-}
-
-.search--result__item {
-  padding: 7px;
-  border-radius: 10px;
-  color: #1a1a1a;
-  font-weight: 700;
-  cursor: pointer;
 }
 </style>

@@ -4,7 +4,13 @@
       ref="hippieNav"
       :routes="routes"
       :excluded-paths="excludedPaths"
-    />
+    >
+      <template #resultItem="route">
+        <h3 class="text search--result__item">
+          {{ route.name }}
+        </h3>
+      </template>
+    </hippie-nav>
     <div class="main">
       <div class="view">
         <router-view />

@@ -18,6 +18,7 @@
         :collapsed="showChildPath === route.path"
         :has-children="route.children?.length > 0"
         @set-show-child-path="setShowChildPath"
+        @add-child-route="addChildRoute"
       />
       <div v-if="showChildPath === route.path">
         <ul
@@ -49,7 +50,7 @@
 <script lang="ts">
 import BoxRoutesItem from './BoxRoutesItem.vue'
 import HippieButton from '../HippieBtnCollapse.vue'
-import { RouteRecordRaw } from 'vue-router'
+import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 import { routeNormalize } from '../../util/routeNormalize'
 import { PropType, defineComponent } from 'vue'
 
@@ -78,6 +79,9 @@ export default defineComponent({
 
   },
   methods: {
+    addChildRoute (e: RouteRecordNormalized) {
+      this.$emit('add-child-route', e)
+    },
     addRoute () {
       this.$emit('add-route')
     },

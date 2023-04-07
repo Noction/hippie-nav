@@ -73,3 +73,11 @@ li {
 h1, h2, h3, h4, h5, p, span {
   color: #170c0c;
 }
+
+.search--result__item {
+  padding: 7px;
+  border-radius: 10px;
+  color: #1a1a1a;
+  font-weight: 700;
+  cursor: pointer;
+}
