@@ -60,7 +60,10 @@ export default defineComponent({
   methods: {
     addRoute (momRoute: RouteRecordNormalized) {
       const routes = this.$router.getRoutes()
+
       const fullPathOfMomRoute = momRoute.name ? getFullPath(momRoute.name, routes) : undefined
+
+      console.log(fullPathOfMomRoute)
       const isChildOfChild = momRoute.name ? slashCounter(fullPathOfMomRoute as string) === 2 : false
       const component = { template: `<div>${this.route.displayName}</div>` }
       const aliases = this.route.aliases.split(',')

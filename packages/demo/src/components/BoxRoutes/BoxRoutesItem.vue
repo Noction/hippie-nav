@@ -11,20 +11,22 @@
         <button
           v-if="route.path !== '/'"
           class="button-add"
-          @click="$emit('add-child-route', route)"
+          @click="addChildRoute(route)"
         >
+          add
           +
         </button>
       </div>
     </div>
+    <slot name="slote" />
     <h5>{{ route.path }}</h5>
   </li>
 </template>
 
 <script lang="ts">
 import HippieBtnCollapse from '../HippieBtnCollapse.vue'
-import { RouteRecordRaw } from 'vue-router'
 import { PropType, defineComponent } from 'vue'
+import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 
 export default defineComponent({
   name: 'BoxRoutesItem',
@@ -47,7 +49,7 @@ export default defineComponent({
   },
   emits: ['set-show-child-path', 'add-child-route'],
   methods: {
-    addChildRoute (route: string) {
+    addChildRoute (route: RouteRecordNormalized) {
       this.$emit('add-child-route', route)
     },
     setShowChildPath (path: string) {

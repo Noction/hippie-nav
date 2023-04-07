@@ -12,7 +12,11 @@
         :result="result"
         @mouse-over="$emit('mouse-over', result)"
         @close-modal="$emit('close-modal')"
-      />
+      >
+        <template #routeItem="route">
+          <slot name="resultItem" v-bind="route" />
+        </template>
+      </search-result-item>
     </div>
   </div>
   <div v-else-if="results.length === 0 && input !== ''">
