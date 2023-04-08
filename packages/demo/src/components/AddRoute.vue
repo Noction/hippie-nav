@@ -8,7 +8,7 @@
             : 'You are creating a route'
         }}
       </h3>
-      <button @click="momRoute.name !== '' ? addRoute(momRoute) : addRoute">
+      <button @click="addRoute">
         +
       </button>
     </div>
@@ -58,16 +58,16 @@ export default defineComponent({
     }
   },
   methods: {
-    addRoute (momRoute: RouteRecordNormalized) {
+    addRoute () {
+      console.log('asd')
       const routes = this.$router.getRoutes()
+      const copyOfMomRoute = JSON.parse(JSON.stringify(this.momRoute))
 
-      const fullPathOfMomRoute = momRoute.name ? getFullPath(momRoute.name, routes) : undefined
-
-      console.log(fullPathOfMomRoute)
-      const isChildOfChild = momRoute.name ? slashCounter(fullPathOfMomRoute as string) === 2 : false
+      const fullPathOfMomRoute = copyOfMomRoute.name ? getFullPath(copyOfMomRoute.name, routes) : undefined
+      const isChildOfChild = fullPathOfMomRoute ? slashCounter(fullPathOfMomRoute) === 2 : false
       const component = { template: `<div>${this.route.displayName}</div>` }
       const aliases = this.route.aliases.split(',')
-      const path = momRoute.path ? momRoute.path + this.route.path : this.route.path
+      const path = copyOfMomRoute.path ? copyOfMomRoute.path + this.route.path : this.route.path
 
       routes.forEach(r => {
         if (r.name === this.route.displayName) {
@@ -81,7 +81,7 @@ export default defineComponent({
         return
       }
       if (!isChildOfChild) {
-        if (!momRoute.name) {
+        if (!copyOfMomRoute.name) {
           this.$router.addRoute({
             component,
             meta: { aliases },
@@ -89,26 +89,28 @@ export default defineComponent({
             path: this.route.path
           })
         } else {
-          if (momRoute.name) {
+          if (copyOfMomRoute.name) {
             const newChild = {
               component,
               meta: { aliases },
               name: this.route.displayName,
               path: this.route.path.replace(/\//g, '')
             }
-            const children = [...momRoute.children, newChild]
+            const children = [...copyOfMomRoute.children, newChild]
 
-            this.$router.removeRoute(momRoute.name)
-            momRoute.children = children
-            this.$router.addRoute(momRoute)
+            this.$router.removeRoute(copyOfMomRoute.name)
+            copyOfMomRoute.children = children
+            this.$router.addRoute(copyOfMomRoute)
           }
         }
       } else {
         if (fullPathOfMomRoute) {
+          console.log('here')
           const splittedRoute = fullPathOfMomRoute.split('/')
           const parent = routes.find(r => r.path === `/${splittedRoute[1]}`) as RouteRecordNormalized
           const childOfParent = parent.children.find(c => c.path === splittedRoute[2]) as RouteRecordNormalized
 
+          console.log(this.route.path.replace(/\//g, ''))
           const route = {
             ...parent,
             children: [
@@ -116,7 +118,7 @@ export default defineComponent({
               {
                 ...childOfParent,
                 children: childOfParent.children ? [
-                  childOfParent?.children,
+                  ...childOfParent.children,
                   {
                     component,
                     name: this.route.displayName,
