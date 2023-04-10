@@ -2,8 +2,8 @@
 import { defineProps } from 'vue'
 const { shown } = defineProps({
   shown: {
-    type: Boolean,
-    default: false
+    default: false,
+    type: Boolean
   }
 })
 const emit = defineEmits({
@@ -40,7 +40,6 @@ function close () {
     min-height: 50px;
     padding: 20px;
     margin: 150px auto auto;
-    /*margin: auto;*/
     background: white;
     border-radius: 12px;
   }

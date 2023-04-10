@@ -5,7 +5,7 @@
     @click="goto(result.data.path)"
     @mouseover="$emit('mouse-over', result)"
   >
-    <slot name="routeItem" v-bind="result" />
+    <slot name="routeItemRoute" v-bind="result" />
   </div>
   <div
     v-if="result.data.action"

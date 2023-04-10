@@ -2,6 +2,10 @@ import { ActionConfig } from '../types'
 import { Document } from 'flexsearch'
 import { RouteRecordNormalized } from 'vue-router'
 
+export interface IndexFields {
+  id: string,
+  index: string[]
+}
 export type IndexType = 'route' | 'action'
 
 export const indexAdd = (index: Document<any>, data: RouteRecordNormalized[] | ActionConfig[], type: IndexType) => {
@@ -25,22 +29,11 @@ export const indexAdd = (index: Document<any>, data: RouteRecordNormalized[] | A
   }
 }
 
-export const indexSetup = (type: IndexType): Document<any> => {
-  return type === 'route' ? new Document({
+export const indexSetup = (type: IndexType, indexFields: IndexFields): Document<any> => {
+  return new Document({
     charset: 'latin:extra',
-    document: {
-      id: 'id',
-      index: ['name', 'aliases', 'path']
-    },
+    document: indexFields,
     preset: 'match',
-    tokenize: 'full'
-  }) : new Document({
-    charset: 'latin:extra',
-    document: {
-      id: 'id',
-      index: ['name', 'aliases']
-    },
-    preset: 'match',
-    tokenize: 'full'
+    tokenize: 'forward'
   })
 }

@@ -92,13 +92,17 @@ export default defineComponent({
       this.showModal = true
       event.preventDefault()
     })
-    this.indexActions = indexSetup('action')
+    const indexFields = { id: 'id', index: ['name', 'aliases'] }
+
+    this.indexActions = indexSetup('action', indexFields)
     indexAdd(this.indexActions, this.actions, 'action')
     this.fullReindex()
   },
   methods: {
     fullReindex () {
-      this.indexRoutes = indexSetup('route')
+      const indexFields = { id: 'id', index: ['name', 'aliases', 'path'] }
+
+      this.indexRoutes = indexSetup('route', indexFields)
       indexAdd(this.indexRoutes, this.validConfig, 'route')
     },
     goto () {
@@ -161,8 +165,8 @@ export default defineComponent({
       @mouse-over="onMouseOver"
       @close-modal="showModal = false"
     >
-      <template #resultItem="route">
-        <slot name="resultItem" v-bind="route" />
+      <template #resultItemRoute="route">
+        <slot name="resultItemRoute" v-bind="route" />
       </template>
       <template #resultItemAction="action">
         <slot name="resultItemAction" v-bind="action" />
@@ -181,19 +185,5 @@ img {
 
 hr {
   margin: 2px;
-}
-
-.buttons {
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
-.margin-left {
-  margin-left: 5px;
-}
-
-.buttons--item {
-  display: flex;
-  align-items: center;
 }
 </style>
