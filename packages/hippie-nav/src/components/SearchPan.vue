@@ -11,7 +11,7 @@
       class="search-panel__input"
       type="text"
       placeholder="Search"
-      @input="$emit('update:modelValue', $event.target.value)"
+      @input="$emit('update-model-value', $event.target.value)"
       @keydown.esc.prevent="$emit('close')"
       @keydown.down.prevent="$emit('next')"
       @keydown.up.prevent="$emit('previous')"
@@ -39,7 +39,7 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['close', 'update:modelValue', 'next', 'previous', 'goto']
+  emits: ['close', 'update-model-value', 'next', 'previous', 'goto']
 })
 
 </script>

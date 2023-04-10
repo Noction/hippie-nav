@@ -5,7 +5,7 @@
     </h2>
     <div
       v-for="(result, index) in results"
-      :key="result.path"
+      :key="result.type + result.data.name"
     >
       <search-result-item
         :colored="index === current"
@@ -16,6 +16,9 @@
         <template #routeItem="route">
           <slot name="resultItem" v-bind="route" />
         </template>
+        <template #resultItemAction="resultAction">
+          <slot name="resultItemAction" v-bind="resultAction" />
+        </template>
       </search-result-item>
     </div>
   </div>
@@ -25,6 +28,7 @@
 </template>
 
 <script lang="ts">
+import { ResultItem } from '../HippieNav.vue'
 import { RouteRecordNormalized } from 'vue-router'
 import SearchResultItem from './SearchResultItem.vue'
 import { PropType, defineComponent } from 'vue'
@@ -42,9 +46,9 @@ export default defineComponent({
       required: true
     },
     results: {
-      type: Array as PropType<RouteRecordNormalized[]>,
+      type: Array as PropType<ResultItem[]>,
       required: false,
-      default: [] as RouteRecordNormalized[]
+      default: [] as ResultItem[]
     }
   },
   emits: ['close-modal', 'mouse-over']

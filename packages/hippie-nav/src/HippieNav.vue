@@ -1,6 +1,8 @@
 <script lang="ts">
+import { ActionConfig } from './types'
 import { Document } from 'flexsearch'
 import NavButtons from './components/NavButtons.vue'
+import RecentResults from './components/RecentResults.vue'
 import { RouteRecordNormalized } from 'vue-router'
 import SearchModal from './components/SearchModal.vue'
 import SearchPan from './components/SearchPan.vue'
@@ -11,16 +13,26 @@ import { useFlexSearch } from './util/useFlexSearch.js'
 import { PropType, defineComponent } from 'vue'
 import { indexAdd, indexSetup } from './util/indexSetup'
 
+export interface ResultItem {
+  type: 'route' | 'action',
+  data: RouteRecordNormalized | ActionConfig
+}
+
 export default defineComponent({
   name: 'HippieNav',
   components: {
     NavButtons,
+    RecentResults,
     SearchModal,
     SearchPan,
     SearchResult
   },
   expose: ['fullReindex'],
   props: {
+    actions: {
+      type: Array as PropType<ActionConfig[]>,
+      required: true
+    },
     excludedPaths: {
       type: Array as PropType<string[]>,
       default: [] as PropType<string[]>
@@ -33,9 +45,12 @@ export default defineComponent({
   data () {
     return {
       current: 0,
-      index: {} as Document<any>,
-      recentResults: [] as RouteRecordNormalized[],
-      results: [] as RouteRecordNormalized[],
+      indexActions: {} as Document<any>,
+      indexRoutes: {} as Document<any>,
+      recentResults: [] as ResultItem[],
+      results: [] as ResultItem[],
+      resultsActions: [] as ActionConfig[],
+      resultsRoutes: [] as RouteRecordNormalized[],
       searchInput: '',
       showModal: false
     }
@@ -50,10 +65,25 @@ export default defineComponent({
   },
   watch: {
     searchInput (value) {
-      if (value === '') {
-        this.results = []
+      this.results = []
+      this.resultsRoutes = useFlexSearch(value, this.indexRoutes, this.validConfig, 'route')
+      this.resultsActions = useFlexSearch(value, this.indexActions, this.actions, 'action')
+      if (this.resultsRoutes?.length > 0) {
+        this.resultsRoutes.forEach((r: RouteRecordNormalized) => {
+          this.results.push({
+            data: r,
+            type: 'route'
+          })
+        })
       }
-      this.results = useFlexSearch(value, this.index, this.validConfig)
+      if (this.resultsActions?.length > 0) {
+        this.resultsActions.forEach((r: ActionConfig) => {
+          this.results.push({
+            data: r,
+            type: 'action'
+          })
+        })
+      }
       this.current = 0
     }
   },
@@ -62,15 +92,25 @@ export default defineComponent({
       this.showModal = true
       event.preventDefault()
     })
+    this.indexActions = indexSetup('action')
+    indexAdd(this.indexActions, this.actions, 'action')
     this.fullReindex()
   },
   methods: {
     fullReindex () {
-      this.index = indexSetup()
-      indexAdd(this.index, this.validConfig)
+      this.indexRoutes = indexSetup('route')
+      indexAdd(this.indexRoutes, this.validConfig, 'route')
     },
     goto () {
-      this.$router.push(this.results[this.current].path)
+      if (this.results[this.current].type === 'route') {
+        const route = this.results[this.current].data as RouteRecordNormalized
+
+        this.$router.push(route.path)
+      } else if (this.results[this.current].type === 'action') {
+        const actionItem = this.results[this.current].data as ActionConfig
+
+        actionItem.action()
+      }
       this.recentResults.push(this.results[this.current])
       this.recentResults = this.recentResults.slice(-3)
       this.showModal = false
@@ -79,8 +119,8 @@ export default defineComponent({
       if (this.results.length - 1 === this.current) return
       this.current++
     },
-    onMouseOver (e: RouteRecordNormalized) {
-      this.current = this.results?.findIndex(r => r.path === e.path)
+    onMouseOver (e: ResultItem) {
+      this.current = this.results?.findIndex(r => r.data.name === e.data.name)
     },
     previous () {
       if (this.current === 0) return
@@ -104,18 +144,15 @@ export default defineComponent({
       @next="next"
       @previous="previous"
       @goto="goto"
-      @update:modelValue="newValue => searchInput = newValue"
+      @update-model-value="newValue => searchInput = newValue"
     />
     <hr>
     <div v-if="recentResults.length > 0">
-      <h3 class="text">
-        Recent results
-      </h3>
-      <div v-for="(result) in recentResults" :key="result.name">
-        <h4 class="text">
-          {{ result.name }}
-        </h4>
-      </div>
+      <recent-results :recent-results="recentResults">
+        <template #recentResultItem="result">
+          <slot name="recentResultItem" v-bind="result" />
+        </template>
+      </recent-results>
     </div>
     <search-result
       :results="results"
@@ -126,6 +163,9 @@ export default defineComponent({
     >
       <template #resultItem="route">
         <slot name="resultItem" v-bind="route" />
+      </template>
+      <template #resultItemAction="action">
+        <slot name="resultItemAction" v-bind="action" />
       </template>
     </search-result>
     <hr>

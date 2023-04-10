@@ -31,10 +31,10 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from 'vue'
-import { RouteRecordName, RouteRecordNormalized } from 'vue-router'
 import { getFullPath } from '../util/getFullRoute'
 import { slashCounter } from '../util/slashCounter'
+import { PropType, defineComponent } from 'vue'
+import { RouteRecordName, RouteRecordNormalized } from 'vue-router'
 
 export default defineComponent({
   name: 'AddRoute',
