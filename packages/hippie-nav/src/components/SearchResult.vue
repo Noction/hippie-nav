@@ -13,8 +13,8 @@
         @mouse-over="$emit('mouse-over', result)"
         @close-modal="$emit('close-modal')"
       >
-        <template #routeItem="route">
-          <slot name="resultItem" v-bind="route" />
+        <template #routeItemRoute="route">
+          <slot name="resultItemRoute" v-bind="route" />
         </template>
         <template #resultItemAction="resultAction">
           <slot name="resultItemAction" v-bind="resultAction" />

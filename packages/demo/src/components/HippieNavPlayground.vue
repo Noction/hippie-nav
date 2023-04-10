@@ -6,7 +6,7 @@
       :excluded-paths="excludedPaths"
       :actions="actions"
     >
-      <template #resultItem="route">
+      <template #resultItemRoute="route">
         <h3 class="text search--result__item">
           {{ route.data.name }}
         </h3>
