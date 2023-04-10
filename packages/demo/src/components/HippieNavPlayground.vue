@@ -4,10 +4,21 @@
       ref="hippieNav"
       :routes="routes"
       :excluded-paths="excludedPaths"
+      :actions="actions"
     >
       <template #resultItem="route">
         <h3 class="text search--result__item">
-          {{ route.name }}
+          {{ route.data.name }}
+        </h3>
+      </template>
+      <template #resultItemAction="action">
+        <h3 class="text search--result__item">
+          {{ action.data.name }}
+        </h3>
+      </template>
+      <template #recentResultItem="result">
+        <h3 class="text search--result__item">
+          {{ result.data.name }}
         </h3>
       </template>
     </hippie-nav>
@@ -23,7 +34,7 @@
         />
         <box-router-config :routes="routes" />
         <box-config :excluded-paths="excludedPaths" @add-excluded-path="addExcludedPath" />
-        <box-routes />
+        <box-actions :actions="actions" />
       </div>
       <add-route
         v-if="showAddRoute"
@@ -35,7 +46,9 @@
 </template>
 
 <script lang="ts">
+
 import AddRoute from './AddRoute.vue'
+import BoxActions from './BoxActions.vue'
 import BoxConfig from './BoxConfig.vue'
 import BoxRouterConfig from './BoxRouteConfig.vue'
 import BoxRoutes from './BoxRoutes/BoxRoutes.vue'
@@ -44,10 +57,26 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'HippieNavPlayground',
-  components: { AddRoute, BoxConfig, BoxRouterConfig, BoxRoutes },
+  components: { AddRoute, BoxActions, BoxConfig, BoxRouterConfig, BoxRoutes },
   data () {
     return {
-      excludedPaths: ['/test', '/test1', '/about'],
+      actions: [
+        {
+          action: () => {
+            this.$router.push('/about')
+          },
+          aliases: ['logOut', 'signOut', 'exit'],
+          name: 'Log out'
+        },
+        {
+          action: () => {
+            console.log('showGraph executed')
+          },
+          aliases: ['show', 'graph'],
+          name: 'Show graph'
+        }
+      ],
+      excludedPaths: ['/test', '/test1'],
       momRoute: {} as RouteRecordNormalized,
       routes: this.$router.getRoutes(),
       showAddRoute: false
@@ -77,9 +106,9 @@ export default defineComponent({
 <style>
 .container {
   margin: 20px;
-  -webkit-box-shadow: 0px 50px 71px 33px rgba(0,0,0,0.29);
-  -moz-box-shadow: 0px 50px 71px 33px rgba(0,0,0,0.29);
-  box-shadow: 0px 50px 71px 33px rgba(0,0,0,0.29);
+  -webkit-box-shadow: 0 50px 71px 33px rgba(0, 0, 0, 0.29);
+  -moz-box-shadow: 0 50px 71px 33px rgba(0, 0, 0, 0.29);
+  box-shadow: 0 50px 71px 33px rgba(0, 0, 0, 0.29);
   border-radius: 30px;
 }
 

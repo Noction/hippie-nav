@@ -8,13 +8,13 @@
 </template>
 
 <script>
-import hippieNav from 'hippie-nav'
-import { createApp, defineComponent } from 'vue'
-import { createRouter, createWebHistory } from 'vue-router'
 import AboutPage from '../pages/AboutPage.vue'
 import ChildPage1 from '../pages/ChildPage1.vue'
 import HomePage from '../pages/HomePage.vue'
 import HomeView from './HippieNavPlayground.vue'
+import hippieNav from 'hippie-nav'
+import { createApp, defineComponent } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {

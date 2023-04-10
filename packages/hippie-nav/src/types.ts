@@ -1,8 +1,5 @@
-export type HippieNavConfig = HippieNavConfigRoute[]
-
-export interface HippieNavConfigRoute {
-    id: number,
+export interface ActionConfig {
     name: string,
+    action: () => void
     aliases: string[]
-    path: string
 }

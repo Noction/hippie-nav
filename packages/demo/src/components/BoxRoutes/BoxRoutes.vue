@@ -50,9 +50,9 @@
 <script lang="ts">
 import BoxRoutesItem from './BoxRoutesItem.vue'
 import HippieButton from '../HippieBtnCollapse.vue'
-import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 import { routeNormalize } from '../../util/routeNormalize'
 import { PropType, defineComponent } from 'vue'
+import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 
 export default defineComponent({
   name: 'BoxRoutes',
@@ -86,7 +86,6 @@ export default defineComponent({
       this.$emit('add-route')
     },
     setShowChildOfChildPath (path: string) {
-      console.log(path)
       if (this.showChildOfChildPath === path) {
         this.showChildOfChildPath = ''
         return
@@ -104,7 +103,3 @@ export default defineComponent({
 
 })
 </script>
-
-<style scoped>
-
-</style>

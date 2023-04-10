@@ -1,8 +1,23 @@
 import { RouteRecordNormalized } from 'vue-router'
+import { ActionConfig } from '../types'
+import { IndexType } from './indexSetup'
 
-export const useFlexSearch = (query: string, providedIndex: any, store: RouteRecordNormalized[]) => {
+export const useFlexSearch = (query: string, providedIndex: any, store: RouteRecordNormalized[] | ActionConfig[], type: IndexType) => {
 
-  const results = providedIndex.search(query)
+  if (type === 'route') {
+    const routes = store as RouteRecordNormalized[]
+    const results = providedIndex.search(query)
 
-  return results[0]?.result.map((id: number) => JSON.parse(JSON.stringify(store[id])))
+    return results[0]?.result.map((id: string) => {
+      return routes.find(route => route.path === id)
+    })
+  }
+  if (type === 'action') {
+    const routes = store as ActionConfig[]
+    const results = providedIndex.search(query)
+
+    return results[0]?.result.map((id: string) => {
+      return routes.find(action => action.name === id)
+    })
+  }
 }
