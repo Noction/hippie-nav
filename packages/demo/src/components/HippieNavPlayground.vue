@@ -104,29 +104,11 @@ export default defineComponent({
 </script>
 
 <style>
-.container {
-  margin: 20px;
-  -webkit-box-shadow: 0 50px 71px 33px rgba(0, 0, 0, 0.29);
-  -moz-box-shadow: 0 50px 71px 33px rgba(0, 0, 0, 0.29);
-  box-shadow: 0 50px 71px 33px rgba(0, 0, 0, 0.29);
-  border-radius: 30px;
-}
-
-.main {
-  display: flex;
-  flex-direction: column;
-}
-
-.view {
-  height: 60vh;
-  padding: 20px;
-}
-
-.footer {
-  align-self: center;
-  display: flex;
-  padding: 10px;
-  width: 98%;
-  height: 25vh;
-}
+  .footer {
+    display: flex;
+    align-self: center;
+    width: 98%;
+    height: 25vh;
+    padding: 10px;
+  }
 </style>

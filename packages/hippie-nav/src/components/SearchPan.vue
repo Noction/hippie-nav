@@ -6,42 +6,36 @@
       alt=""
     >
     <input
-      v-focus
-      :value="modelValue"
+      ref="input"
+      :value="props.modelValue"
       class="search-panel__input"
       type="text"
       placeholder="Search"
-      @input="$emit('update-model-value', $event.target.value)"
-      @keydown.esc.prevent="$emit('close')"
-      @keydown.down.prevent="$emit('next')"
-      @keydown.up.prevent="$emit('previous')"
-      @keydown.enter.prevent="$emit('goto')"
+      @input="emits('update-model-value', $event.target.value)"
+      @keydown.esc.prevent="emits('close')"
+      @keydown.down.prevent="emits('next')"
+      @keydown.up.prevent="emits('previous')"
+      @keydown.enter.prevent="emits('goto')"
     >
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
 
-const focus = {
-  mounted: (el: HTMLInputElement) => {
-    el.focus()
-  }
+interface SearchPanProps {
+  modelValue: string
 }
 
-export default defineComponent({
-  directives: {
-    focus
-  },
-  props: {
-    modelValue: {
-      type: String,
-      required: true
-    }
-  },
-  emits: ['close', 'update-model-value', 'next', 'previous', 'goto']
-})
+const props = defineProps<SearchPanProps>()
 
+const emits = defineEmits(['close', 'update-model-value', 'next', 'previous', 'goto'])
+
+const input = ref<HTMLInputElement | null>(null)
+
+onMounted(() => {
+  input.value?.focus()
+})
 </script>
 
 <style scoped>

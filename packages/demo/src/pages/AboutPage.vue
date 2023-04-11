@@ -1,15 +1,5 @@
 <template>
-  <div>About</div>
+  <div>
+    AboutPage
+  </div>
 </template>
-
-<script>
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'AboutPage'
-})
-</script>
-
-<style scoped>
-
-</style>
