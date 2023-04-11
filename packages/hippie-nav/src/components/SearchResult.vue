@@ -56,7 +56,7 @@ export default defineComponent({
 </script>
 
 <style>
-.color__red {
-  color: rebeccapurple;
-}
+  .color__red {
+    color: rebeccapurple;
+  }
 </style>

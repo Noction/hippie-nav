@@ -1,23 +1,18 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from './components/HippieNavPlayground.vue'
+import { defineAsyncComponent } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router'
 
-export enum AppRoutes  {
-    HOME = 'home',
-    ABC = 'abc'
-}
-
-export const RoutePath: Record<AppRoutes, string> = {
-  [AppRoutes.HOME]: '/',
-  [AppRoutes.ABC]: '/abc'
-}
+const AboutPage = defineAsyncComponent(() => import('./pages/AboutPage.vue'))
+const HomePage = defineAsyncComponent(() => import('./pages/HomePage.vue'))
+const PlaygroundPage = defineAsyncComponent(() => import( './pages/PlaygroundPage.vue'))
 
 export const routes = [
-  { path: RoutePath.home, component: HomeView },
-  { path: RoutePath.abc, component: HomeView }
+  { component: HomePage, path: '/' },
+  { component: PlaygroundPage, path: '/play' },
+  { component: AboutPage, path: '/about' }
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 })
 

@@ -1,16 +1,30 @@
 module.exports = {
   plugins: ['sort-exports'],
   rules: {
+    // requires consistent spacing around type annotations.
+    '@typescript-eslint/type-annotation-spacing': 'error',
     // disallow spaces between curly braces
     'array-bracket-spacing': ['error', 'never'],
     // allows omitting parens when there is only one argument
     'arrow-parens': ['error', 'as-needed'],
+    // requires space before/after arrow function's arrow.
+    'arrow-spacing': 'error',
+    // enforces the spaces inside of blocks after opening blocks and before closing blocks.
+    'block-spacing': 'error',
     // put brace after statement with 1 space and allow one inline statement
     'brace-style': ['error', '1tbs', { allowSingleLine: true }],
     // looks for any underscores (_) located within the source code.
     camelcase: 0,
     // disallow trailing commas
     'comma-dangle': ['error', 'never'],
+    // enforces spacing around commas.
+    'comma-spacing': ['error', { after: true, before: false }],
+    // enforce consistent comma style in <template>
+    'comma-style': ['error', 'last'],
+    // Enforces newline before dots.
+    'dot-location': ['error', 'property'],
+    // enforces dot notation whenever possible.
+    'dot-notation': 'error',
     // required to use type comparison === or !==
     eqeqeq: ['error', 'always'], // ?
     // required 2 indented spaces
@@ -18,7 +32,7 @@ module.exports = {
     // enforce consistent spacing after keywords
     'keyword-spacing': ['error', { after: true, before: true }],
     // require an empty line after variable declarations
-    'newline-after-var': 'error',
+    // 'newline-after-var': 'error',
     // isn't allowed to use async Promises
     'no-async-promise-executor': 'error', // ?
     // allow only console.error or console.warn
@@ -37,8 +51,15 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
     // require object literal shorthand syntax
     'object-shorthand': 'error',
+    'padding-line-between-statements': [
+      'error',
+      { blankLine: 'always', next: '*', prev: ['const', 'let', 'var'] },
+      { blankLine: 'any', next: ['const', 'let', 'var'], prev: ['const', 'let', 'var'] }
+    ],
     // Suggest using const
     'prefer-const': 'error',
+    // requires destructuring from arrays and/or objects
+    'prefer-destructuring': 'error',
     // Suggest using template literals instead of string concatenation
     'prefer-template': 'error',
     // require quotes around object literal property names
@@ -61,22 +82,6 @@ module.exports = {
     ],
     // disallow Space Before Blocks
     'space-before-blocks': 'error',
-    // TODO: add rule later promise should always have return
-    // "promise/always-return": "error",
-    // requires space before/after arrow function's arrow.
-    'arrow-spacing': 'error',
-    // enforces the spaces inside of blocks after opening blocks and before closing blocks.
-    'block-spacing': 'error',
-    // enforces spacing around commas.
-    'comma-spacing': ['error', { after: true, before: false }],
-    // enforce consistent comma style in <template>
-    'comma-style': ['error', 'last'],
-    // Enforces newline before dots.
-    'dot-location': ['error', 'property'],
-    // enforces dot notation whenever possible.
-    'dot-notation': 'error',
-    // requires destructuring from arrays and/or objects
-    'prefer-destructuring': 'error',
     // requires or disallows a space before function parenthesis.
     'space-before-function-paren': 'error'
   }

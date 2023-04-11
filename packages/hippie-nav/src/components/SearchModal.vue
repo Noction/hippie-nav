@@ -1,23 +1,6 @@
-<script lang="ts" setup>
-import { defineProps } from 'vue'
-const { shown } = defineProps({
-  shown: {
-    default: false,
-    type: Boolean
-  }
-})
-const emit = defineEmits({
-  close: () => true
-})
-
-function close () {
-  emit('close')
-}
-</script>
-
 <template>
   <div
-    v-if="shown"
+    v-if="props.shown"
     class="modal"
     @click.stop="close"
   >
@@ -26,6 +9,23 @@ function close () {
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+const props = defineProps({
+  shown: {
+    default: false,
+    type: Boolean
+  }
+})
+
+const emit = defineEmits({
+  close: () => true
+})
+
+function close (): void {
+  emit('close')
+}
+</script>
 
 <style scoped>
   .modal {

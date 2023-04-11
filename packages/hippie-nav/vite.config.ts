@@ -5,7 +5,7 @@ import commonjs from 'vite-plugin-commonjs'
 
 export default defineConfig({
   build: {
-    emptyOutDir: true,
+    emptyOutDir: process.env.NODE_ENV !== 'development',
     lib: {
       entry: resolve(__dirname, './src/index.ts'),
       name: 'HippieNav'

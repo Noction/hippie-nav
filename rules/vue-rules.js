@@ -2,7 +2,7 @@ module.exports = {
   rules: {
     // enforce consistent spacing inside array brackets in <template>
     'vue/array-bracket-spacing': ['error', 'never'],
-    // enforce consistent spacing before and after the arrow in arrow functions in <temp§late>
+    // enforce consistent spacing before and after the arrow in arrow functions in <template>
     'vue/arrow-spacing': 'error',
     // disallow or enforce spaces inside of blocks after opening block and before closing block in <template>
     'vue/block-spacing': 'error',
@@ -20,8 +20,12 @@ module.exports = {
     'vue/component-name-in-template-casing': ['error', 'kebab-case'],
     // enforce the casing of component name in components options
     'vue/component-options-name-casing': 'error',
+    // enforce order of component top-level elements
+    'vue/component-tags-order': ['error', { order: ['template', 'script:not([setup])', 'script[setup]', 'style:not([scoped])', 'style[scoped]'] }],
     // enforce specific casing for custom event name
-    'vue/custom-event-name-casing': ['error', 'kebab-case'],
+    'vue/custom-event-name-casing': 'error',
+    // enforce order of defineEmits and defineProps compiler macros
+    'vue/define-macros-order': 'error',
     // enforce consistent newlines before and after dots in <template>
     'vue/dot-location': ['error', 'property'],
     // enforce dot notation whenever possible in <template>
@@ -36,7 +40,9 @@ module.exports = {
     'vue/html-comment-indent': 'error',
     // name property in component MUST be same as file name
     'vue/match-component-file-name': ['error', { extensions: ['vue'], shouldMatchCase: false }],
-    // C: enforce the maximum number of attributes per line
+    // require the registered component name to match the imported component name
+    'vue/match-component-import-name': 'error',
+    // enforce the maximum number of attributes per line
     'vue/max-attributes-per-line': ['error', { singleline: 2 }],
     // disallow element's child contents which would be overwritten by a directive like v-html or v-text
     'vue/no-child-content': 'error',
@@ -54,8 +60,6 @@ module.exports = {
     'vue/no-this-in-before-route-enter': 'error',
     // disallow unsupported Vue.js syntax on the specified version
     'vue/no-unsupported-features': ['error', { ignores: [], version: '^3.0.0' }],
-    // disallow unused properties
-    'vue/no-unused-properties': 'error',
     // disallow unused refs
     'vue/no-unused-refs': 'error',
     // disallow use computed property like method
