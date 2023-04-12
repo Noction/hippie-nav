@@ -46,7 +46,7 @@ import BoxRoutes from '../components/PlaygrounPage/BoxRoutes/BoxRoutes.vue'
 import HippieNavPlayground from '../components/PlaygrounPage/HippieNavPlayground.vue'
 import hippieNav from 'hippie-nav'
 import { RouteRecordNormalized, createMemoryHistory, createRouter } from 'vue-router'
-import { InjectionKey, createApp, defineComponent } from 'vue'
+import {  createApp, defineComponent } from 'vue'
 
 const actions = [
   {
@@ -236,6 +236,7 @@ export default defineComponent({
           font-weight: 600;
           background-color: #fff;
           box-shadow: 0 0 0 1px #fff;
+          z-index: -1;
 
           .name {
             display: flex;
