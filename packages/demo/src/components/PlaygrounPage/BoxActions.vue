@@ -1,8 +1,11 @@
 <template>
-  <div class="box">
-    <h3 class="box-title">
-      Actions
-    </h3>
+  <div class="route-actions">
+    <div class="title">
+      <span class="name">
+        <i-carbon-function-math />
+        Route Actions
+      </span>
+    </div>
     <ul
       v-for="action in actions"
       :key="action.aliases"

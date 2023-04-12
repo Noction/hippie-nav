@@ -1,13 +1,18 @@
 <template>
-  <div class="box">
-    <h3 class="box-title">
-      Config
-    </h3>
+  <div class="route-config">
+    <div class="title">
+      <span class="name">
+        <i-carbon-settings />
+        Route Config
+      </span>
+    </div>
     <div class="box-content">
       <h5>Search fields</h5>
       <span>["name", "aliases"]</span>
-      <h5>Excluded paths</h5>
-      <span>{{ excludedPaths }}</span>
+      <h5>
+        Excluded paths:
+        <span>{{ excludedPaths }}</span>
+      </h5>
       <h5>Add excluded paths</h5>
       <div class="flex">
         <input v-model="excludedPathModel" type="text">
@@ -23,14 +28,14 @@
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'BoxConfig',
+  name: 'BoxRouteConfig',
   props: {
     excludedPaths: {
       type: Array as PropType<string[]>,
       required: true
     }
   },
-  emits: ['add-excluded-path'],
+  emits: ['addExcludedPath'],
   data () {
     return {
       excludedPathModel: ''
@@ -38,7 +43,7 @@ export default defineComponent({
   },
   methods: {
     addExcludedPath () {
-      this.$emit('add-excluded-path', this.excludedPathModel)
+      this.$emit('addExcludedPath', this.excludedPathModel)
       this.excludedPathModel = ''
     }
   }

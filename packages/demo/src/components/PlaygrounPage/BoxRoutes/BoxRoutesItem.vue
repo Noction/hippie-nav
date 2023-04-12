@@ -24,9 +24,9 @@
 </template>
 
 <script lang="ts">
-import HippieBtnCollapse from '../HippieBtnCollapse.vue'
+import HippieBtnCollapse from '../../common/HippieBtnCollapse.vue'
 import { PropType, defineComponent } from 'vue'
-import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
+import {  RouteRecordRaw } from 'vue-router'
 
 export default defineComponent({
   name: 'BoxRoutesItem',
@@ -47,13 +47,13 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['set-show-child-path', 'add-child-route'],
+  emits: ['setShowChildPath', 'addChildRoute'],
   methods: {
-    addChildRoute (route: RouteRecordNormalized) {
-      this.$emit('add-child-route', route)
+    addChildRoute (route: RouteRecordRaw) {
+      this.$emit('addChildRoute', route)
     },
     setShowChildPath (path: string) {
-      this.$emit('set-show-child-path', path)
+      this.$emit('setShowChildPath', path)
     }
   }
 })

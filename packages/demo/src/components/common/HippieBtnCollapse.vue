@@ -1,6 +1,6 @@
 <template>
   <button class="button-39" @click="action">
-    <img src="../assets/triangle.svg" :class="{ button__collapsed: collapsed }">
+    <img src="../../assets/triangle.svg" :class="{ button__collapsed: collapsed }">
   </button>
 </template>
 

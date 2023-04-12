@@ -1,13 +1,14 @@
 <template>
-  <div class="box">
-    <div class="flex box__center">
-      <h3 class="box-title ">
-        Routes
-      </h3>
-      <button class="button-add" @click="addRoute">
-        +
-      </button>
+  <div class="routes">
+    <div class="title">
+      <span class="name">
+        <i-carbon-cube />
+        routes
+      </span>
     </div>
+    <button @click="$emit('addRoute')">
+      add route
+    </button>
     <ul
       v-for="route in routesWithoutChild"
       :key="route.path"
@@ -17,7 +18,7 @@
         :route="route"
         :collapsed="showChildPath === route.path"
         :has-children="route.children?.length > 0"
-        @set-show-child-path="setShowChildPath"
+        @set-show-child-path="setShowPath($event, 'child')"
         @add-child-route="addChildRoute"
       />
       <div v-if="showChildPath === route.path">
@@ -30,9 +31,9 @@
             <hippie-button
               v-if="childRoute.children?.length > 0"
               :collapsed="showChildOfChildPath === childRoute.path"
-              @action="setShowChildOfChildPath(childRoute.path)"
+              @action="setShowPath(childRoute.path, 'childOfChild')"
             />
-            <button @click="$emit('add-child-route', childRoute)">
+            <button @click="$emit('addChildRoute', childRoute)">
               add child
             </button>
           </li>
@@ -49,11 +50,10 @@
 
 <script lang="ts">
 import BoxRoutesItem from './BoxRoutesItem.vue'
-import HippieButton from '../HippieBtnCollapse.vue'
-import { routeNormalize } from '../../util/routeNormalize'
+import HippieButton from '../../common/HippieBtnCollapse.vue'
+import { routeNormalize } from '../../../util/routeNormalize'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
-
 export default defineComponent({
   name: 'BoxRoutes',
   components: { BoxRoutesItem, HippieButton },
@@ -63,7 +63,7 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['add-route', 'add-child-route'],
+  emits: ['addRoute', 'addChildRoute'],
   data () {
     return {
       showChildOfChildPath: '',
@@ -72,34 +72,23 @@ export default defineComponent({
   },
   computed: {
     routesWithoutChild () {
-      if (this.routes?.length) {
-        return routeNormalize(this.routes)
-      } return this.routes
+      return routeNormalize(this.routes)
     }
-
   },
   methods: {
     addChildRoute (e: RouteRecordNormalized) {
-      this.$emit('add-child-route', e)
+      this.$emit('addChildRoute', e)
     },
     addRoute () {
-      this.$emit('add-route')
+      this.$emit('addRoute')
     },
-    setShowChildOfChildPath (path: string) {
-      if (this.showChildOfChildPath === path) {
-        this.showChildOfChildPath = ''
-        return
+    setShowPath (path: string, type: string) {
+      if (type === 'childOfChild') {
+        this.showChildOfChildPath = this.showChildOfChildPath === path ? '' : path
+      } else if (type === 'child') {
+        this.showChildPath = this.showChildPath === path ? '' : path
       }
-      this.showChildOfChildPath = path
-    },
-    setShowChildPath (path: string) {
-      if (this.showChildPath === path) {
-        this.showChildPath = ''
-        return
-      }
-      this.showChildPath = path
     }
   }
-
 })
 </script>
