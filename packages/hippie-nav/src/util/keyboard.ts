@@ -1,6 +1,6 @@
+import { isMac } from './env'
 import { useEventListener } from '@vueuse/core'
 import { Ref, isRef } from 'vue'
-import { isMac } from './env'
 
 export type KeyboardHandler = (event: KeyboardEvent) => unknown
 
@@ -31,10 +31,10 @@ export function formatKey (key: string) {
 }
 
 const modifiers: { [i: string]: { key: string, pressed: boolean } } = {
-  ctrl: { key: 'Control', pressed: false },
   alt: { key: 'Alt', pressed: false },
-  shift: { key: 'Shift', pressed: false },
-  meta: { key: 'Meta', pressed: false }
+  ctrl: { key: 'Control', pressed: false },
+  meta: { key: 'Meta', pressed: false },
+  shift: { key: 'Shift', pressed: false }
 }
 
 const pressedKeys = new Set<string>()

@@ -36,11 +36,22 @@
 </template>
 
 <script lang="ts">
-import { getFullPath } from '../../util/getFullRoute'
 import { slashCounter } from '../../util/slashCounter'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordName, RouteRecordNormalized, Router } from 'vue-router'
+function getFullPath (name: string, routes: RouteRecordNormalized[]): string | undefined {
+  const route = routes.find(r => r.name === name)
 
+  return route ? route.path : undefined
+}
+
+function hasDuplicateName (routes: RouteRecordNormalized[], name: string): boolean {
+  return routes.some(r => r.name === name)
+}
+
+function hasDuplicatePath (routes: RouteRecordNormalized[], path: string): boolean {
+  return routes.some(r => r.path === path)
+}
 export default defineComponent({
   name: 'AddRoute',
   props: {
@@ -61,31 +72,21 @@ export default defineComponent({
         aliases: '',
         displayName: '',
         path: '/'
-      },
-      wrongDisplayName: false,
-      wrongPath: false
+      }
     }
   },
   methods: {
     addRoute () {
       const routes = this.router.getRoutes()
       const copyOfMomRoute = JSON.parse(JSON.stringify(this.momRoute))
-
       const fullPathOfMomRoute = copyOfMomRoute.name && getFullPath(copyOfMomRoute.name, routes)
       const isChildOfChild = fullPathOfMomRoute ? slashCounter(fullPathOfMomRoute) === 2 : false
       const component = { template: `<div>${this.route.displayName}</div>` }
       const aliases = this.route.aliases.split(',')
       const path = copyOfMomRoute.path ? `${copyOfMomRoute.path}${this.route.path}` : this.route.path
+      const areEmptyFields = this.route.displayName.trim() === '' || this.route.path.trim() === ''
 
-      routes.forEach(r => {
-        if (r.name === this.route.displayName && r.name === '') {
-          this.wrongDisplayName = true
-        }
-        if (r.path === path || r.path === '') {
-          this.wrongPath = true
-        }
-      })
-      if (this.wrongPath || this.wrongDisplayName) {
+      if (hasDuplicateName(routes, this.route.displayName) || hasDuplicatePath(routes, path) || areEmptyFields) {
         return
       }
       if (!isChildOfChild) {

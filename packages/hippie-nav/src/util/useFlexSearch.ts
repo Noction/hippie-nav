@@ -1,8 +1,12 @@
-import { RouteRecordNormalized } from 'vue-router'
-import { ActionConfig } from '../types'
+import { ActionConfig } from '../shared/types'
 import { IndexType } from './indexSetup'
+import { RouteRecordNormalized } from 'vue-router'
 
-export const useFlexSearch = (query: string, providedIndex: any, store: RouteRecordNormalized[] | ActionConfig[], type: IndexType) => {
+export const useFlexSearch = (
+  query: string,
+  providedIndex: any,
+  store: RouteRecordNormalized[] | ActionConfig[], type: IndexType
+) => {
 
   if (type === 'route') {
     const routes = store as RouteRecordNormalized[]

@@ -3,7 +3,7 @@
     v-if="result.data.path"
     :class="{ selected: colored }"
     @click="goto(result.data.path)"
-    @mouseover="$emit('mouse-over', result)"
+    @mouseover="$emit('mouseOver', result)"
   >
     <slot name="routeItemRoute" v-bind="result" />
   </div>
@@ -11,7 +11,7 @@
     v-if="result.data.action"
     :class="{ selected: colored }"
     @click="result.data.action"
-    @mouseover="$emit('mouse-over', result)"
+    @mouseover="$emit('mouseOver', result)"
   >
     <slot name="resultItemAction" v-bind="result" />
   </div>
@@ -33,11 +33,11 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['close-modal', 'mouse-over'],
+  emits: ['closeModal', 'mouseOver'],
   methods: {
     goto (path: string) {
       this.$router.push(path)
-      this.$emit('close-modal')
+      this.$emit('closeModal')
     }
   }
 })

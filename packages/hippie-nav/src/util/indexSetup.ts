@@ -1,5 +1,6 @@
-import { ActionConfig } from '../types'
+import { ActionConfig } from '../shared/types'
 import { Document } from 'flexsearch'
+import { IndexOptionsHippieNav } from '../HippieNav.vue'
 import { RouteRecordNormalized } from 'vue-router'
 
 export interface IndexFields {
@@ -29,7 +30,7 @@ export const indexAdd = (index: Document<any>, data: RouteRecordNormalized[] | A
   }
 }
 
-export const indexSetup = (type: IndexType, indexFields: IndexFields): Document<any> => {
+export const indexSetup = (type: IndexType, indexFields: IndexFields): Document<IndexOptionsHippieNav> => {
   return new Document({
     charset: 'latin:extra',
     document: indexFields,
