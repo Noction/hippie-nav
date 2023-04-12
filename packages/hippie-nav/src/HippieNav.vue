@@ -1,3 +1,44 @@
+<template>
+  <search-modal
+    :shown="showModal"
+    :input="searchInput"
+    @close="showModal = false"
+  >
+    <search-pan
+      :model-value="searchInput"
+      @close="showModal = false"
+      @next="next"
+      @previous="previous"
+      @goto="goto"
+      @update-model-value="newValue => searchInput = newValue"
+    />
+    <hr>
+    <div v-if="recentResults.length > 0">
+      <recent-results :recent-results="recentResults">
+        <template #recentResultItem="result">
+          <slot name="recentResultItem" v-bind="result" />
+        </template>
+      </recent-results>
+    </div>
+    <search-result
+      :results="results"
+      :current="current"
+      :input="searchInput"
+      @mouse-over="onMouseOver"
+      @close-modal="showModal = false"
+    >
+      <template #resultItemRoute="route">
+        <slot name="resultItemRoute" v-bind="route" />
+      </template>
+      <template #resultItemAction="action">
+        <slot name="resultItemAction" v-bind="action" />
+      </template>
+    </search-result>
+    <hr>
+    <nav-buttons />
+  </search-modal>
+</template>
+
 <script lang="ts">
 import { ActionConfig } from './types'
 import { Document } from 'flexsearch'
@@ -7,10 +48,11 @@ import { RouteRecordNormalized } from 'vue-router'
 import SearchModal from './components/SearchModal.vue'
 import SearchPan from './components/SearchPan.vue'
 import SearchResult from './components/SearchResult.vue'
+import { excludedPaths } from './index'
 import { filterExcludedPaths } from './util/filterExcludedPaths'
 import { onKeyboardShortcut } from './util/keyboard'
 import { useFlexSearch } from './util/useFlexSearch.js'
-import { PropType, defineComponent } from 'vue'
+import { PropType, defineComponent, inject } from 'vue'
 import { indexAdd, indexSetup } from './util/indexSetup'
 
 export interface ResultItem {
@@ -33,10 +75,6 @@ export default defineComponent({
       type: Array as PropType<ActionConfig[]>,
       required: true
     },
-    excludedPaths: {
-      type: Array as PropType<string[]>,
-      default: [] as PropType<string[]>
-    },
     routes: {
       type: Array as PropType<RouteRecordNormalized[]>,
       required: true
@@ -45,6 +83,7 @@ export default defineComponent({
   data () {
     return {
       current: 0,
+      excludedPaths: inject(excludedPaths) as string[],
       indexActions: {} as Document<any>,
       indexRoutes: {} as Document<any>,
       recentResults: [] as ResultItem[],
@@ -135,47 +174,6 @@ export default defineComponent({
 })
 
 </script>
-
-<template>
-  <search-modal
-    :shown="showModal"
-    :input="searchInput"
-    @close="showModal = false"
-  >
-    <search-pan
-      :model-value="searchInput"
-      @close="showModal = false"
-      @next="next"
-      @previous="previous"
-      @goto="goto"
-      @update-model-value="newValue => searchInput = newValue"
-    />
-    <hr>
-    <div v-if="recentResults.length > 0">
-      <recent-results :recent-results="recentResults">
-        <template #recentResultItem="result">
-          <slot name="recentResultItem" v-bind="result" />
-        </template>
-      </recent-results>
-    </div>
-    <search-result
-      :results="results"
-      :current="current"
-      :input="searchInput"
-      @mouse-over="onMouseOver"
-      @close-modal="showModal = false"
-    >
-      <template #resultItemRoute="route">
-        <slot name="resultItemRoute" v-bind="route" />
-      </template>
-      <template #resultItemAction="action">
-        <slot name="resultItemAction" v-bind="action" />
-      </template>
-    </search-result>
-    <hr>
-    <nav-buttons />
-  </search-modal>
-</template>
 
 <style>
 img {

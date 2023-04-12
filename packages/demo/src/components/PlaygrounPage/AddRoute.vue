@@ -1,40 +1,45 @@
 <template>
-  <div class="footer add-route">
-    <div class="flex">
-      <h3 class="add-route-text">
+  <div class="routes">
+    <div class="title">
+      <span class="name">
         {{
           momRoute.name
             ? `You are creating a child route for ${momRoute.name}`
             : 'You are creating a route'
         }}
-      </h3>
-      <button @click="addRoute">
-        +
-      </button>
+        <button @click="addRoute">
+          +
+        </button>
+        <button @click="$emit('close')">
+          b
+        </button>
+      </span>
     </div>
-    <input
-      v-model="route.displayName"
-      type="text"
-      placeholder="displayName"
-    >
-    <input
-      v-model="route.path"
-      type="text"
-      placeholder="path"
-    >
-    <input
-      v-model="route.aliases"
-      type="text"
-      placeholder="aliases: main, home"
-    >
+    <div>
+      <input
+        v-model="route.displayName"
+        type="text"
+        placeholder="displayName"
+      >
+      <input
+        v-model="route.path"
+        type="text"
+        placeholder="path"
+      >
+      <input
+        v-model="route.aliases"
+        type="text"
+        placeholder="aliases: main, home"
+      >
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { getFullPath } from '../util/getFullRoute'
-import { slashCounter } from '../util/slashCounter'
+import { getFullPath } from '../../util/getFullRoute'
+import { slashCounter } from '../../util/slashCounter'
 import { PropType, defineComponent } from 'vue'
-import { RouteRecordName, RouteRecordNormalized } from 'vue-router'
+import { RouteRecordName, RouteRecordNormalized, Router } from 'vue-router'
 
 export default defineComponent({
   name: 'AddRoute',
@@ -43,6 +48,10 @@ export default defineComponent({
       type: Object as PropType<RouteRecordNormalized>,
       required: false,
       default: {} as RouteRecordNormalized
+    },
+    router: {
+      type: Object as PropType<Router>,
+      required: true
     }
   },
   emits: ['close'],
@@ -51,7 +60,7 @@ export default defineComponent({
       route: {
         aliases: '',
         displayName: '',
-        path: ''
+        path: '/'
       },
       wrongDisplayName: false,
       wrongPath: false
@@ -59,21 +68,20 @@ export default defineComponent({
   },
   methods: {
     addRoute () {
-      console.log('asd')
-      const routes = this.$router.getRoutes()
+      const routes = this.router.getRoutes()
       const copyOfMomRoute = JSON.parse(JSON.stringify(this.momRoute))
 
-      const fullPathOfMomRoute = copyOfMomRoute.name ? getFullPath(copyOfMomRoute.name, routes) : undefined
+      const fullPathOfMomRoute = copyOfMomRoute.name && getFullPath(copyOfMomRoute.name, routes)
       const isChildOfChild = fullPathOfMomRoute ? slashCounter(fullPathOfMomRoute) === 2 : false
       const component = { template: `<div>${this.route.displayName}</div>` }
       const aliases = this.route.aliases.split(',')
-      const path = copyOfMomRoute.path ? copyOfMomRoute.path + this.route.path : this.route.path
+      const path = copyOfMomRoute.path ? `${copyOfMomRoute.path}${this.route.path}` : this.route.path
 
       routes.forEach(r => {
-        if (r.name === this.route.displayName) {
+        if (r.name === this.route.displayName && r.name === '') {
           this.wrongDisplayName = true
         }
-        if (r.path === path) {
+        if (r.path === path || r.path === '') {
           this.wrongPath = true
         }
       })
@@ -82,7 +90,7 @@ export default defineComponent({
       }
       if (!isChildOfChild) {
         if (!copyOfMomRoute.name) {
-          this.$router.addRoute({
+          this.router.addRoute({
             component,
             meta: { aliases },
             name: this.route.displayName,
@@ -98,51 +106,46 @@ export default defineComponent({
             }
             const children = [...copyOfMomRoute.children, newChild]
 
-            this.$router.removeRoute(copyOfMomRoute.name)
+            this.router.removeRoute(copyOfMomRoute.name)
             copyOfMomRoute.children = children
-            this.$router.addRoute(copyOfMomRoute)
+            this.router.addRoute(copyOfMomRoute)
           }
         }
       } else {
         if (fullPathOfMomRoute) {
-          console.log('here')
           const splittedRoute = fullPathOfMomRoute.split('/')
           const parent = routes.find(r => r.path === `/${splittedRoute[1]}`) as RouteRecordNormalized
           const childOfParent = parent.children.find(c => c.path === splittedRoute[2]) as RouteRecordNormalized
+          const childOfChildRoute = {
+            component,
+            name: this.route.displayName,
+            path: this.route.path.replace(/\//g, '')
+          }
 
-          console.log(this.route.path.replace(/\//g, ''))
           const route = {
             ...parent,
             children: [
-              ...parent.children,
+              ...parent.children.filter(c => c.name !== childOfParent.name),
               {
                 ...childOfParent,
                 children: childOfParent.children ? [
                   ...childOfParent.children,
-                  {
-                    component,
-                    name: this.route.displayName,
-                    path: this.route.path.replace(/\//g, '')
-                  }
+                  childOfChildRoute
                 ] : [
-                  {
-                    component,
-                    name: this.route.displayName,
-                    path: this.route.path.replace(/\//g, '')
-                  }
+                  childOfChildRoute
                 ]
               }
             ]
           }
 
-          this.$router.removeRoute(parent.name as RouteRecordName)
-          this.$router.addRoute(route as RouteRecordNormalized)
+          this.router.removeRoute(parent.name as RouteRecordName)
+          this.router.addRoute(route as RouteRecordNormalized)
         }
       }
       this.route = {
         aliases: '',
         displayName: '',
-        path: ''
+        path: '/'
       }
       this.$emit('close')
     }
@@ -151,28 +154,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.add-route {
-  background-color: var(--secondary-color);
-  border-radius: 20px;
-  padding: 20px;
-  flex-direction: column;
-}
-
-.add-route-text {
-  margin-top: 11px;
-  align-self: baseline;
-}
 
 input {
-  width: 20%;
-  margin-top: 11px;
-  padding: 11px;
+    margin-top: 5px;
+    width: 100%;
+    padding: 11px;
 }
 
 button {
-  margin-left: 20px;
-  align-self: baseline;
-  padding: 11px;
+    margin-left: 20px;
+    width: 20px;
 }
 
 </style>

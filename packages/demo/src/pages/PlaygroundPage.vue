@@ -13,48 +13,57 @@
       <div class="playground">
         <div id="playground" />
       </div>
-      <div class="routes">
-        <div class="title">
-          <span class="name">
-            <i-carbon-cube />
-            routes
-          </span>
-        </div>
-      </div>
-      <div class="route-items">
-        <div class="title">
-          <span class="name">
-            <i-carbon-branch />
-            route items
-          </span>
-        </div>
-      </div>
-      <div class="route-config">
-        <div class="title">
-          <span class="name">
-            <i-carbon-settings />
-            route config
-          </span>
-        </div>
-      </div>
-      <div class="route-actions">
-        <div class="title">
-          <span class="name">
-            <i-carbon-function-math />
-            route actions
-          </span>
-        </div>
-      </div>
+      <box-routes
+        v-if="!showAddRoute"
+        :routes="routes"
+        @add-route="setShowAddRoute(true)"
+        @add-child-route="addChildRoute"
+      />
+      <add-route
+        v-if="showAddRoute"
+        :router="router"
+        :mom-route="momRoute"
+        @close="forceRender"
+      />
+      <box-route-items :routes="routes" />
+      <box-route-config
+        :routes="routes"
+        :excluded-paths="excludedPaths"
+        @add-excluded-path="addExcludedPath"
+      />
+      <box-actions :actions="actions" />
     </div>
   </div>
 </template>
 
-<script setup>
-import 'hippie-nav/dist/style.css'
-import HippieNavPlayground from '../components/HippieNavPlayground.vue'
+<script lang="ts">
+import AddRoute from '../components/PlaygrounPage/HippieNavPlayground.vue'
+import App from '../App.vue'
+import BoxActions from '../components/PlaygrounPage/BoxActions.vue'
+import BoxRouteConfig from '../components/PlaygrounPage/BoxRouteConfig.vue'
+import BoxRouteItems from '../components/PlaygrounPage/BoxRouteItems.vue'
+import BoxRoutes from '../components/PlaygrounPage/BoxRoutes/BoxRoutes.vue'
+import HippieNavPlayground from '../components/PlaygrounPage/HippieNavPlayground.vue'
 import hippieNav from 'hippie-nav'
-import { createApp, onMounted } from 'vue'
-import { createMemoryHistory, createRouter } from 'vue-router'
+import { RouteRecordNormalized, createMemoryHistory, createRouter } from 'vue-router'
+import { InjectionKey, createApp, defineComponent } from 'vue'
+
+const actions = [
+  {
+    action: () => {
+      router.push('/')
+    },
+    aliases: ['logOut', 'signOut', 'exit'],
+    name: 'Log out'
+  },
+  {
+    action: () => {
+      console.log('showGraph executed')
+    },
+    aliases: ['show', 'graph'],
+    name: 'Show graph'
+  }
+]
 
 const routes = [
   {
@@ -105,78 +114,139 @@ const router = createRouter({
   routes
 })
 
-onMounted(() => {
-  const playground = createApp(HippieNavPlayground)
+export default defineComponent({
+  name: 'PlaygroundPage',
+  components: {
+    AddRoute,
+    BoxActions,
+    BoxRouteConfig,
+    BoxRouteItems,
+    BoxRoutes
+  },
+  data () {
+    return {
+      actions,
+      excludedPaths: ['/test', '/test1'],
+      momRoute: {} as RouteRecordNormalized,
+      playground: App,
+      router,
+      routes: routes as unknown as RouteRecordNormalized[],
+      showAddRoute: false
+    }
+  },
+  mounted () {
+    this.initPlay()
+  },
+  methods: {
+    addChildRoute (e: RouteRecordNormalized) {
+      this.momRoute = e
+      this.showAddRoute = !this.showAddRoute
+    },
+    addExcludedPath (e: string) {
+      this.excludedPaths.push(e)
+    },
+    async forceRender () {
+      this.setShowAddRoute(false)
+      this.routes = this.router.getRoutes()
+      await this.$nextTick()
+      this.playground.unmount()
+      await this.$nextTick()
+      this.initPlay()
+    },
+    initPlay () {
+      this.playground = createApp(HippieNavPlayground)
 
-  playground.use(router)
-  playground.use(hippieNav)
-  playground.mount('#playground')
+      this.playground.use(router)
+      this.playground.use(hippieNav, {
+        excludedPaths: this.excludedPaths
+      })
+      this.playground.mount('#playground')
+    },
+    setShowAddRoute (value: boolean) {
+      this.showAddRoute = value
+    }
+  }
+
 })
+
 </script>
 
-<style lang="scss" scoped>
-  .playground-page {
-    display: grid;
-    grid: auto 1fr / 1fr;
-    row-gap: 20px;
-    height: 100%;
-    padding-bottom: 20px;
+<style lang="scss">
+.playground-page {
+  display: grid;
+  grid: auto 1fr / 1fr;
+  row-gap: 20px;
+  height: 100%;
+  padding-bottom: 20px;
 
-    .playground-wrapper {
-      display: grid;
-      grid:
+  .playground-wrapper {
+    display: grid;
+    grid:
         'playground playground playground playground' 1fr
         'routes route-items route-config route-actions' 200px
         / 1fr 1fr 1fr 1fr;
-      gap: 15px;
-      padding: 15px;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px 0 hsl(210deg 29% 75%);
+
+    > * {
+      padding: 10px
+    }
+
+    .playground {
+      grid-area: playground;
+      background-color: hsl(210deg 29% 95%);
       border-radius: 5px;
-      box-shadow: 0 0 15px 0 hsl(210deg 29% 75%);
+    }
 
-      > * { padding: 10px }
+    .routes {
+      grid-area: routes;
+    }
 
-      .playground {
-        grid-area: playground;
-        background-color: hsl(210deg 29% 95%);
-        border-radius: 5px;
-      }
+    .route-items {
+      grid-area: route-items;
+    }
 
-      .routes { grid-area: routes; }
-      .route-items { grid-area: route-items; }
-      .route-config { grid-area: route-config; }
-      .route-actions { grid-area: route-actions; }
+    .route-config {
+      grid-area: route-config;
+    }
 
-      .routes,
-      .route-items,
-      .route-actions,
-      .route-config {
-        max-height: 100%;
-        overflow-y: auto;
-        border: 1px solid hsl(210deg 29% 75%);
-        border-radius: 5px;
+    .route-actions {
+      grid-area: route-actions;
+    }
 
-        .title {
-          position: sticky;
-          top: -10px;
-          display: grid;
-          grid: 1fr / 1fr auto;
-          place-items: center;
-          margin-bottom: 2px;
-          font-size: 14px;
-          font-weight: 600;
-          background-color: #fff;
-          box-shadow: 0 0 0 1px #fff;
+    .routes,
+    .route-items,
+    .route-actions,
+    .route-config {
+      max-height: 100%;
+      overflow-y: auto;
+      border: 1px solid hsl(210deg 29% 75%);
+      border-radius: 5px;
 
-          .name {
-            display: flex;
-            grid-row: 1;
-            grid-column: 1 / 3;
-            column-gap: 4px;
-            padding: 4px 0;
-            text-transform: capitalize;
-          }
+      .title {
+        position: sticky;
+        top: -10px;
+        display: grid;
+        grid: 1fr / 1fr auto;
+        place-items: center;
+        margin-bottom: 2px;
+        font-size: 14px;
+        font-weight: 600;
+        background-color: #fff;
+        box-shadow: 0 0 0 1px #fff;
+
+        .name {
+          display: flex;
+          grid-row: 1;
+          grid-column: 1 / 3;
+          column-gap: 4px;
+          padding: 4px 0;
+          text-transform: capitalize;
         }
       }
     }
   }
+}
 </style>

@@ -1,8 +1,11 @@
 <template>
-  <div class="box">
-    <h3 class="box-title">
-      Route Config
-    </h3>
+  <div class="route-items">
+    <div class="title">
+      <span class="name">
+        <i-carbon-branch />
+        Route Items
+      </span>
+    </div>
     <div class="box-content">
       <ul v-for="route in _routesFlatten" :key="route.name">
         <li class="box-list">
@@ -24,14 +27,14 @@
 </template>
 
 <script lang="ts">
-import HippieButton from './HippieBtnCollapse.vue'
-import { routeNormalize } from '../util/routeNormalize'
-import { routesFlatten } from '../util/routesFlatten'
+import HippieButton from '../common/HippieBtnCollapse.vue'
+import { routeNormalize } from '../../util/routeNormalize'
+import { routesFlatten } from '../../util/routesFlatten'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 
 export default defineComponent({
-  name: 'BoxRouteConfig',
+  name: 'BoxRouteItems',
   components: { HippieButton },
   props: {
     routes: {
@@ -64,12 +67,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.box-list {
-  display: flex;
-  flex-direction: column;
-}
+  .box-list {
+    display: flex;
+    flex-direction: column;
+  }
 
-.box-list-main {
-  display: flex;
-}
+  .box-list-main {
+    display: flex;
+  }
 </style>
