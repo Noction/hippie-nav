@@ -228,6 +228,7 @@ export default defineComponent({
         .title {
           position: sticky;
           top: -10px;
+          z-index: -1;
           display: grid;
           grid: 1fr / 1fr auto;
           place-items: center;
@@ -236,7 +237,6 @@ export default defineComponent({
           font-weight: 600;
           background-color: #fff;
           box-shadow: 0 0 0 1px #fff;
-          z-index: -1;
 
           .name {
             display: flex;
