@@ -39,6 +39,7 @@
 import { slashCounter } from '../../util/slashCounter'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordName, RouteRecordNormalized, Router } from 'vue-router'
+
 function getFullPath (name: string, routes: RouteRecordNormalized[]): string | undefined {
   const route = routes.find(r => r.name === name)
 
@@ -52,6 +53,7 @@ function hasDuplicateName (routes: RouteRecordNormalized[], name: string): boole
 function hasDuplicatePath (routes: RouteRecordNormalized[], path: string): boolean {
   return routes.some(r => r.path === path)
 }
+
 export default defineComponent({
   name: 'AddRoute',
   props: {
@@ -105,7 +107,9 @@ export default defineComponent({
               name: this.route.displayName,
               path: this.route.path.replace(/\//g, '')
             }
-            const children = [...copyOfMomRoute.children, newChild]
+            const children = copyOfMomRoute.children.length > 0
+              ? [...copyOfMomRoute.children, newChild]
+              : [newChild]
 
             this.router.removeRoute(copyOfMomRoute.name)
             copyOfMomRoute.children = children
