@@ -1,6 +1,5 @@
-import { ActionConfig } from '../shared/types'
+import { ActionConfig, IndexOptionsHippieNav } from '../shared/types'
 import { Document } from 'flexsearch'
-import { IndexOptionsHippieNav } from '../HippieNav.vue'
 import { RouteRecordNormalized } from 'vue-router'
 
 export interface IndexFields {
