@@ -17,7 +17,7 @@
             <li>displayName: {{ route.name }}</li>
             <li>Path:{{ route.path }}</li>
             <li v-if="route.meta?.aliases">
-              Aliases: {{ route.meta?.aliases }}
+              Aliases: {{ route.meta.aliases }}
             </li>
           </ul>
         </li>

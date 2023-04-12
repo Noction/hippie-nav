@@ -7,8 +7,8 @@
     <search-pan
       :model-value="searchInput"
       @close="showModal = false"
-      @next="next"
-      @previous="previous"
+      @next="move('next')"
+      @previous="move('previous')"
       @goto="goto"
       @update-model-value="newValue => searchInput = newValue"
     />
@@ -40,11 +40,9 @@
 </template>
 
 <script lang="ts">
-import { ActionConfig } from './types'
-import { Document } from 'flexsearch'
+import { ActionConfig } from './shared/types'
 import NavButtons from './components/NavButtons.vue'
 import RecentResults from './components/RecentResults.vue'
-import { RouteRecordNormalized } from 'vue-router'
 import SearchModal from './components/SearchModal.vue'
 import SearchPan from './components/SearchPan.vue'
 import SearchResult from './components/SearchResult.vue'
@@ -52,8 +50,17 @@ import { excludedPaths } from './index'
 import { filterExcludedPaths } from './util/filterExcludedPaths'
 import { onKeyboardShortcut } from './util/keyboard'
 import { useFlexSearch } from './util/useFlexSearch.js'
+import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
+import { IndexFields, indexAdd, indexSetup } from './util/indexSetup'
 import { PropType, defineComponent, inject } from 'vue'
-import { indexAdd, indexSetup } from './util/indexSetup'
+import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
+
+export interface IndexOptionsHippieNav {
+  charset: 'latin:extra',
+  document: IndexFields,
+  preset: 'match',
+  tokenize: 'forward'
+}
 
 export interface ResultItem {
   type: 'route' | 'action',
@@ -84,8 +91,8 @@ export default defineComponent({
     return {
       current: 0,
       excludedPaths: inject(excludedPaths) as string[],
-      indexActions: {} as Document<any>,
-      indexRoutes: {} as Document<any>,
+      indexActions: {} as Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>,
+      indexRoutes: {} as Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>,
       recentResults: [] as ResultItem[],
       results: [] as ResultItem[],
       resultsActions: [] as ActionConfig[],
@@ -145,31 +152,34 @@ export default defineComponent({
       indexAdd(this.indexRoutes, this.validConfig, 'route')
     },
     goto () {
-      if (this.results[this.current].type === 'route') {
-        const route = this.results[this.current].data as RouteRecordNormalized
+      const result = this.results[this.current]
+
+      if (result.type === 'route') {
+        const route = result.data as RouteRecordRaw
 
         this.$router.push(route.path)
-      } else if (this.results[this.current].type === 'action') {
-        const actionItem = this.results[this.current].data as ActionConfig
+      } else if (result.type === 'action') {
+        const actionItem = result.data as ActionConfig
 
         actionItem.action()
       }
-      this.recentResults.push(this.results[this.current])
-      this.recentResults = this.recentResults.slice(-3)
+
+      this.recentResults.push(result)
+      if (this.recentResults.length > 3) {
+        this.recentResults.shift()
+      }
       this.showModal = false
     },
-    next () {
-      if (this.results.length - 1 === this.current) return
-      this.current++
+    move (direction: 'next' | 'previous') {
+      if (direction === 'next' && this.results.length - 1 > this.current) {
+        this.current++
+      } else if (direction === 'previous' && this.current > 0) {
+        this.current--
+      }
     },
     onMouseOver (e: ResultItem) {
       this.current = this.results?.findIndex(r => r.data.name === e.data.name)
-    },
-    previous () {
-      if (this.current === 0) return
-      this.current--
     }
-
   }
 })
 

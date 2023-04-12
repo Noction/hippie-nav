@@ -25,7 +25,3 @@ export default {
   name: 'NavButtons'
 }
 </script>
-
-<style scoped>
-
-</style>

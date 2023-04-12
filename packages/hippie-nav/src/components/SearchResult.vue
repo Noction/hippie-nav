@@ -10,8 +10,8 @@
       <search-result-item
         :colored="index === current"
         :result="result"
-        @mouse-over="$emit('mouse-over', result)"
-        @close-modal="$emit('close-modal')"
+        @mouse-over="$emit('mouseOver', result)"
+        @close-modal="$emit('closeModal')"
       >
         <template #routeItemRoute="route">
           <slot name="resultItemRoute" v-bind="route" />
@@ -22,14 +22,13 @@
       </search-result-item>
     </div>
   </div>
-  <div v-else-if="results.length === 0 && input !== ''">
+  <div v-else-if="results?.length === 0 && input !== ''">
     Nothing have found
   </div>
 </template>
 
 <script lang="ts">
 import { ResultItem } from '../HippieNav.vue'
-import { RouteRecordNormalized } from 'vue-router'
 import SearchResultItem from './SearchResultItem.vue'
 import { PropType, defineComponent } from 'vue'
 
@@ -51,12 +50,6 @@ export default defineComponent({
       default: [] as ResultItem[]
     }
   },
-  emits: ['close-modal', 'mouse-over']
+  emits: ['closeModal', 'mouseOver']
 })
 </script>
-
-<style>
-  .color__red {
-    color: rebeccapurple;
-  }
-</style>

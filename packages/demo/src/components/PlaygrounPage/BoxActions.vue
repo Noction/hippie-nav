@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { ActionConfig } from 'hippie-nav/src/types'
+import { ActionConfig } from 'hippie-nav/src/shared/types'
 import {  PropType, defineComponent } from 'vue'
 
 export default defineComponent({
