@@ -9,7 +9,9 @@ interface AppOptions {
   excludedPaths: string[]
 }
 export const excludedPaths = Symbol()
-export function install (app: App, options: AppOptions) {
+export function install (app: App, options: AppOptions = {
+  excludedPaths: []
+}) {
   app.component('HippieNav', PrivateHippieNav)
 
   app.provide(excludedPaths, options.excludedPaths)

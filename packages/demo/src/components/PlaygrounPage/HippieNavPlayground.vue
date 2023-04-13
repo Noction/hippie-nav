@@ -4,21 +4,21 @@
       :routes="routes"
       :actions="actions"
     >
-      <template #resultItemRoute="route">
-        <h3 class="text search--result__item">
-          {{ route.data.name }}
-        </h3>
-      </template>
-      <template #resultItemAction="action">
-        <h3 class="text search--result__item">
-          {{ action.data.name }}
-        </h3>
-      </template>
-      <template #recentResultItem="result">
-        <h3 class="text search--result__item">
-          {{ result.data.name }}
-        </h3>
-      </template>
+      <!--      <template #resultItemRoute="route"> -->
+      <!--        <h3 class="text search&#45;&#45;result__item"> -->
+      <!--          {{ route.data.name }} -->
+      <!--        </h3> -->
+      <!--      </template> -->
+      <!--      <template #resultItemAction="action"> -->
+      <!--        <h3 class="text search&#45;&#45;result__item"> -->
+      <!--          {{ action.data.name }} -->
+      <!--        </h3> -->
+      <!--      </template> -->
+      <!--      <template #recentResultItem="result"> -->
+      <!--        <h3 class="text search&#45;&#45;result__item"> -->
+      <!--          {{ result.data.name }} -->
+      <!--        </h3> -->
+      <!--      </template> -->
     </hippie-nav>
     <router-view />
   </div>
@@ -26,7 +26,6 @@
 
 <script lang="ts">
 
-import '../../../../hippie-nav/dist/style.css'
 import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'HippieNavPlayground',

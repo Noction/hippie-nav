@@ -37,6 +37,7 @@
 </template>
 
 <script lang="ts">
+import 'hippie-nav/dist/style.css'
 import AddRoute from '../components/PlaygrounPage/HippieNavPlayground.vue'
 import App from '../App.vue'
 import BoxActions from '../components/PlaygrounPage/BoxActions.vue'
