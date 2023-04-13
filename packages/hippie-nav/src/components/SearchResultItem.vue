@@ -5,7 +5,9 @@
     @click="goto(result.data.path)"
     @mouseover="$emit('mouseOver', result)"
   >
-    <slot name="routeItemRoute" v-bind="result" />
+    <slot name="routeItemRoute" v-bind="result">
+      <h3 v-text="result.data.name" />
+    </slot>
   </div>
   <div
     v-if="result.data.action"
@@ -13,7 +15,9 @@
     @click="result.data.action"
     @mouseover="$emit('mouseOver', result)"
   >
-    <slot name="resultItemAction" v-bind="result" />
+    <slot name="resultItemAction" v-bind="result">
+      <h3 v-text="result.data.name" />
+    </slot>
   </div>
 </template>
 

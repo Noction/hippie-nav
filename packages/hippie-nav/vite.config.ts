@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import vue from '@vitejs/plugin-vue'
-import commonjs from 'vite-plugin-commonjs'
 
 export default defineConfig({
   build: {
@@ -11,9 +10,9 @@ export default defineConfig({
       name: 'HippieNav'
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', 'vue-router'],
       output: {
-        globals: { vue: 'Vue' }
+        globals: { vue: 'Vue', 'vue-router': 'VueRouter' }
       }
     }
   },
@@ -21,7 +20,5 @@ export default defineConfig({
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     VERSION: JSON.stringify(require('./package.json').version)
   },
-  plugins: [vue(), commonjs({
-
-  })]
+  plugins: [vue()]
 })
