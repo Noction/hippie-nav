@@ -5,7 +5,7 @@
     </h2>
     <div
       v-for="(result, index) in results"
-      :key="result.type + result.data.name"
+      :key="uniqueKey(result.data.name)"
     >
       <search-result-item
         :colored="index === current"
@@ -28,8 +28,9 @@
 </template>
 
 <script lang="ts">
-import { ResultItem } from '../HippieNav.vue'
+import { ResultItem } from '../types'
 import SearchResultItem from './SearchResultItem.vue'
+import { uniqueKey } from '../util/uniqueKey'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
@@ -50,6 +51,7 @@ export default defineComponent({
       default: [] as ResultItem[]
     }
   },
-  emits: ['closeModal', 'mouseOver']
+  emits: ['closeModal', 'mouseOver'],
+  methods: { uniqueKey }
 })
 </script>

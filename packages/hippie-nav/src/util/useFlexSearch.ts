@@ -1,4 +1,4 @@
-import { ActionConfig } from '../shared/types'
+import { ActionConfig } from '../types'
 import { IndexType } from './indexSetup'
 import { RouteRecordNormalized } from 'vue-router'
 

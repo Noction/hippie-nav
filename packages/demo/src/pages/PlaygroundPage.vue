@@ -39,15 +39,14 @@
 <script lang="ts">
 import 'hippie-nav/dist/style.css'
 import AddRoute from '../components/PlaygrounPage/HippieNavPlayground.vue'
-import App from '../App.vue'
 import BoxActions from '../components/PlaygrounPage/BoxActions.vue'
 import BoxRouteConfig from '../components/PlaygrounPage/BoxRouteConfig.vue'
 import BoxRouteItems from '../components/PlaygrounPage/BoxRouteItems.vue'
 import BoxRoutes from '../components/PlaygrounPage/BoxRoutes/BoxRoutes.vue'
 import HippieNavPlayground from '../components/PlaygrounPage/HippieNavPlayground.vue'
 import hippieNav from 'hippie-nav'
+import { App, createApp, defineComponent } from 'vue'
 import { RouteRecordNormalized, createMemoryHistory, createRouter } from 'vue-router'
-import {  createApp, defineComponent } from 'vue'
 
 const actions = [
   {
@@ -129,7 +128,7 @@ export default defineComponent({
       actions,
       excludedPaths: ['/test', '/test1'],
       momRoute: {} as RouteRecordNormalized,
-      playground: App,
+      playground: {} as App<Element>,
       router,
       routes: routes as unknown as RouteRecordNormalized[],
       showAddRoute: false
@@ -155,7 +154,7 @@ export default defineComponent({
       this.initPlay()
     },
     initPlay () {
-      this.playground = createApp(HippieNavPlayground)
+      this.playground = createApp(HippieNavPlayground) as unknown as typeof this.playground
 
       this.playground.use(router)
       this.playground.use(hippieNav, {
