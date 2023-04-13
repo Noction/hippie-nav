@@ -8,7 +8,7 @@
     </div>
     <ul
       v-for="action in actions"
-      :key="action.aliases"
+      :key="action.name"
       class="box-content"
     >
       <li>
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { ActionConfig } from 'hippie-nav/src/shared/types'
+import { ActionConfig } from 'hippie-nav/src/types'
 import {  PropType, defineComponent } from 'vue'
 
 export default defineComponent({

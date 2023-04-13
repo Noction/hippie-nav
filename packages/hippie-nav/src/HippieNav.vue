@@ -40,7 +40,6 @@
 </template>
 
 <script lang="ts">
-import { ActionConfig, IndexOptionsHippieNav, ResultItem } from './shared/types'
 import NavButtons from './components/NavButtons.vue'
 import RecentResults from './components/RecentResults.vue'
 import SearchModal from './components/SearchModal.vue'
@@ -50,10 +49,11 @@ import { excludedPaths } from './index'
 import { filterExcludedPaths } from './util/filterExcludedPaths'
 import { onKeyboardShortcut } from './util/keyboard'
 import { useFlexSearch } from './util/useFlexSearch.js'
+import { ActionConfig, IndexOptionsHippieNav, ResultItem } from './types'
 import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
-import { indexAdd, indexSetup } from './util/indexSetup'
 import { PropType, defineComponent, inject } from 'vue'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
+import { indexAdd, indexSetup } from './util/indexSetup'
 
 export default defineComponent({
   name: 'HippieNav',
