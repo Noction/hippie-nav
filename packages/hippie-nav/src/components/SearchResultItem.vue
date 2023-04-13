@@ -1,8 +1,8 @@
 <template>
   <div
-    v-if="result.data.path"
+    v-if="route"
     :class="{ selected: colored }"
-    @click="goto(result.data.path)"
+    @click="goto(route.path)"
     @mouseover="$emit('mouseOver', result)"
   >
     <slot name="routeItemRoute" v-bind="result">
@@ -10,9 +10,9 @@
     </slot>
   </div>
   <div
-    v-if="result.data.action"
+    v-if="_action"
     :class="{ selected: colored }"
-    @click="result.data.action"
+    @click="_action.action"
     @mouseover="$emit('mouseOver', result)"
   >
     <slot name="resultItemAction" v-bind="result">
@@ -22,7 +22,8 @@
 </template>
 
 <script lang="ts">
-import { ResultItem } from '../HippieNav.vue'
+import { RouteRecordNormalized } from 'vue-router'
+import { ActionConfig, ResultItem } from '../types'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
@@ -38,6 +39,18 @@ export default defineComponent({
     }
   },
   emits: ['closeModal', 'mouseOver'],
+  computed: {
+    _action (): ActionConfig {
+      if (this.result.type === 'action') {
+        return  this.result.data as ActionConfig
+      } return  undefined
+    },
+    route (): RouteRecordNormalized {
+      if (this.result.type === 'route') {
+        return this.result.data as RouteRecordNormalized
+      } else return undefined
+    }
+  },
   methods: {
     goto (path: string) {
       this.$router.push(path)

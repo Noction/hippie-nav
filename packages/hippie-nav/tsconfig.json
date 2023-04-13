@@ -12,11 +12,13 @@
     "skipLibCheck": true,
     "allowJs": true
   },
+  "include": [
+    "src"
+  ],
   "exclude": [
     "node_modules",
-    "dist",
-    "**/*.js"
+    "dist/**/*",
+    "src/**/*.spec.ts"
   ],
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

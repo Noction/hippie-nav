@@ -14,13 +14,15 @@
       :key="route.path"
       class="box-content"
     >
-      <box-routes-item
-        :route="route"
-        :collapsed="showChildPath === route.path"
-        :has-children="route.children?.length > 0"
-        @set-show-child-path="setShowPath($event, 'child')"
-        @add-child-route="addChildRoute"
-      />
+      <div v-if="route.children">
+        <box-routes-item
+          :route="route"
+          :collapsed="showChildPath === route.path"
+          :has-children="route.children.length > 0"
+          @set-show-child-path="setShowPath($event, 'child')"
+          @add-child-route="addChildRoute"
+        />
+      </div>
       <div v-if="showChildPath === route.path">
         <ul
           v-for="childRoute in route.children"
@@ -29,7 +31,7 @@
           <li class="box-list">
             <h5>{{ childRoute.name }}</h5>
             <hippie-button
-              v-if="childRoute.children?.length > 0"
+              v-if="childRoute.hasOwnProperty('children')"
               :collapsed="showChildOfChildPath === childRoute.path"
               @action="setShowPath(childRoute.path, 'childOfChild')"
             />

@@ -11,8 +11,6 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AddRoute: typeof import('./src/components/PlaygrounPage/AddRoute.vue')['default']
     BoxActions: typeof import('./src/components/PlaygrounPage/BoxActions.vue')['default']
-    BoxConfig: typeof import('./src/components/PlaygrounPage/BoxRouteConfig.vue')['default']
-    BoxItems: typeof import('./src/components/PlaygrounPage/BoxRouteConfig.vue')['default']
     BoxRouteConfig: typeof import('./src/components/PlaygrounPage/BoxRouteConfig.vue')['default']
     BoxRouteItems: typeof import('./src/components/PlaygrounPage/BoxRouteItems.vue')['default']
     BoxRoutes: typeof import('./src/components/PlaygrounPage/BoxRoutes/BoxRoutes.vue')['default']

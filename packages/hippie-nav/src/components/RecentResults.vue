@@ -3,7 +3,10 @@
     <h3 class="text">
       Recent results
     </h3>
-    <div v-for="(result) in recentResults" :key="result.data.name + Math.random()">
+    <div
+      v-for="(result) in recentResults"
+      :key="uniqueKey(result.data.name)"
+    >
       <slot name="recentResultItem" v-bind="result">
         <h3 class="text search--result__item">
           {{ result.data.name }}
@@ -14,7 +17,8 @@
 </template>
 
 <script lang="ts">
-import { ResultItem } from '../HippieNav.vue'
+import { ResultItem } from '../types'
+import { uniqueKey } from '../util/uniqueKey'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
@@ -24,6 +28,7 @@ export default defineComponent({
       type: Array as PropType<ResultItem[]>,
       required: true
     }
-  }
+  },
+  methods: { uniqueKey }
 })
 </script>

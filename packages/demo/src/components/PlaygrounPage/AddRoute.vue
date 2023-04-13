@@ -3,9 +3,9 @@
     <div class="title">
       <span class="name">
         {{
-          momRoute.name
-            ? `You are creating a child route for ${momRoute.name}`
-            : 'You are creating a route'
+          String( momRoute.name
+            ? `You are creating a child route for ${String(momRoute.name)}`
+            : 'You are creating a route')
         }}
         <button @click="addRoute">
           +

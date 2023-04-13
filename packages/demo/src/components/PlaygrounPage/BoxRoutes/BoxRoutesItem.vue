@@ -25,8 +25,8 @@
 
 <script lang="ts">
 import HippieBtnCollapse from '../../common/HippieBtnCollapse.vue'
-import { PropType, defineComponent } from 'vue'
 import {  RouteRecordRaw } from 'vue-router'
+import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'BoxRoutesItem',
