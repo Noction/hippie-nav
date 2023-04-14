@@ -1,26 +1,24 @@
 <template>
-  <li class="box-routes-item">
-    <div class="flex">
-      <h4>{{ route.name }}</h4>
-      <div class="flex box-routes-btns">
-        <hippie-btn-collapse
-          v-if="hasChildren"
-          :collapsed="collapsed"
-          @click="setShowChildPath(route.path)"
-        />
-        <button
-          v-if="route.path !== '/'"
-          class="button-add"
-          @click="addChildRoute(route)"
-        >
-          add
-          +
-        </button>
-      </div>
+  <div class="flex">
+    <h4>{{ route.name }}</h4>
+    <div class="flex box-routes-btns">
+      <hippie-btn-collapse
+        v-if="hasChildren"
+        :collapsed="collapsed"
+        @click="setShowChildPath(route.path)"
+      />
+      <button
+        v-if="route.path !== '/'"
+        class="button-add"
+        @click="addChildRoute(route)"
+      >
+        add
+        +
+      </button>
     </div>
-    <slot name="slote" />
-    <h5>{{ route.path }}</h5>
-  </li>
+  </div>
+  <slot name="slote" />
+  <h5>{{ route.path }}</h5>
 </template>
 
 <script lang="ts">
@@ -36,11 +34,13 @@ export default defineComponent({
   props: {
     collapsed: {
       type: Boolean,
-      required: true
+      required: false,
+      default: false
     },
     hasChildren: {
       type: Boolean,
-      required: true
+      required: false,
+      default: false
     },
     route: {
       type: Object as PropType<RouteRecordRaw>,

@@ -9,56 +9,48 @@
     <button @click="$emit('addRoute')">
       add route
     </button>
-    <ul
-      v-for="route in routesWithoutChild"
-      :key="route.path"
-      class="box-content"
-    >
-      <div v-if="route.children">
+    <ul>
+      <li
+        v-for="route in routesWithoutChild"
+        :key="route.path"
+      >
         <box-routes-item
           :route="route"
           :collapsed="showChildPath === route.path"
-          :has-children="route.children.length > 0"
+          :has-children="route.hasOwnProperty('children')"
           @set-show-child-path="setShowPath($event, 'child')"
           @add-child-route="addChildRoute"
         />
-      </div>
-      <div v-if="showChildPath === route.path">
-        <ul
-          v-for="childRoute in route.children"
-          :key="childRoute.path"
-        >
-          <li class="box-list">
-            <h5>{{ childRoute.name }}</h5>
-            <hippie-button
-              v-if="childRoute.hasOwnProperty('children')"
+        <ul v-if="showChildPath === route.path && route.children">
+          <li v-for="childRoute in route.children" :key="childRoute.path">
+            <box-routes-item
+              :route="childRoute"
+              :has-children="childRoute.hasOwnProperty('children')"
               :collapsed="showChildOfChildPath === childRoute.path"
-              @action="setShowPath(childRoute.path, 'childOfChild')"
+              @set-show-child-path="setShowPath($event, 'childOfChild')"
             />
-            <button @click="$emit('addChildRoute', childRoute)">
-              add child
-            </button>
-          </li>
-          <div v-if="showChildOfChildPath === childRoute.path">
-            <ul v-for="childOfChild in childRoute.children" :key="childOfChild.path">
-              <li>{{ childOfChild.name }}</li>
+            <ul v-if="showChildOfChildPath === childRoute.path && childRoute.children">
+              <li v-for="childOfChildRoute in childRoute.children" :key="childOfChildRoute.name">
+                <box-routes-item
+                  :route="childOfChildRoute"
+                />
+              </li>
             </ul>
-          </div>
+          </li>
         </ul>
-      </div>
+      </li>
     </ul>
   </div>
 </template>
 
 <script lang="ts">
 import BoxRoutesItem from './BoxRoutesItem.vue'
-import HippieButton from '../../common/HippieBtnCollapse.vue'
 import { routeNormalize } from '../../../util/routeNormalize'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 export default defineComponent({
   name: 'BoxRoutes',
-  components: { BoxRoutesItem, HippieButton },
+  components: { BoxRoutesItem },
   props: {
     routes: {
       type: Array as PropType<RouteRecordRaw[]>,
