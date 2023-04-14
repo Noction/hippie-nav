@@ -1,18 +1,18 @@
 <template>
   <div class="routes">
+    <button @click="addRoute">
+      add
+    </button>
+    <button @click="$emit('close')">
+      back
+    </button>
     <div class="title">
       <span class="name">
         {{
-          String( momRoute.name
+          String(momRoute.name
             ? `You are creating a child route for ${String(momRoute.name)}`
             : 'You are creating a route')
         }}
-        <button @click="addRoute">
-          +
-        </button>
-        <button @click="$emit('close')">
-          b
-        </button>
       </span>
     </div>
     <div>
@@ -78,17 +78,18 @@ export default defineComponent({
     }
   },
   methods: {
-    addRoute () {
-      const routes = this.router.getRoutes()
+    addRoute (): void {
+      const routes: RouteRecordNormalized[] = this.router.getRoutes()
       const copyOfMomRoute = JSON.parse(JSON.stringify(this.momRoute))
-      const fullPathOfMomRoute = copyOfMomRoute.name && getFullPath(copyOfMomRoute.name, routes)
-      const isChildOfChild = fullPathOfMomRoute ? slashCounter(fullPathOfMomRoute) === 2 : false
+      const fullPathOfMomRoute: string | undefined = copyOfMomRoute.name && getFullPath(copyOfMomRoute.name, routes)
+      const isChildOfChild: boolean = fullPathOfMomRoute ? slashCounter(fullPathOfMomRoute) === 2 : false
       const component = { template: `<div>${this.route.displayName}</div>` }
-      const aliases = this.route.aliases.split(',')
-      const path = copyOfMomRoute.path ? `${copyOfMomRoute.path}${this.route.path}` : this.route.path
-      const areEmptyFields = this.route.displayName.trim() === '' || this.route.path.trim() === ''
+      const aliases: string[] = this.route.aliases.split(',')
+      const path: string = copyOfMomRoute.path ? `${copyOfMomRoute.path}${this.route.path}` : this.route.path
+      const areEmptyFields: boolean = this.route.displayName.trim() === '' || this.route.path.trim() === ''
+      const areDuplicates = hasDuplicateName(routes, this.route.displayName) || hasDuplicatePath(routes, path)
 
-      if (hasDuplicateName(routes, this.route.displayName) || hasDuplicatePath(routes, path) || areEmptyFields) {
+      if (areDuplicates || areEmptyFields) {
         return
       }
       if (!isChildOfChild) {
@@ -99,7 +100,7 @@ export default defineComponent({
             name: this.route.displayName,
             path: this.route.path
           })
-        } else {
+        } else if (copyOfMomRoute.name) {
           if (copyOfMomRoute.name) {
             const newChild = {
               component,
@@ -116,7 +117,7 @@ export default defineComponent({
             this.router.addRoute(copyOfMomRoute)
           }
         }
-      } else {
+      } else if (isChildOfChild) {
         if (fullPathOfMomRoute) {
           const splittedRoute = fullPathOfMomRoute.split('/')
           const parent = routes.find(r => r.path === `/${splittedRoute[1]}`) as RouteRecordNormalized
@@ -168,7 +169,7 @@ input {
 
 button {
     margin-left: 20px;
-    width: 20px;
+    width: fit-content;
 }
 
 </style>
