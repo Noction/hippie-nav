@@ -1,10 +1,12 @@
 <template>
   <div class="flex">
-    <h4>{{ route.name }}</h4>
+    <h4 :class="boxType">
+      {{ route.name }}
+    </h4>
     <div class="flex box-routes-btns">
       <hippie-btn-collapse
         v-if="hasChildren"
-        :collapsed="collapsed"
+        :collapsed="Boolean(collapsed)"
         @click="setShowChildPath(route.path)"
       />
       <button
@@ -17,8 +19,9 @@
       </button>
     </div>
   </div>
-  <slot name="slote" />
-  <h5>{{ route.path }}</h5>
+  <h5 :class="boxType + 'Path'">
+    {{ boxType !== 'parent' ? `/${route.path}` : route.path }}
+  </h5>
 </template>
 
 <script lang="ts">
@@ -32,6 +35,10 @@ export default defineComponent({
     HippieBtnCollapse
   },
   props: {
+    boxType: {
+      type: String as PropType<'parent' | 'child' | 'grandChild'>,
+      required: true
+    },
     collapsed: {
       type: Boolean,
       required: false,
@@ -60,11 +67,35 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.box-routes-item {
-  margin-top: 2px;
-}
-
 .box-routes-btns {
   margin-left: auto;
 }
+
+.parent {
+    font-size: 16px;
+}
+
+.parentPath {
+    font-size: 14px;
+    font-weight: lighter;
+}
+
+.child {
+    font-size: 14px;
+}
+
+.childPath {
+    font-size: 12px;
+    font-weight: lighter;
+}
+
+.grandChild {
+    font-size: 12px;
+}
+
+.grandChildPath {
+    font-size: 10px;
+    font-weight: lighter;
+}
+
 </style>

@@ -67,12 +67,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .box-list {
+.box-list {
     display: flex;
     flex-direction: column;
-  }
+}
 
-  .box-list-main {
+.box-list-main {
     display: flex;
-  }
+    justify-content: space-between;
+    margin-top: 2px;
+}
 </style>

@@ -15,6 +15,7 @@
         :key="route.path"
       >
         <box-routes-item
+          box-type="parent"
           :route="route"
           :collapsed="showChildPath === route.path"
           :has-children="route.hasOwnProperty('children')"
@@ -24,6 +25,7 @@
         <ul v-if="showChildPath === route.path && route.children">
           <li v-for="childRoute in route.children" :key="childRoute.path">
             <box-routes-item
+              box-type="child"
               :route="childRoute"
               :has-children="childRoute.hasOwnProperty('children')"
               :collapsed="showChildOfChildPath === childRoute.path"
@@ -32,6 +34,7 @@
             <ul v-if="showChildOfChildPath === childRoute.path && childRoute.children">
               <li v-for="childOfChildRoute in childRoute.children" :key="childOfChildRoute.name">
                 <box-routes-item
+                  box-type="grandChild"
                   :route="childOfChildRoute"
                 />
               </li>
@@ -48,6 +51,7 @@ import BoxRoutesItem from './BoxRoutesItem.vue'
 import { routeNormalize } from '../../../util/routeNormalize'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
+
 export default defineComponent({
   name: 'BoxRoutes',
   components: { BoxRoutesItem },

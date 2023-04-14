@@ -9,18 +9,22 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AboutPage: typeof import('./src/components/AboutPage/AboutPage.vue')['default']
     AddRoute: typeof import('./src/components/PlaygrounPage/AddRoute.vue')['default']
     BoxActions: typeof import('./src/components/PlaygrounPage/BoxActions.vue')['default']
     BoxRouteConfig: typeof import('./src/components/PlaygrounPage/BoxRouteConfig.vue')['default']
     BoxRouteItems: typeof import('./src/components/PlaygrounPage/BoxRouteItems.vue')['default']
     BoxRoutes: typeof import('./src/components/PlaygrounPage/BoxRoutes/BoxRoutes.vue')['default']
     BoxRoutesItem: typeof import('./src/components/PlaygrounPage/BoxRoutes/BoxRoutesItem.vue')['default']
+    ExpandTransition: typeof import('./src/components/common/ExpandTransition.vue')['default']
     HippieBtnCollapse: typeof import('./src/components/common/HippieBtnCollapse.vue')['default']
     HippieNavPlayground: typeof import('./src/components/PlaygrounPage/HippieNavPlayground.vue')['default']
+    HomePage: typeof import('./src/components/HomePage/HomePage.vue')['default']
     ICarbonBranch: typeof import('~icons/carbon/branch')['default']
     ICarbonCube: typeof import('~icons/carbon/cube')['default']
     ICarbonFunctionMath: typeof import('~icons/carbon/function-math')['default']
     ICarbonSettings: typeof import('~icons/carbon/settings')['default']
+    PlaygroundPage: typeof import('./src/components/PlaygrounPage/PlaygroundPage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
