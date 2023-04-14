@@ -6,7 +6,7 @@
     @mouseover="$emit('mouseOver', result)"
   >
     <slot name="routeItemRoute" v-bind="result">
-      <h3 v-text="result.data.name" />
+      <p v-highlight="{ keyword: searchInput }" v-html="result.data.name" />
     </slot>
   </div>
   <div
@@ -22,12 +22,16 @@
 </template>
 
 <script lang="ts">
+import HighlightDirective from '../directives/textHighlight'
 import { RouteRecordNormalized } from 'vue-router'
 import { ActionConfig, ResultItem } from '../types'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SearchResultItem',
+  directives: {
+    highlight: HighlightDirective
+  },
   props: {
     colored: {
       type: Boolean,
@@ -36,14 +40,19 @@ export default defineComponent({
     result: {
       type: Object as PropType<ResultItem>,
       required: true
+    },
+    searchInput: {
+      type: String,
+      required: true
     }
   },
   emits: ['closeModal', 'mouseOver'],
   computed: {
     _action (): ActionConfig {
       if (this.result.type === 'action') {
-        return  this.result.data as ActionConfig
-      } return  undefined
+        return this.result.data as ActionConfig
+      }
+      return undefined
     },
     route (): RouteRecordNormalized {
       if (this.result.type === 'route') {
@@ -61,7 +70,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .selected {
+.selected {
     background-color: rgb(110 107 107 / 65%);
-  }
+}
 </style>

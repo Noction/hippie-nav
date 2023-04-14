@@ -1,5 +1,5 @@
 <template>
-  <div class="flex buttons">
+  <div class="buttons">
     <div class="buttons--item">
       <img src="../assets/page_up.svg" alt="">
       <img
@@ -25,3 +25,19 @@ export default {
   name: 'NavButtons'
 }
 </script>
+
+<style>
+.buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons--item {
+    display: flex;
+    align-items: center;
+}
+img {
+    margin-right: 5px;
+}
+</style>
