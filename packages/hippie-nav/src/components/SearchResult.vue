@@ -8,6 +8,7 @@
       :key="uniqueKey(result.data.name)"
     >
       <search-result-item
+        :search-input="searchInput"
         :colored="index === current"
         :result="result"
         @mouse-over="$emit('mouseOver', result)"
@@ -49,6 +50,10 @@ export default defineComponent({
       type: Array as PropType<ResultItem[]>,
       required: false,
       default: [] as ResultItem[]
+    },
+    searchInput: {
+      type: String,
+      required: true
     }
   },
   emits: ['closeModal', 'mouseOver'],

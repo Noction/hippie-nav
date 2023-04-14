@@ -20,26 +20,30 @@
         </template>
       </recent-results>
     </div>
-    <search-result
-      :results="results"
-      :current="current"
-      :input="searchInput"
-      @mouse-over="onMouseOver"
-      @close-modal="showModal = false"
-    >
-      <template #resultItemRoute="route">
-        <slot name="resultItemRoute" v-bind="route" />
-      </template>
-      <template #resultItemAction="action">
-        <slot name="resultItemAction" v-bind="action" />
-      </template>
-    </search-result>
+    <expand-transition>
+      <search-result
+        :search-input="searchInput"
+        :results="results"
+        :current="current"
+        :input="searchInput"
+        @mouse-over="onMouseOver"
+        @close-modal="showModal = false"
+      >
+        <template #resultItemRoute="route">
+          <slot name="resultItemRoute" v-bind="route" />
+        </template>
+        <template #resultItemAction="action">
+          <slot name="resultItemAction" v-bind="action" />
+        </template>
+      </search-result>
+    </expand-transition>
     <hr>
     <nav-buttons />
   </search-modal>
 </template>
 
 <script lang="ts">
+import ExpandTransition from './components/ExpandTransition.vue'
 import NavButtons from './components/NavButtons.vue'
 import RecentResults from './components/RecentResults.vue'
 import SearchModal from './components/SearchModal.vue'
@@ -58,6 +62,7 @@ import { indexAdd, indexSetup } from './util/indexSetup'
 export default defineComponent({
   name: 'HippieNav',
   components: {
+    ExpandTransition,
     NavButtons,
     RecentResults,
     SearchModal,
@@ -180,6 +185,9 @@ img {
 }
 
 hr {
-  margin: 2px;
+    margin: 2px;
+    height: 1px;
+    border: 3px;
+    box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);
 }
 </style>
