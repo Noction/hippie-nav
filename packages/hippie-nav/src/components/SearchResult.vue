@@ -1,11 +1,11 @@
 <template>
-  <div v-if="results.length > 0">
+  <div v-if="results.length !== 0">
     <h2 class="text">
       Results
     </h2>
     <div
       v-for="(result, index) in results"
-      :key="uniqueKey(result.data.name)"
+      :key="uniqueKey(index)"
     >
       <search-result-item
         :search-input="searchInput"

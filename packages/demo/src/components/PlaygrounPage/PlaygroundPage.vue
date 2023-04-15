@@ -114,6 +114,8 @@ const router = createRouter({
   routes
 })
 
+const regex = /^\/about\/(.+)/
+
 export default defineComponent({
   name: 'PlaygroundPage',
   components: {
@@ -126,7 +128,7 @@ export default defineComponent({
   data () {
     return {
       actions,
-      excludedPaths: ['/test', '/test1'],
+      excludedPaths: ['/test', '/test1', regex] as (RegExp| string)[],
       momRoute: {} as RouteRecordNormalized,
       playground: {} as App<Element>,
       router,
