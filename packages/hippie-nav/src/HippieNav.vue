@@ -103,24 +103,19 @@ export default defineComponent({
     }
   },
   watch: {
-    searchInput (value) {
+    searchInput (value: string) {
       this.results = []
       this.resultsRoutes = useFlexSearch(value, this.indexRoutes, this.validConfig, 'route')
       this.resultsActions = useFlexSearch(value, this.indexActions, this.actions, 'action')
       if (this.resultsRoutes?.length > 0) {
         this.resultsRoutes.forEach((r: RouteRecordNormalized) => {
-          this.results.push({
-            data: r,
-            type: 'route'
-          })
+          this.results.push({ data: r, type: 'route' })
         })
       }
+
       if (this.resultsActions?.length > 0) {
         this.resultsActions.forEach((r: ActionConfig) => {
-          this.results.push({
-            data: r,
-            type: 'action'
-          })
+          this.results.push({ data: r, type: 'action' })
         })
       }
       this.current = 0

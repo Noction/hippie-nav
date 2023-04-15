@@ -16,22 +16,18 @@
     @mouseover="$emit('mouseOver', result)"
   >
     <slot name="resultItemAction" v-bind="result">
-      <h3 v-text="result.data.name" />
+      <p v-highlight="{ keyword: searchInput }" v-html="result.data.name" />
     </slot>
   </div>
 </template>
 
 <script lang="ts">
-import HighlightDirective from '../directives/textHighlight'
 import { RouteRecordNormalized } from 'vue-router'
 import { ActionConfig, ResultItem } from '../types'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SearchResultItem',
-  directives: {
-    highlight: HighlightDirective
-  },
   props: {
     colored: {
       type: Boolean,
