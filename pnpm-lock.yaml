@@ -86,7 +86,6 @@ importers:
       typescript: ^4.9.3
       vite: ^4.2.0
       vue: ^3.2.47
-      vue-highlight-words: ^3.0.1
       vue-router: ^4.1.6
       vue-tsc: ^1.2.0
       vue-typegen: ^0.2.0
@@ -103,7 +102,6 @@ importers:
       typescript: 4.9.5
       vite: 4.2.1_sass@1.62.0
       vue: 3.2.47
-      vue-highlight-words: 3.0.1_vue@3.2.47
       vue-tsc: 1.2.0_typescript@4.9.5
       vue-typegen: 0.2.0_typescript@4.9.5
 
@@ -1555,10 +1553,6 @@ packages:
     hasBin: true
     dev: true
 
-  /highlight-words-core/1.2.2:
-    resolution: {integrity: sha512-BXUKIkUuh6cmmxzi5OIbUJxrG8OAk2MqoL1DtO3Wo9D2faJg2ph5ntyuQeLqaHJmzER6H5tllCDA9ZnNe9BVGg==}
-    dev: true
-
   /hosted-git-info/2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
     dev: true
@@ -2791,15 +2785,6 @@ packages:
       semver: 7.4.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /vue-highlight-words/3.0.1_vue@3.2.47:
-    resolution: {integrity: sha512-t6L0+KRaMzX5RVubWl6Sog+Aa+U0kHsbUlDIrln1VfajR2SEg+zQYfXov8UmX3MLNOfd6cv7MCM6LclqNlW4ww==}
-    peerDependencies:
-      vue: ^3.0.0
-    dependencies:
-      highlight-words-core: 1.2.2
-      vue: 3.2.47
     dev: true
 
   /vue-router/4.1.6_vue@3.2.47:
