@@ -7,7 +7,7 @@ export {
 }
 
 interface AppOptions {
-  excludedPaths: string[]
+  excludedPaths: (string | RegExp)[]
 }
 export const excludedPaths = Symbol()
 

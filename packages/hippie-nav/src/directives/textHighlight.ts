@@ -17,6 +17,7 @@ const unescapeHtml = safe => safe
   .replace(/&#039;/g, '\'')
 
 const escapeRegExp = function (str) {
+  // eslint-disable-next-line
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\<\>]/g, '\\$&')
 }
 
@@ -44,8 +45,10 @@ const highlightSearch = function (message, keyword) {
 
   if (testMath) {
     // return escapeHtml(message).replace(match, `<span ${styleString}>\$&</span>`)
+    // eslint-disable-next-line
     const replaced = message.replace(match, ':;{{:;\$&:;}}:;')
     const matchAgain = new RegExp(`:;{{:;(${escapeHtml(regexWord)}):;}}:;`, 'gi')
+    // eslint-disable-next-line
     const restoreReplaced = escapeHtml(replaced).replace(matchAgain, `<span class="highlighted" ${styleString}>\$1</span>`)
 
     return restoreReplaced

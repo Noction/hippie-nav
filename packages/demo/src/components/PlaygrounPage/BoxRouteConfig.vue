@@ -31,7 +31,7 @@ export default defineComponent({
   name: 'BoxRouteConfig',
   props: {
     excludedPaths: {
-      type: Array as PropType<string[]>,
+      type: Array as PropType<(string | RegExp)[]>,
       required: true
     }
   },
