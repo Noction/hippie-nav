@@ -1,14 +1,14 @@
 <template>
-  <div class="searchPanel">
+  <div class="search-panel">
     <img
-      class="searchPanelIcon"
+      class="search-panel-icon"
       src="../assets/glass.svg"
       alt=""
     >
     <input
       ref="input"
       :value="props.modelValue"
-      class="searchPanelInput"
+      class="search-panel-input"
       type="text"
       placeholder="Search"
       @input="emits('update-model-value', ($event.target as HTMLInputElement).value )"
@@ -35,19 +35,19 @@ onMounted(() => {
 </script>
 
 <style scoped>
-  .searchPanelIcon {
+  .search-panel-icon {
     width: 20px;
     height: 20px;
   }
 
-  .searchPanel {
+  .search-panel {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
   }
 
-  .searchPanelInput {
+  .search-panel-input {
     padding: 10px;
     margin-left: 20px;
     font-size: 30px;

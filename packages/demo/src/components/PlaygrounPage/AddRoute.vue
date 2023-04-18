@@ -161,15 +161,15 @@ export default defineComponent({
 
 <style scoped>
 
-input {
-    margin-top: 5px;
+  input {
     width: 100%;
     padding: 11px;
-}
+    margin-top: 5px;
+  }
 
-button {
-    margin-left: 20px;
+  button {
     width: fit-content;
-}
+    margin-left: 20px;
+  }
 
 </style>

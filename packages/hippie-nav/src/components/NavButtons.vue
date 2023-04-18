@@ -1,6 +1,6 @@
 <template>
   <div class="buttons">
-    <div class="buttons--item">
+    <div class="buttons-item">
       <img src="../assets/page_up.svg" alt="">
       <img
         class="margin-left"
@@ -9,11 +9,11 @@
       >
       <span class="margin-left">to navigate</span>
     </div>
-    <div class="buttons--item">
+    <div class="buttons-item">
       <img src="../assets/enter.svg" alt="">
       <span class="margin-left">to select</span>
     </div>
-    <div class="buttons--item">
+    <div class="buttons-item">
       <img src="../assets/escape.svg" alt="">
       <span class="margin-left">to cancel</span>
     </div>
@@ -27,17 +27,18 @@ export default {
 </script>
 
 <style>
-.buttons {
-    margin-top: 10px;
+  .buttons {
     display: flex;
     justify-content: space-between;
-}
+    margin-top: 10px;
+  }
 
-.buttons--item {
+  .buttons-item {
     display: flex;
     align-items: center;
-}
-img {
+  }
+
+  img {
     margin-right: 5px;
-}
+  }
 </style>

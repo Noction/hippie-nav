@@ -67,35 +67,35 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.box-routes-btns {
-  margin-left: auto;
-}
+  .box-routes-btns {
+    margin-left: auto;
+  }
 
-.parent {
+  .parent {
     font-size: 16px;
-}
+  }
 
-.parentPath {
+  .parentPath {
     font-size: 14px;
     font-weight: lighter;
-}
+  }
 
-.child {
+  .child {
     font-size: 14px;
-}
+  }
 
-.childPath {
+  .childPath {
     font-size: 12px;
     font-weight: lighter;
-}
+  }
 
-.grandChild {
+  .grandChild {
     font-size: 12px;
-}
+  }
 
-.grandChildPath {
+  .grandChildPath {
     font-size: 10px;
     font-weight: lighter;
-}
+  }
 
 </style>

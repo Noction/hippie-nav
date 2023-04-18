@@ -1,26 +1,28 @@
 <template>
   <div class="container">
+    <nav>
+      <ul class="flex">
+        <li class="home-page">
+          <RouterLink to="/">
+            Home page
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/about">
+            About page
+          </RouterLink>
+        </li>
+        <button @click="openModal">
+          Open Serchbar
+        </button>
+      </ul>
+    </nav>
     <hippie-nav
+      ref="hippieNav"
       :routes="routes"
       :actions="actions"
-    >
-      <!--      <template #resultItemRoute="route"> -->
-      <!--        <h3 class="text search&#45;&#45;result__item"> -->
-      <!--          {{ route.data.name }} -->
-      <!--        </h3> -->
-      <!--      </template> -->
-      <!--      <template #resultItemAction="action"> -->
-      <!--        <h3 class="text search&#45;&#45;result__item"> -->
-      <!--          {{ action.data.name }} -->
-      <!--        </h3> -->
-      <!--      </template> -->
-      <!--      <template #recentResultItem="result"> -->
-      <!--        <h3 class="text search&#45;&#45;result__item"> -->
-      <!--          {{ result.data.name }} -->
-      <!--        </h3> -->
-      <!--      </template> -->
-    </hippie-nav>
-    <router-view />
+    />
+    <router-view class="view" />
   </div>
 </template>
 
@@ -49,6 +51,41 @@ export default defineComponent({
       ],
       routes: this.$router.getRoutes()
     }
+  },
+  methods: {
+    openModal () {
+      this.$refs.hippieNav.openModal()
+    }
   }
 })
 </script>
+
+<style scoped>
+  .home-page {
+    margin-right: 20px;
+    margin-left: 25px;
+  }
+
+  nav {
+    padding: 10px;
+    background-color: hsl(215deg 61% 77% / 67%);
+    border-radius: 25px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:visited {
+    color: inherit;
+  }
+
+  .view {
+    padding: 20px;
+  }
+
+  button {
+    margin-left: 20px;
+  }
+</style>

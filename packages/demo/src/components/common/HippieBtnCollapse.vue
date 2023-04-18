@@ -25,22 +25,22 @@ export default defineComponent({
 </script>
 
 <style scoped>
-button {
-  margin-left: 5px;
-  background-color: transparent;
-  border-color: transparent;
-  cursor: pointer;
-}
-img {
-  width: 17px;
-  height: 17px;
-}
+  button {
+    margin-left: 5px;
+    cursor: pointer;
+    background-color: transparent;
+    border-color: transparent;
+  }
 
-.button__collapsed {
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  transform: rotate(90deg);
-}
+  img {
+    width: 17px;
+    height: 17px;
+  }
+
+  .button__collapsed {
+    transform: rotate(90deg);
+    transform: rotate(90deg);
+    transform: rotate(90deg);
+    transform: rotate(90deg);
+  }
 </style>
