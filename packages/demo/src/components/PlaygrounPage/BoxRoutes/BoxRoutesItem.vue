@@ -10,7 +10,7 @@
         @click="setShowChildPath(route.path)"
       />
       <button
-        v-if="route.path !== '/'"
+        v-if="route.path !== '/' && boxType !== 'grandChild'"
         class="button-add"
         @click="addChildRoute(route)"
       >
@@ -19,7 +19,7 @@
       </button>
     </div>
   </div>
-  <h5 :class="boxType + 'Path'">
+  <h5 :class="boxType + '-path'">
     {{ boxType !== 'parent' ? `/${route.path}` : route.path }}
   </h5>
 </template>
@@ -36,7 +36,7 @@ export default defineComponent({
   },
   props: {
     boxType: {
-      type: String as PropType<'parent' | 'child' | 'grandChild'>,
+      type: String as PropType<'parent' | 'child' | 'grand-child'>,
       required: true
     },
     collapsed: {
@@ -75,27 +75,27 @@ export default defineComponent({
     font-size: 16px;
   }
 
-  .parentPath {
+  .parent-path {
     font-size: 14px;
-    font-weight: lighter;
+    font-weight: 300;
   }
 
   .child {
     font-size: 14px;
   }
 
-  .childPath {
+  .child-path {
     font-size: 12px;
-    font-weight: lighter;
+    font-weight: 300;
   }
 
-  .grandChild {
+  .grand-child {
     font-size: 12px;
   }
 
-  .grandChildPath {
+  .grand-child-path {
     font-size: 10px;
-    font-weight: lighter;
+    font-weight: 300w;
   }
 
 </style>

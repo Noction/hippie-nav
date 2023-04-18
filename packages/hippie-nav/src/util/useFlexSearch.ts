@@ -5,7 +5,8 @@ import { RouteRecordNormalized } from 'vue-router'
 export const useFlexSearch = (
   query: string,
   providedIndex: any,
-  store: RouteRecordNormalized[] | ActionConfig[], type: IndexType
+  store: RouteRecordNormalized[] | ActionConfig[],
+  type: IndexType
 ) => {
 
   if (type === 'route') {
