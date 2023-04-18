@@ -66,7 +66,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.selected {
+  .selected {
     background-color: rgb(110 107 107 / 65%);
-}
+  }
 </style>

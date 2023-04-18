@@ -65,22 +65,23 @@ function leave (element: RendererElement) {
 </script>
 
 <style>
-.expand-enter-active,
-.expand-leave-active {
+  .expand-enter-active,
+  .expand-leave-active {
     overflow: hidden;
     transition: height .2s ease-in-out;
-}
-.expand-enter,
-.expand-leave-to {
+  }
+
+  .expand-enter,
+  .expand-leave-to {
     height: 0;
-}
+  }
 </style>
 
 <style scoped>
-* {
+  * {
     will-change: height;
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000px;
-}
+  }
 </style>
