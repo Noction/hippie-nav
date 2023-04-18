@@ -4,7 +4,7 @@
     class="modal"
     @click.stop="close"
   >
-    <div class="modalContent" @click.stop>
+    <div class="modal-content" @click.stop>
       <slot />
     </div>
   </div>
@@ -35,7 +35,7 @@ function close (): void {
     background: rgb(0 0 0 / 50%);
   }
 
-  .modalContent {
+  .modal-content {
     min-width: 300px;
     min-height: 50px;
     padding: 20px;

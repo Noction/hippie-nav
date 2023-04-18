@@ -1,14 +1,14 @@
 import { RouteRecordNormalized } from 'vue-router'
 
 export const filterExcludedPaths = (routes: RouteRecordNormalized[], excludedPaths: (string | RegExp)[]) => {
-  const regExps = [] as RegExp[]
-  const strings = [] as string[]
+  const regExps: RegExp[] = []
+  const strings: string[] = []
 
   for (const e of excludedPaths) {
-    if (e instanceof RegExp) {
-      regExps.push(e)
-    } else {
+    if (typeof e === 'string') {
       strings.push(e)
+    } else {
+      regExps.push(e)
     }
   }
 

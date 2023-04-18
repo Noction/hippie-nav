@@ -5,7 +5,7 @@
     </h3>
     <div
       v-for="(result) in recentResults"
-      :key="uniqueKey(result.data.name)"
+      :key="generateUniqueKey(result.data.name)"
     >
       <slot name="recentResultItem" v-bind="result">
         <h3 class="text search--result__item">
@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { ResultItem } from '../types'
-import { uniqueKey } from '../util/uniqueKey'
+import { generateUniqueKey } from '../util/generateUniqueKey'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
@@ -29,6 +29,6 @@ export default defineComponent({
       required: true
     }
   },
-  methods: { uniqueKey }
+  methods: { generateUniqueKey }
 })
 </script>

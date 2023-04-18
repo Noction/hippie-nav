@@ -5,7 +5,7 @@
     </h2>
     <div
       v-for="(result, index) in results"
-      :key="uniqueKey(index)"
+      :key="generateUniqueKey(index)"
     >
       <search-result-item
         :search-input="searchInput"
@@ -31,7 +31,7 @@
 <script lang="ts">
 import { ResultItem } from '../types'
 import SearchResultItem from './SearchResultItem.vue'
-import { uniqueKey } from '../util/uniqueKey'
+import { generateUniqueKey } from '../util/generateUniqueKey'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
@@ -57,6 +57,6 @@ export default defineComponent({
     }
   },
   emits: ['closeModal', 'mouseOver'],
-  methods: { uniqueKey }
+  methods: { generateUniqueKey }
 })
 </script>
