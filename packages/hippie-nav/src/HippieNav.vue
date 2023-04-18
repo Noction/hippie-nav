@@ -2,7 +2,7 @@
   <search-modal
     :shown="showModal"
     :input="searchInput"
-    @close="showModal = false"
+    @close="closeModal"
   >
     <search-pan
       :model-value="searchInput"
@@ -27,7 +27,7 @@
         :current="current"
         :input="searchInput"
         @mouse-over="onMouseOver"
-        @close-modal="showModal = false"
+        @close-modal="closeModal"
       >
         <template #resultItemRoute="route">
           <slot name="resultItemRoute" v-bind="route" />
@@ -69,7 +69,7 @@ export default defineComponent({
     SearchPan,
     SearchResult
   },
-  expose: ['fullReindex'],
+  expose: ['fullReindex', 'openModal'],
   props: {
     actions: {
       type: Array as PropType<ActionConfig[]>,
@@ -123,7 +123,7 @@ export default defineComponent({
   },
   mounted () {
     onKeyboardShortcut(['ctrl+k', 'meta+k'], event => {
-      this.showModal = true
+      this.openModal()
       event.preventDefault()
     })
     const indexFields = { id: 'id', index: ['name', 'aliases'] }
@@ -133,6 +133,10 @@ export default defineComponent({
     this.fullReindex()
   },
   methods: {
+    closeModal () {
+      this.showModal = false
+      this.searchInput = ''
+    },
     fullReindex () {
       const indexFields = { id: 'id', index: ['name', 'aliases', 'path'] }
 
@@ -151,12 +155,11 @@ export default defineComponent({
 
         actionItem.action()
       }
-
       this.recentResults.push(result)
       if (this.recentResults.length > 3) {
         this.recentResults.shift()
       }
-      this.showModal = false
+      this.closeModal()
     },
     move (direction: 'next' | 'previous') {
       if (direction === 'next' && this.results.length - 1 > this.current) {
@@ -167,6 +170,9 @@ export default defineComponent({
     },
     onMouseOver (e: ResultItem) {
       this.current = this.results?.findIndex(r => r.data.name === e.data.name)
+    },
+    openModal () {
+      this.showModal = true
     }
   }
 })
@@ -174,15 +180,15 @@ export default defineComponent({
 </script>
 
 <style>
-img {
-  width: 40px;
-  height: 40px;
-}
+  img {
+    width: 40px;
+    height: 40px;
+  }
 
-hr {
-    margin: 2px;
+  hr {
     height: 1px;
+    margin: 2px;
     border: 3px;
-    box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);
-}
+    box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
+  }
 </style>
