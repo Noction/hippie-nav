@@ -12,25 +12,23 @@ export interface KeyboardShortcutOptions {
 
 export function formatKey (key: string) {
   key = key.toLowerCase()
-  if (key === 'ctrl') {
-    return isMac ? '^' : 'Ctrl'
+  const keys = new Map()
+
+  keys.set('ctrl', isMac ? '^' : 'Ctrl')
+  keys.set('alt', isMac ? '⎇' : 'Alt' )
+  keys.set('shift', '⇧')
+  keys.set('meta', '⌘')
+  keys.set('enter', '⏎' )
+  if (keys.has(key)) {
+    return keys.get(key)
   }
-  if (key === 'alt') {
-    return isMac ? '⎇' : 'Alt'
-  }
-  if (key === 'shift') {
-    return '⇧'
-  }
-  if (key === 'meta') {
-    return '⌘'
-  }
-  if (key === 'enter') {
-    return '⏎'
-  }
+
   return key.charAt(0).toUpperCase() + key.substring(1).toLowerCase()
 }
 
-const modifiers: { [i: string]: { key: string, pressed: boolean } } = {
+type Modifier = { [i: string]: { key: string, pressed: boolean } }
+
+const modifiers: Modifier = {
   alt: { key: 'Alt', pressed: false },
   ctrl: { key: 'Control', pressed: false },
   meta: { key: 'Meta', pressed: false },

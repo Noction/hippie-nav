@@ -40,10 +40,10 @@ import { slashCounter } from '../../util/slashCounter'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordName, RouteRecordNormalized, Router } from 'vue-router'
 
-function getFullPath (name: string, routes: RouteRecordNormalized[]): string | undefined {
+function getFullPath (name: RouteRecordNormalized['name'], routes: RouteRecordNormalized[]): string | undefined {
   const route = routes.find(r => r.name === name)
 
-  return route ? route.path : undefined
+  return route?.path
 }
 
 function hasDuplicateName (routes: RouteRecordNormalized[], name: string): boolean {
@@ -108,7 +108,7 @@ export default defineComponent({
               name: this.route.displayName,
               path: this.route.path.replace(/\//g, '')
             }
-            const children = copyOfMomRoute.children.length > 0
+            const children = copyOfMomRoute.children
               ? [...copyOfMomRoute.children, newChild]
               : [newChild]
 
@@ -120,7 +120,7 @@ export default defineComponent({
       } else if (isChildOfChild) {
         if (fullPathOfMomRoute) {
           const splittedRoute = fullPathOfMomRoute.split('/')
-          const parent = routes.find(r => r.path === `/${splittedRoute[1]}`) as RouteRecordNormalized
+          const parent: RouteRecordNormalized = routes.find(r => r.path === `/${splittedRoute[1]}`) as RouteRecordNormalized
           const childOfParent = parent.children.find(c => c.path === splittedRoute[2]) as RouteRecordNormalized
           const childOfChildRoute = {
             component,

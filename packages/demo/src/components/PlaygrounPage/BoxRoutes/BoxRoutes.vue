@@ -18,7 +18,7 @@
           box-type="parent"
           :route="route"
           :collapsed="showChildPath === route.path"
-          :has-children="route.hasOwnProperty('children')"
+          :has-children="route.hasOwnProperty('children') && route.path !== '/'"
           @set-show-child-path="setShowPath($event, 'child')"
           @add-child-route="addChildRoute"
         />
@@ -30,11 +30,12 @@
               :has-children="childRoute.hasOwnProperty('children')"
               :collapsed="showChildOfChildPath === childRoute.path"
               @set-show-child-path="setShowPath($event, 'childOfChild')"
+              @add-child-route="addChildRoute"
             />
             <ul v-if="showChildOfChildPath === childRoute.path && childRoute.children">
               <li v-for="childOfChildRoute in childRoute.children" :key="childOfChildRoute.name">
                 <box-routes-item
-                  box-type="grandChild"
+                  box-type="grand-child"
                   :route="childOfChildRoute"
                 />
               </li>
