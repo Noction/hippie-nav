@@ -79,7 +79,7 @@ export default defineComponent({
   },
   methods: {
     addRoute (): void {
-      const routes: RouteRecordNormalized[] = this.router.getRoutes()
+      const routes = this.router.getRoutes()
       const copyOfMomRoute = JSON.parse(JSON.stringify(this.momRoute))
       const fullPathOfMomRoute: string | undefined = copyOfMomRoute.name && getFullPath(copyOfMomRoute.name, routes)
       const isChildOfChild: boolean = fullPathOfMomRoute ? slashCounter(fullPathOfMomRoute) === 2 : false
@@ -130,18 +130,18 @@ export default defineComponent({
 
           const route = {
             ...parent,
-            children: [
-              ...parent.children.filter(c => c.name !== childOfParent.name),
-              {
-                ...childOfParent,
-                children: childOfParent.children ? [
-                  ...childOfParent.children,
-                  childOfChildRoute
-                ] : [
-                  childOfChildRoute
-                ]
+            children: parent.children.map(child => {
+              if (child.name === childOfParent.name) {
+                return {
+                  ...child,
+                  children: [
+                    ...(child.children || []),
+                    childOfChildRoute
+                  ]
+                }
               }
-            ]
+              return child
+            })
           }
 
           this.router.removeRoute(parent.name as RouteRecordName)

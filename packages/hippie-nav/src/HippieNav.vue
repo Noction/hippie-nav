@@ -50,6 +50,7 @@ import SearchModal from './components/SearchModal.vue'
 import SearchPan from './components/SearchPan.vue'
 import SearchResult from './components/SearchResult.vue'
 import { excludedPaths } from './index'
+import { addLocalStorageRecentResults, extractLocalStoreRecentResults } from './util/recentResultsLocalStorageUtils'
 import { filterExcludedPaths } from './util/filterExcludedPaths'
 import { onKeyboardShortcut } from './util/keyboard'
 import { useFlexSearch } from './util/useFlexSearch.js'
@@ -131,6 +132,7 @@ export default defineComponent({
     this.indexActions = indexSetup('action', indexFields)
     indexAdd(this.indexActions, this.actions, 'action')
     this.fullReindex()
+    this.recentResults = extractLocalStoreRecentResults(this.actions, this.routes)
   },
   methods: {
     closeModal () {
@@ -159,6 +161,7 @@ export default defineComponent({
       if (this.recentResults.length > 3) {
         this.recentResults.shift()
       }
+      addLocalStorageRecentResults(this.recentResults)
       this.closeModal()
     },
     move (direction: 'next' | 'previous') {

@@ -114,7 +114,7 @@ const router = createRouter({
   routes
 })
 
-const regex = /^\/about\/(.+)/
+const regex = /\/regex/
 
 export default defineComponent({
   name: 'PlaygroundPage',
