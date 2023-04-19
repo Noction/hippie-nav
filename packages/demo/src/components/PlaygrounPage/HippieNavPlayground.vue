@@ -52,6 +52,9 @@ export default defineComponent({
       routes: this.$router.getRoutes()
     }
   },
+  mounted () {
+    console.log(this.$router.getRoutes())
+  },
   methods: {
     openModal () {
       this.$refs.hippieNav.openModal()
