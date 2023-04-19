@@ -95,7 +95,7 @@ export default defineComponent({
 
   .grand-child-path {
     font-size: 10px;
-    font-weight: 300w;
+    font-weight: 300;
   }
 
 </style>
