@@ -34,7 +34,7 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style>
   .search-panel-icon {
     width: 20px;
     height: 20px;
@@ -52,7 +52,7 @@ onMounted(() => {
     margin-left: 20px;
     font-size: 30px;
     color: #1a1a1a;
-    background-color: white;
+    background-color: inherit;
     border: 0 white;
     outline: none;
   }

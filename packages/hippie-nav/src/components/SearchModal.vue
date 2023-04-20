@@ -40,7 +40,7 @@ function close (): void {
     min-height: 50px;
     padding: 20px;
     margin: 150px auto auto;
-    background: white;
+    background: var(--hippie-primary-color);
     border-radius: 12px;
   }
 </style>
