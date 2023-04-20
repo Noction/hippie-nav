@@ -2,6 +2,7 @@
   <div
     v-if="route"
     :class="{ selected: colored }"
+    class="hippie-result-item"
     @click="goto(route.path)"
     @mouseover="$emit('mouseOver', result)"
   >
@@ -12,6 +13,7 @@
   <div
     v-if="_action"
     :class="{ selected: colored }"
+    class="hippie-result-item"
     @click="_action.action"
     @mouseover="$emit('mouseOver', result)"
   >
@@ -65,8 +67,22 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss">
   .selected {
-    background-color: rgb(110 107 107 / 65%);
+    background-color: var(--hippie-hover)
+  }
+
+  .hippie-result-item {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 10px;
+
+    .hippie-highlighted {
+      color: inherit;
+    }
+
+    p {
+      color: var(--hippie-font-color);
+    }
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div v-if="results.length !== 0">
-    <h2 class="text">
+    <h2 class="hippie-font-color-main">
       Results
     </h2>
     <div

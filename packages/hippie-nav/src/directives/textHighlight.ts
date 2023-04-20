@@ -49,7 +49,7 @@ const highlightSearch = function (message, keyword) {
     const replaced = message.replace(match, ':;{{:;\$&:;}}:;')
     const matchAgain = new RegExp(`:;{{:;(${escapeHtml(regexWord)}):;}}:;`, 'gi')
     // eslint-disable-next-line
-    const restoreReplaced = escapeHtml(replaced).replace(matchAgain, `<span class="highlighted" ${styleString}>\$1</span>`)
+    const restoreReplaced = escapeHtml(replaced).replace(matchAgain, `<span class="hippie-highlighted" ${styleString}>\$1</span>`)
 
     return restoreReplaced
   }

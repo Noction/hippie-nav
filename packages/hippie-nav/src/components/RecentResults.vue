@@ -1,23 +1,26 @@
 <template>
   <div>
-    <h3 class="text">
+    <h3 class="hippie-font-color-main">
       Recent results
     </h3>
     <div
       v-for="(result) in recentResults"
       :key="generateUniqueKey(result.data.name)"
+      class="pointer"
+      @click="onClick(result)"
     >
       <slot name="recentResultItem" v-bind="result">
-        <h3 class="text search--result__item">
+        <span class="hippie-font-color">
           {{ result.data.name }}
-        </h3>
+        </span>
       </slot>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ResultItem } from '../types'
+import { RouteRecordNormalized } from 'vue-router'
+import { ActionConfig, ResultItem } from '../types'
 import { generateUniqueKey } from '../util/generateUniqueKey'
 import { PropType, defineComponent } from 'vue'
 
@@ -29,6 +32,25 @@ export default defineComponent({
       required: true
     }
   },
-  methods: { generateUniqueKey }
+  methods: {
+    generateUniqueKey,
+    onClick (result: ResultItem) {
+      if (result.type === 'action') {
+        const action = result.data as ActionConfig
+
+        action.action()
+        return
+      }
+      const route = result.data as RouteRecordNormalized
+
+      this.$router.push(route.path)
+    }
+  }
 })
 </script>
+
+<style>
+  .pointer {
+    cursor: pointer;
+  }
+</style>
