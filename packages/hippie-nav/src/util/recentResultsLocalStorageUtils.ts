@@ -44,5 +44,5 @@ export const extractLocalStoreRecentResults = (actions: ActionConfig[], routes: 
     }
   })
 
-  return resultsResults ?? [].concat(actionsResults ?? [])
+  return resultsResults?.concat(actionsResults ?? [])
 }

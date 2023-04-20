@@ -26,8 +26,6 @@ export function formatKey (key: string) {
   return key.charAt(0).toUpperCase() + key.substring(1).toLowerCase()
 }
 
-type Modifier = { [i: string]: { key: string, pressed: boolean } }
-
 const modifiers: Modifier = {
   alt: { key: 'Alt', pressed: false },
   ctrl: { key: 'Control', pressed: false },

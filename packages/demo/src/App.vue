@@ -14,6 +14,7 @@
 </template>
 
 <style lang="scss">
+
   html, body {
     display: block;
     height: 100%;

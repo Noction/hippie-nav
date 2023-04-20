@@ -1,48 +1,51 @@
 <template>
-  <search-modal
-    :shown="showModal"
-    :input="searchInput"
-    @close="closeModal"
-  >
-    <search-pan
-      :model-value="searchInput"
-      @close="showModal = false"
-      @next="move('next')"
-      @previous="move('previous')"
-      @goto="goto"
-      @update-model-value="newValue => searchInput = newValue"
-    />
-    <hr>
-    <div v-if="recentResults.length > 0">
-      <recent-results :recent-results="recentResults">
-        <template #recentResultItem="result">
-          <slot name="recentResultItem" v-bind="result" />
-        </template>
-      </recent-results>
-    </div>
-    <expand-transition>
-      <search-result
-        :search-input="searchInput"
-        :results="results"
-        :current="current"
-        :input="searchInput"
-        @mouse-over="onMouseOver"
-        @close-modal="closeModal"
-      >
-        <template #resultItemRoute="route">
-          <slot name="resultItemRoute" v-bind="route" />
-        </template>
-        <template #resultItemAction="action">
-          <slot name="resultItemAction" v-bind="action" />
-        </template>
-      </search-result>
-    </expand-transition>
-    <hr>
-    <nav-buttons />
-  </search-modal>
+  <div class="hippie-nav">
+    <search-modal
+      :shown="showModal"
+      :input="searchInput"
+      @close="closeModal"
+    >
+      <search-pan
+        :model-value="searchInput"
+        @close="showModal = false"
+        @next="move('next')"
+        @previous="move('previous')"
+        @goto="goto"
+        @update-model-value="newValue => searchInput = newValue"
+      />
+      <hr>
+      <div v-if="recentResults.length > 0">
+        <recent-results :recent-results="recentResults">
+          <template #recentResultItem="result">
+            <slot name="recentResultItem" v-bind="result" />
+          </template>
+        </recent-results>
+      </div>
+      <expand-transition>
+        <search-result
+          :search-input="searchInput"
+          :results="results"
+          :current="current"
+          :input="searchInput"
+          @mouse-over="onMouseOver"
+          @close-modal="closeModal"
+        >
+          <template #resultItemRoute="route">
+            <slot name="resultItemRoute" v-bind="route" />
+          </template>
+          <template #resultItemAction="action">
+            <slot name="resultItemAction" v-bind="action" />
+          </template>
+        </search-result>
+      </expand-transition>
+      <hr>
+      <nav-buttons />
+    </search-modal>
+  </div>
 </template>
 
 <script lang="ts">
+import './style.css'
 import ExpandTransition from './components/ExpandTransition.vue'
 import NavButtons from './components/NavButtons.vue'
 import RecentResults from './components/RecentResults.vue'
@@ -50,7 +53,6 @@ import SearchModal from './components/SearchModal.vue'
 import SearchPan from './components/SearchPan.vue'
 import SearchResult from './components/SearchResult.vue'
 import { excludedPaths } from './index'
-import { addLocalStorageRecentResults, extractLocalStoreRecentResults } from './util/recentResultsLocalStorageUtils'
 import { filterExcludedPaths } from './util/filterExcludedPaths'
 import { onKeyboardShortcut } from './util/keyboard'
 import { useFlexSearch } from './util/useFlexSearch.js'
@@ -58,6 +60,7 @@ import { ActionConfig, IndexOptionsHippieNav, ResultItem } from './types'
 import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
 import { PropType, defineComponent, inject } from 'vue'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
+import { addLocalStorageRecentResults, extractLocalStoreRecentResults } from './util/recentResultsLocalStorageUtils'
 import { indexAdd, indexSetup } from './util/indexSetup'
 
 export default defineComponent({
@@ -92,7 +95,7 @@ export default defineComponent({
       resultsActions: [] as ActionConfig[],
       resultsRoutes: [] as RouteRecordNormalized[],
       searchInput: '',
-      showModal: false
+      showModal: true
     }
   },
   computed: {
@@ -135,6 +138,13 @@ export default defineComponent({
     this.recentResults = extractLocalStoreRecentResults(this.actions, this.routes)
   },
   methods: {
+    addRecentResult (result: ResultItem[]) {
+      this.recentResults.unshift(result)
+      if (this.recentResults.length > 3) {
+        this.recentResults.pop()
+      }
+      addLocalStorageRecentResults(this.recentResults)
+    },
     closeModal () {
       this.showModal = false
       this.searchInput = ''
@@ -157,11 +167,7 @@ export default defineComponent({
 
         actionItem.action()
       }
-      this.recentResults.push(result)
-      if (this.recentResults.length > 3) {
-        this.recentResults.shift()
-      }
-      addLocalStorageRecentResults(this.recentResults)
+      this.addRecentResult(result)
       this.closeModal()
     },
     move (direction: 'next' | 'previous') {
@@ -183,15 +189,19 @@ export default defineComponent({
 </script>
 
 <style>
-  img {
-    width: 40px;
-    height: 40px;
-  }
 
   hr {
     height: 1px;
     margin: 2px;
     border: 3px;
     box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
+  }
+
+  .hippie-font-color-main {
+    color: var(--hippie-secondary-color);
+  }
+
+  .hippie-font-color {
+    color: var(--hippie-font-color);
   }
 </style>

@@ -1,21 +1,27 @@
 <template>
-  <div class="buttons">
-    <div class="buttons-item">
-      <img src="../assets/page_up.svg" alt="">
-      <img
-        class="margin-left"
-        src="../assets/page_down.svg"
-        alt=""
-      >
-      <span class="margin-left">to navigate</span>
+  <div class="key-caps">
+    <div class="key-cap-content">
+      <div class="key-cap-btn-group">
+        <div class="key-cap-btn key-cap-btn-arrow">
+          <span>&#8593;</span>
+        </div>
+        <div class="key-cap-btn key-cap-btn-arrow">
+          <span>&#8595;</span>
+        </div>
+      </div>
+      <p>to navigate</p>
     </div>
-    <div class="buttons-item">
-      <img src="../assets/enter.svg" alt="">
-      <span class="margin-left">to select</span>
+    <div class="key-cap-content">
+      <div class="key-cap-btn">
+        <span>RETURN</span>
+      </div>
+      <span>to select</span>
     </div>
-    <div class="buttons-item">
-      <img src="../assets/escape.svg" alt="">
-      <span class="margin-left">to cancel</span>
+    <div class="key-cap-content">
+      <div class="key-cap-btn">
+        <span>ESC</span>
+      </div>
+      <span>to exit</span>
     </div>
   </div>
 </template>
@@ -27,18 +33,40 @@ export default {
 </script>
 
 <style>
-  .buttons {
+  .key-caps {
     display: flex;
+    align-items: baseline;
     justify-content: space-between;
     margin-top: 10px;
-  }
 
-  .buttons-item {
-    display: flex;
-    align-items: center;
-  }
+    .key-cap-content {
+      display: flex;
+      align-items: baseline;
+      font-size: 17px;
 
-  img {
-    margin-right: 5px;
+      .key-cap-btn-group {
+        display: flex;
+        align-items: baseline;
+      }
+
+      .key-cap-btn {
+        display: flex;
+        padding: 5px 10px;
+        margin-right: 5px;
+        color: var(--hippie-font-color);
+        background-color: var(--hippie-secondary-color);
+        border-radius: 5px;
+
+        span {
+          font-weight: 700;
+        }
+      }
+
+      .key-cap-btn-arrow {
+        justify-content: center;
+        padding: 5px 11px;
+      }
+
+    }
   }
 </style>
