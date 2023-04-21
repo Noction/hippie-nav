@@ -19,9 +19,9 @@
 </template>
 
 <script lang="ts">
-import { RouteRecordNormalized } from 'vue-router'
-import { generateUniqueKey } from '../util/generateUniqueKey'
-import { ActionConfig, ResultItem } from '../types'
+import { ResultItem } from '@/types'
+import { generateUniqueKey } from '@/util/generateUniqueKey'
+import { isActionConfig } from '@/types/typePredicates'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
@@ -35,13 +35,13 @@ export default defineComponent({
   methods: {
     generateUniqueKey,
     onClick (result: ResultItem) {
-      if (result.type === 'action') {
-        const action = result.data as ActionConfig
+      if (isActionConfig(result.data)) {
+        const action = result.data
 
         action.action()
         return
       }
-      const route = result.data as RouteRecordNormalized
+      const route = result.data
 
       this.$router.push(route.path)
     }

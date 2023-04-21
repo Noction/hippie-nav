@@ -1,6 +1,7 @@
 import { Document } from 'flexsearch'
 import { RouteRecordNormalized } from 'vue-router'
-import { ActionConfig, IndexOptionsHippieNav } from '../types'
+import { isActionConfig } from '@/types/typePredicates'
+import { ActionConfig, IndexOptionsHippieNav } from '@/types'
 
 export interface IndexFields {
   id: string,
@@ -10,21 +11,21 @@ export type IndexType = 'route' | 'action'
 
 export const indexAdd = (index: Document<any>, data: RouteRecordNormalized[] | ActionConfig[], type: IndexType) => {
   if (type === 'route') {
-    const routes = data as RouteRecordNormalized[]
-
-    routes.sort((a, b) => {
+    data.sort((a, b) => {
       const nameA = String(a.name).toUpperCase() || ''
       const nameB = String(b.name).toUpperCase() || ''
 
       return nameA.localeCompare(nameB)
-    }).forEach((route: RouteRecordNormalized) => {
-      index.add({ aliases: route.meta.aliases, id: route.path, name: route.name, path: route.path })
+    }).forEach(route => {
+      if (!isActionConfig(route)) {
+        index.add({ aliases: route.meta.aliases, id: route.path, name: route.name, path: route.path })
+      }
     })
   } else if (type === 'action') {
-    const actions = data as ActionConfig[]
-
-    actions.forEach(action => {
-      index.add({ aliases: action.aliases, id: action.name })
+    data.forEach(action => {
+      if (isActionConfig(action)) {
+        index.add({ aliases: action.aliases, id: action.name })
+      }
     })
   }
 }

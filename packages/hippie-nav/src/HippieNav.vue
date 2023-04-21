@@ -50,6 +50,7 @@
 import ExpandTransition from './components/ExpandTransition.vue'
 import NavButtons from './components/NavButtons.vue'
 import RecentResults from './components/RecentResults.vue'
+import { RouteRecordNormalized } from 'vue-router'
 import SearchModal from './components/SearchModal.vue'
 import SearchPan from './components/SearchPan.vue'
 import SearchResult from './components/SearchResult.vue'
@@ -60,9 +61,14 @@ import { useFlexSearch } from './util/useFlexSearch.js'
 import { ActionConfig, IndexOptionsHippieNav, ResultItem } from './types'
 import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
 import { PropType, defineComponent, inject } from 'vue'
-import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
-import { addLocalStorageRecentResults, extractLocalStoreRecentResults } from './util/recentResultsLocalStorageUtils'
+import {
+  addLocalStorageRecentResults,
+  extractLocalStoreRecentResults
+} from './util/recentResultsLocalStorageUtils'
 import { indexAdd, indexSetup } from './util/indexSetup'
+const isActionConfig = (value: RouteRecordNormalized | ActionConfig): value is ActionConfig => {
+  return 'action' in value
+}
 
 export default defineComponent({
   name: 'HippieNav',
@@ -159,12 +165,12 @@ export default defineComponent({
     goto () {
       const result = this.results[this.current]
 
-      if (result.type === 'route') {
-        const route = result.data as RouteRecordRaw
+      if (!isActionConfig(result.data)) {
+        const route = result.data
 
         this.$router.push(route.path)
-      } else if (result.type === 'action') {
-        const actionItem = result.data as ActionConfig
+      } else {
+        const actionItem = result.data
 
         actionItem.action()
       }

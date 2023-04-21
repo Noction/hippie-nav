@@ -1,5 +1,5 @@
 <template>
-  <div v-if="results.length !== 0">
+  <div v-if="results?.length !== 0">
     <h2 class="hippie-font-color-main">
       Results
     </h2>
@@ -29,9 +29,9 @@
 </template>
 
 <script lang="ts">
-import { ResultItem } from '../types'
+import { ResultItem } from '@/types'
 import SearchResultItem from './SearchResultItem.vue'
-import { generateUniqueKey } from '../util/generateUniqueKey'
+import { generateUniqueKey } from '@/util/generateUniqueKey'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({

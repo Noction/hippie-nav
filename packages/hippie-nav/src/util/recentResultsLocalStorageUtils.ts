@@ -1,9 +1,11 @@
 import { RouteRecordNormalized } from 'vue-router'
-import { ActionConfig, LocalStorageItems, ResultItem } from '../types'
+import { isActionConfig } from '@/types/typePredicates'
 
-const isActionConfig = (value: RouteRecordNormalized | ActionConfig): value is ActionConfig => {
-  return 'action' in value
-}
+import { ActionConfig, ResultItem } from '@/types'
+const LocalStorageItems = {
+  ACTIONS_NAMES: 'actionsNames',
+  ROUTE_PATHS: 'routePaths'
+} as const
 
 export const addLocalStorageRecentResults = (recentResults: ResultItem[]) => {
   const routesPaths: string[] = []
