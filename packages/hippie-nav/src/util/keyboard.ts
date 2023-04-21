@@ -1,3 +1,4 @@
+import { Modifier } from '@/types'
 import { isMac } from './env'
 import { useEventListener } from '@vueuse/core'
 import { Ref, isRef } from 'vue'
