@@ -1,6 +1,6 @@
 <template>
   <button class="button-39" @click="action">
-    <img src="../../assets/triangle.svg" :class="{ button__collapsed: collapsed }">
+    <img src="/triangle.svg" :class="{ 'button-collapsed': collapsed }">
   </button>
 </template>
 
@@ -37,10 +37,7 @@ export default defineComponent({
     height: 17px;
   }
 
-  .button__collapsed {
-    transform: rotate(90deg);
-    transform: rotate(90deg);
-    transform: rotate(90deg);
+  .button-collapsed {
     transform: rotate(90deg);
   }
 </style>

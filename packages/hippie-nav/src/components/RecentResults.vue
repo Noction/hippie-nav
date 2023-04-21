@@ -5,7 +5,7 @@
     </h3>
     <div
       v-for="(result) in recentResults"
-      :key="generateUniqueKey(result.data.name)"
+      :key="generateUniqueKey(result.data.name as string)"
       class="pointer"
       @click="onClick(result)"
     >

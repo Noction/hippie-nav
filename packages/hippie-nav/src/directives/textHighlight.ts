@@ -1,42 +1,41 @@
-import { onBeforeUnmount, onMounted } from 'vue'
+import { DirectiveBinding, VNode, onBeforeUnmount, onMounted } from 'vue'
 
-const replaceWithOriginal = (original, newText) => `<p style="display:none;">${original}</p>${newText}`
+const replaceWithOriginal = (original: string, newText: string) => `<p style="display:none;">${original}</p>${newText}`
 
-const escapeHtml = unsafe => unsafe
+declare global {
+  interface HTMLElement {
+    beforeHighlight: () => void;
+  }
+}
+const escapeHtml = (unsafe: string) => unsafe
   .replace(/&/g, '&amp;')
   .replace(/</g, '&lt;')
   .replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#039;')
 
-const unescapeHtml = safe => safe
+const unescapeHtml = (safe: string) => safe
   .replace(/&amp;/g, '&')
   .replace(/&lt;/g, '<')
   .replace(/&gt;/g, '>')
   .replace(/&quot;/g, '"')
   .replace(/&#039;/g, '\'')
 
-const escapeRegExp = function (str) {
+const escapeRegExp = function (str: string) {
   // eslint-disable-next-line
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\<\>]/g, '\\$&')
 }
 
-const highlightSearch = function (message, keyword) {
+const highlightSearch = function (message: string, keyword: string) {
   const styleString = 'style="text-decoration: underline"'
   const newKeyword = keyword
   let regexWord = ''
 
-  if (typeof keyword === 'string') {
-    if (/^\s*$/.test(keyword)) {
-      // when the keyword is empty string, return the original message.
-      return escapeHtml(message)
-    }
-    regexWord = escapeRegExp(newKeyword)
-  } else {
-    console.warn('type is not String')
-    // return ''
+  if (/^\s*$/.test(keyword)) {
+    // when the keyword is empty string, return the original message.
     return escapeHtml(message)
   }
+  regexWord = escapeRegExp(newKeyword)
 
   // const match = new RegExp(`(${regexWord})`, flags)
   // Can only replace the words out of the html tags.
@@ -57,7 +56,7 @@ const highlightSearch = function (message, keyword) {
 }
 
 export default {
-  mounted (el, binding) {
+  mounted (el: HTMLElement, binding: DirectiveBinding) {
     const originalString = `${el.innerHTML}`
 
     el.innerHTML = replaceWithOriginal(originalString, originalString)
@@ -88,10 +87,12 @@ export default {
       el.innerHTML = el.children[0].innerHTML
     })
   },
-  updated (el, binding, vnode) {
-    const originalString = escapeHtml(vnode.children[0].text)
+  updated (el: HTMLElement, binding: DirectiveBinding, vnode: VNode) {
+    if (vnode.children !== null) {
+      const originalString = escapeHtml(vnode.children[0].text)
 
-    el.innerHTML = replaceWithOriginal(originalString, originalString)
-    el.beforeHighlight()
+      el.innerHTML = replaceWithOriginal(originalString, originalString)
+      el.beforeHighlight()
+    }
   }
 }

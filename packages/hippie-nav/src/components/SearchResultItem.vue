@@ -46,13 +46,13 @@ export default defineComponent({
   },
   emits: ['closeModal', 'mouseOver'],
   computed: {
-    _action (): ActionConfig {
+    _action () {
       if (this.result.type === 'action') {
         return this.result.data as ActionConfig
       }
       return undefined
     },
-    route (): RouteRecordNormalized {
+    route () {
       if (this.result.type === 'route') {
         return this.result.data as RouteRecordNormalized
       } else return undefined

@@ -36,14 +36,14 @@ export default defineComponent({
       actions: [
         {
           action: () => {
-            console.log('action')
+            this.$router.push('/')
           },
           aliases: ['logOut', 'signOut', 'exit'],
           name: 'Log out'
         },
         {
           action: () => {
-            console.log('showGraph executed')
+            this.$router.push('/')
           },
           aliases: ['show', 'graph'],
           name: 'Show graph'
@@ -54,6 +54,8 @@ export default defineComponent({
   },
   methods: {
     openModal () {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.$refs.hippieNav.openModal()
     }
   }

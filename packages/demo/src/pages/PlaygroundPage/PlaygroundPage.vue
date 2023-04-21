@@ -42,12 +42,13 @@ import AddRoute from '../../components/PlaygrounPage/HippieNavPlayground.vue'
 import BoxActions from '../../components/PlaygrounPage/BoxActions.vue'
 import BoxRouteConfig from '../../components/PlaygrounPage/BoxRouteConfig.vue'
 import BoxRouteItems from '../../components/PlaygrounPage/BoxRouteItems.vue'
-import BoxRoutes from '../../components/PlaygrounPage/BoxRoutes'
+import BoxRoutes from '../../components/PlaygrounPage/BoxRoutes/BoxRoutes.vue'
 import HippieNavPlayground from '../../components/PlaygrounPage/HippieNavPlayground.vue'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import hippieNav from 'hippie-nav'
 import { App, createApp, defineComponent } from 'vue'
 import { RouteRecordNormalized, createMemoryHistory, createRouter } from 'vue-router'
-
 const actions = [
   {
     action: () => {
@@ -58,7 +59,7 @@ const actions = [
   },
   {
     action: () => {
-      console.log('showGraph executed')
+      router.push('/')
     },
     aliases: ['show', 'graph'],
     name: 'Show graph'
