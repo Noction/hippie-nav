@@ -139,7 +139,7 @@ export default defineComponent({
     this.recentResults = extractLocalStoreRecentResults(this.actions, this.routes)
   },
   methods: {
-    addRecentResult (result: ResultItem[]) {
+    addRecentResult (result: ResultItem) {
       this.recentResults.unshift(result)
       if (this.recentResults.length > 3) {
         this.recentResults.pop()
@@ -205,18 +205,18 @@ export default defineComponent({
     color: var(--hippie-font-color);
   }
 
-   .hippie-nav {
-      box-sizing: border-box;
+  .hippie-nav {
+    box-sizing: border-box;
 
-      --hippie-animate-duration: .225s;
-      --hippie-primary-color-h: 1deg;
-      --hippie-primary-color-s: 100%;
-      --hippie-primary-color-l: 60%;
-      --hippie-primary-color: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) var(--hippie-primary-color-l));
-      --hippie-secondary-color:  hsl(39deg 100% 63%);
-      --hippie-font-color:  	 		hsl(143deg 100% 40%);
-      --hippie-hover: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) calc(var(--hippie-primary-color-l) - 10%));
-   }
+    --hippie-animate-duration: .225s;
+    --hippie-primary-color-h: 1deg;
+    --hippie-primary-color-s: 100%;
+    --hippie-primary-color-l: 60%;
+    --hippie-primary-color: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) var(--hippie-primary-color-l));
+    --hippie-secondary-color:  hsl(39deg 100% 63%);
+    --hippie-font-color:  	 		hsl(143deg 100% 40%);
+    --hippie-hover: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) calc(var(--hippie-primary-color-l) - 10%));
+  }
 
   .hippie-enter-active {
     animation: fade calc(var(--hippie-animate-duration) / 2);
@@ -236,9 +236,9 @@ export default defineComponent({
   }
 
   @keyframes pulse {
-    from { transform: scale3d(.9, .9, .9); }
+    0% { transform: scale3d(.9, .9, .9); }
     55% { transform: scale3d(.98, .98, .98) }
-    to { transform: scale3d(1, 1, 1); }
+    100% { transform: scale3d(1, 1, 1); }
   }
 
   @keyframes fade {

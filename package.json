@@ -10,7 +10,7 @@
     "lint:style": "pnpm -r --parallel --no-bail lint:style",
     "type:check": "pnpm -r --parallel --no-bail type:check",
     "test": "pnpm -r --parallel test",
-    "test:coverage": "  pnpm -r --parallel run test:coverage",
+    "test:coverage": "pnpm -r --parallel run test:coverage",
     "postinstall": "simple-git-hooks"
   },
   "keywords": [],
