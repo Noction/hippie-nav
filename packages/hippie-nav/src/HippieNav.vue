@@ -1,51 +1,52 @@
 <template>
   <div class="hippie-nav">
-    <search-modal
-      :shown="showModal"
-      :input="searchInput"
-      @close="closeModal"
-    >
-      <search-pan
-        :model-value="searchInput"
-        @close="showModal = false"
-        @next="move('next')"
-        @previous="move('previous')"
-        @goto="goto"
-        @update-model-value="newValue => searchInput = newValue"
-      />
-      <hr>
-      <div v-if="recentResults.length > 0">
-        <recent-results :recent-results="recentResults">
-          <template #recentResultItem="result">
-            <slot name="recentResultItem" v-bind="result" />
-          </template>
-        </recent-results>
-      </div>
-      <expand-transition>
-        <search-result
-          :search-input="searchInput"
-          :results="results"
-          :current="current"
-          :input="searchInput"
-          @mouse-over="onMouseOver"
-          @close-modal="closeModal"
-        >
-          <template #resultItemRoute="route">
-            <slot name="resultItemRoute" v-bind="route" />
-          </template>
-          <template #resultItemAction="action">
-            <slot name="resultItemAction" v-bind="action" />
-          </template>
-        </search-result>
-      </expand-transition>
-      <hr>
-      <nav-buttons />
-    </search-modal>
+    <transition name="hippie">
+      <search-modal
+        :shown="showModal"
+        :input="searchInput"
+        @close="closeModal"
+      >
+        <search-pan
+          :model-value="searchInput"
+          @close="showModal = false"
+          @next="move('next')"
+          @previous="move('previous')"
+          @goto="goto"
+          @update-model-value="newValue => searchInput = newValue"
+        />
+        <hr>
+        <div v-if="recentResults.length > 0">
+          <recent-results :recent-results="recentResults">
+            <template #recentResultItem="result">
+              <slot name="recentResultItem" v-bind="result" />
+            </template>
+          </recent-results>
+        </div>
+        <expand-transition>
+          <search-result
+            :search-input="searchInput"
+            :results="results"
+            :current="current"
+            :input="searchInput"
+            @mouse-over="onMouseOver"
+            @close-modal="closeModal"
+          >
+            <template #resultItemRoute="route">
+              <slot name="resultItemRoute" v-bind="route" />
+            </template>
+            <template #resultItemAction="action">
+              <slot name="resultItemAction" v-bind="action" />
+            </template>
+          </search-result>
+        </expand-transition>
+        <hr>
+        <nav-buttons />
+      </search-modal>
+    </transition>
   </div>
 </template>
 
 <script lang="ts">
-import './style.css'
 import ExpandTransition from './components/ExpandTransition.vue'
 import NavButtons from './components/NavButtons.vue'
 import RecentResults from './components/RecentResults.vue'
@@ -95,7 +96,7 @@ export default defineComponent({
       resultsActions: [] as ActionConfig[],
       resultsRoutes: [] as RouteRecordNormalized[],
       searchInput: '',
-      showModal: true
+      showModal: false
     }
   },
   computed: {
@@ -188,8 +189,7 @@ export default defineComponent({
 
 </script>
 
-<style>
-
+<style lang="scss">
   hr {
     height: 1px;
     margin: 2px;
@@ -203,5 +203,47 @@ export default defineComponent({
 
   .hippie-font-color {
     color: var(--hippie-font-color);
+  }
+
+   .hippie-nav {
+      box-sizing: border-box;
+
+      --hippie-animate-duration: .225s;
+      --hippie-primary-color-h: 1deg;
+      --hippie-primary-color-s: 100%;
+      --hippie-primary-color-l: 60%;
+      --hippie-primary-color: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) var(--hippie-primary-color-l));
+      --hippie-secondary-color:  hsl(39deg 100% 63%);
+      --hippie-font-color:  	 		hsl(143deg 100% 40%);
+      --hippie-hover: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) calc(var(--hippie-primary-color-l) - 10%));
+   }
+
+  .hippie-enter-active {
+    animation: fade calc(var(--hippie-animate-duration) / 2);
+
+    .modal-content { animation:  pulse var(--hippie-animate-duration); }
+  }
+
+  .hippie-leave-active {
+    animation: fade calc(var(--hippie-animate-duration) / 2) reverse;
+
+    .modal-content { animation: pulse calc(var(--hippie-animate-duration)) reverse; }
+  }
+
+  .hippie-enter-from,
+  .hippie-leave-to {
+    opacity: 0;
+  }
+
+  @keyframes pulse {
+    from { transform: scale3d(.9, .9, .9); }
+    55% { transform: scale3d(.98, .98, .98) }
+    to { transform: scale3d(1, 1, 1); }
+  }
+
+  @keyframes fade {
+    0% { opacity: 0; }
+    50% { opacity: .75; }
+    100% { opacity: 1; }
   }
 </style>

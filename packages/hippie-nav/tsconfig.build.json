@@ -1,14 +1,15 @@
 {
   "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "types": ["vitest/globals"],
-  },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.vue",
     "src/**/*.tsx",
-    "src/**/*.js",
+    "src/**/*.js"
+  ],
+  "exclude": [
+    "src/utils/scripts/treeSync",
+    "src/utils/scripts/testsHelpers.ts",
     "tests/**/*.spec.ts"
   ]
 }

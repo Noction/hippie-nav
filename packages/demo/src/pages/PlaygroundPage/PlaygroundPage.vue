@@ -38,12 +38,12 @@
 
 <script lang="ts">
 import 'hippie-nav/dist/style.css'
-import AddRoute from './HippieNavPlayground.vue'
-import BoxActions from './BoxActions.vue'
-import BoxRouteConfig from './BoxRouteConfig.vue'
-import BoxRouteItems from './BoxRouteItems.vue'
-import BoxRoutes from './BoxRoutes'
-import HippieNavPlayground from './HippieNavPlayground.vue'
+import AddRoute from '../../components/PlaygrounPage/HippieNavPlayground.vue'
+import BoxActions from '../../components/PlaygrounPage/BoxActions.vue'
+import BoxRouteConfig from '../../components/PlaygrounPage/BoxRouteConfig.vue'
+import BoxRouteItems from '../../components/PlaygrounPage/BoxRouteItems.vue'
+import BoxRoutes from '../../components/PlaygrounPage/BoxRoutes'
+import HippieNavPlayground from '../../components/PlaygrounPage/HippieNavPlayground.vue'
 import hippieNav from 'hippie-nav'
 import { App, createApp, defineComponent } from 'vue'
 import { RouteRecordNormalized, createMemoryHistory, createRouter } from 'vue-router'

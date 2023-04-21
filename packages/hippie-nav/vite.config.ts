@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
+import path from 'path'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
@@ -20,5 +21,10 @@ export default defineConfig({
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     VERSION: JSON.stringify(require('./package.json').version)
   },
-  plugins: [vue()]
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  }
 })
