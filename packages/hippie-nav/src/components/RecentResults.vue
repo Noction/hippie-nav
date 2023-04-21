@@ -20,8 +20,8 @@
 
 <script lang="ts">
 import { RouteRecordNormalized } from 'vue-router'
-import { ActionConfig, ResultItem } from '../types'
 import { generateUniqueKey } from '../util/generateUniqueKey'
+import { ActionConfig, ResultItem } from '../types'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({

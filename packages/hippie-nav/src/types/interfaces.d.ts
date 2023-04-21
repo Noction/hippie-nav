@@ -7,6 +7,10 @@ export interface ActionConfig {
   aliases: string[]
 }
 
+const isActionConfig = (value: RouteRecordNormalized | ActionConfig): value is ActionConfig => {
+  return 'action' in value
+}
+
 export interface IndexOptionsHippieNav {
   charset: 'latin:extra',
   document: IndexFields,

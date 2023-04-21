@@ -95,7 +95,7 @@ export default defineComponent({
       resultsActions: [] as ActionConfig[],
       resultsRoutes: [] as RouteRecordNormalized[],
       searchInput: '',
-      showModal: true
+      showModal: false
     }
   },
   computed: {
