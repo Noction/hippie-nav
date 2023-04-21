@@ -1,1 +1,1 @@
-type Modifier = { [i: string]: { key: string, pressed: boolean } }
+export type Modifier = { [i: string]: { key: string, pressed: boolean } }

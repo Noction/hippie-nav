@@ -1,4 +1,4 @@
-import { DirectiveBinding, VNode, onBeforeUnmount, onMounted } from 'vue'
+import { DirectiveBinding, VNode, onBeforeUnmount, onMounted  } from 'vue'
 
 const replaceWithOriginal = (original: string, newText: string) => `<p style="display:none;">${original}</p>${newText}`
 
@@ -13,14 +13,6 @@ const escapeHtml = (unsafe: string) => unsafe
   .replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#039;')
-
-const unescapeHtml = (safe: string) => safe
-  .replace(/&amp;/g, '&')
-  .replace(/&lt;/g, '<')
-  .replace(/&gt;/g, '>')
-  .replace(/&quot;/g, '"')
-  .replace(/&#039;/g, '\'')
-
 const escapeRegExp = function (str: string) {
   // eslint-disable-next-line
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\<\>]/g, '\\$&')
@@ -48,9 +40,7 @@ const highlightSearch = function (message: string, keyword: string) {
     const replaced = message.replace(match, ':;{{:;\$&:;}}:;')
     const matchAgain = new RegExp(`:;{{:;(${escapeHtml(regexWord)}):;}}:;`, 'gi')
     // eslint-disable-next-line
-    const restoreReplaced = escapeHtml(replaced).replace(matchAgain, `<span class="hippie-highlighted" ${styleString}>\$1</span>`)
-
-    return restoreReplaced
+    return escapeHtml(replaced).replace(matchAgain, `<span class="hippie-highlighted" ${styleString}>\$1</span>`)
   }
   return escapeHtml(message)
 }

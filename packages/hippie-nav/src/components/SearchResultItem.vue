@@ -25,7 +25,8 @@
 
 <script lang="ts">
 import { RouteRecordNormalized } from 'vue-router'
-import { ActionConfig, ResultItem } from '../types'
+import { isActionConfig } from '@/types/typePredicates'
+import { ActionConfig, ResultItem } from '@/types'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
@@ -46,16 +47,17 @@ export default defineComponent({
   },
   emits: ['closeModal', 'mouseOver'],
   computed: {
-    _action () {
-      if (this.result.type === 'action') {
-        return this.result.data as ActionConfig
+    _action (): ActionConfig | undefined {
+      if (isActionConfig(this.result.data)) {
+        return this.result.data
       }
       return undefined
     },
-    route () {
-      if (this.result.type === 'route') {
-        return this.result.data as RouteRecordNormalized
-      } else return undefined
+    route (): RouteRecordNormalized | undefined {
+      if (!isActionConfig(this.result.data)) {
+        return this.result.data
+      }
+      return undefined
     }
   },
   methods: {
