@@ -32,7 +32,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
   .key-caps {
     display: flex;
     align-items: baseline;

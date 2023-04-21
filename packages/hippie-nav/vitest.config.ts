@@ -1,10 +1,8 @@
-/// <reference types="vitest" />
-
-import { defineConfig } from 'vite'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import path from 'path'
+import * as path from 'path'
 import vue from '@vitejs/plugin-vue'
+import { configDefaults, defineConfig } from 'vitest/config'
+
+const reportsDirectory = process.env.REPORTS_DIR ? process.env.REPORTS_DIR : './coverage'
 
 export default defineConfig({
   plugins: [vue()],
@@ -16,11 +14,25 @@ export default defineConfig({
   test: {
     coverage: {
       all: true,
-      reporter: ['text', 'cobertura'],
+      exclude: [
+        ...configDefaults.exclude,
+        'src/assets/*',
+        'src/index.ts',
+        'src/types/*',
+        'src/*.d.ts',
+        'tests',
+        '*rc.ts',
+        '*rc.js'
+      ],
+      provider: 'c8',
+      reporter: ['text', 'lcov', 'cobertura'],
+      reportsDirectory,
       src: ['src']
     },
     environment: 'jsdom',
     globals: true,
-    include: ['tests/unit/**/*.spec.ts']
+    include: ['tests/unit/**/*.spec.ts'],
+    outputFile: `${reportsDirectory}/junit.xml`,
+    reporters: ['junit', 'verbose']
   }
 })

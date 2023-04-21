@@ -18,7 +18,7 @@ declare module '@vue/runtime-core' {
     BoxRoutesItem: typeof import('./src/components/PlaygrounPage/BoxRoutes/BoxRoutesItem.vue')['default']
     ExpandTransition: typeof import('./src/components/common/ExpandTransition.vue')['default']
     HippieBtnCollapse: typeof import('./src/components/common/HippieBtnCollapse.vue')['default']
-    HippieNav: typeof import('./src/components/PlaygrounPage/hippie-nav.vue')['default']
+    HippieNav: typeof import('hippie-nav')['HippieNav']
     HippieNavPlayground: typeof import('./src/components/PlaygrounPage/HippieNavPlayground.vue')['default']
     HomePage: typeof import('./src/components/HomePage/HomePage.vue')['default']
     ICarbonBranch: typeof import('~icons/carbon/branch')['default']
