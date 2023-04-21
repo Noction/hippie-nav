@@ -1,14 +1,10 @@
-import { IndexFields } from '../util/indexSetup'
+import { IndexFields } from '@/util/indexSetup'
 import { RouteRecordNormalized } from 'vue-router'
 
 export interface ActionConfig {
   name: string,
   action: () => void
   aliases: string[]
-}
-
-const isActionConfig = (value: RouteRecordNormalized | ActionConfig): value is ActionConfig => {
-  return 'action' in value
 }
 
 export interface IndexOptionsHippieNav {

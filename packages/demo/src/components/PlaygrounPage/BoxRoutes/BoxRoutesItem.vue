@@ -10,7 +10,7 @@
         @click="setShowChildPath(route.path)"
       />
       <button
-        v-if="route.path !== '/' && boxType !== 'grandChild'"
+        v-if="route.path !== '/' && boxType !== 'grand-child'"
         class="button-add"
         @click="addChildRoute(route)"
       >

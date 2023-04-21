@@ -5,7 +5,7 @@
     </h2>
     <div
       v-for="(result, index) in results"
-      :key="generateUniqueKey(index)"
+      :key="generateUniqueKey(String(index))"
     >
       <search-result-item
         :search-input="searchInput"

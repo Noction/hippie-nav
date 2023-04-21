@@ -16,7 +16,7 @@
           <ul v-if="route.name === showRouteConfig" class="box-list-secondary">
             <li>displayName: {{ route.name }}</li>
             <li>Path:{{ route.path }}</li>
-            <li v-if="route.meta?.aliases">
+            <li v-if="route.meta.aliases">
               Aliases: {{ route.meta.aliases }}
             </li>
           </ul>
@@ -28,8 +28,8 @@
 
 <script lang="ts">
 import HippieButton from '../common/HippieBtnCollapse.vue'
-import { routesNormalize } from '../../util/routesNormalize'
 import { routesFlatten } from '../../util/routesFlatten'
+import { routesNormalize } from '../../util/routesNormalize'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 
