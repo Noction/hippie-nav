@@ -21,8 +21,6 @@ export const extractLocalStoreRecentResults = (actions: ActionConfig[], routes: 
   const routesPaths = localStorage.getItem(ROUTE_PATHS)?.split(',') ?? []
   const actionNames = localStorage.getItem(ACTIONS_NAMES)?.split(',') ?? []
 
-  console.log('localstorage', routesPaths, actionNames)
-
   const resultsResults: ResultItem[] = routesPaths
     .map(routePath => {
       const route = routes.find(route => route.path === routePath)
@@ -44,5 +42,5 @@ export const extractLocalStoreRecentResults = (actions: ActionConfig[], routes: 
     }
   })
 
-  return resultsResults?.concat(actionsResults ?? [])
+  return resultsResults??[].concat(actionsResults ?? [])
 }
