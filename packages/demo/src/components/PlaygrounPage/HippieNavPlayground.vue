@@ -27,8 +27,8 @@
 </template>
 
 <script lang="ts">
-
 import { defineComponent } from 'vue'
+
 export default defineComponent({
   name: 'HippieNavPlayground',
   data () {
@@ -51,9 +51,6 @@ export default defineComponent({
       ],
       routes: this.$router.getRoutes()
     }
-  },
-  mounted () {
-    console.log(this.$router.getRoutes())
   },
   methods: {
     openModal () {
