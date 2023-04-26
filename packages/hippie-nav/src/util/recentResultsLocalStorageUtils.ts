@@ -32,9 +32,11 @@ export const extractLocalStoreRecentResults = (actions: ActionConfig[], routes: 
       const index = routePath.charAt(0)
       const route = routes.find(route => route.path === routePath.slice(1))
 
-      recentResults[index] = {
-        data: route,
-        type: 'route'
+      if (route) {
+        recentResults[index] = {
+          data: route,
+          type: 'route'
+        }
       }
     }
   }
@@ -44,11 +46,13 @@ export const extractLocalStoreRecentResults = (actions: ActionConfig[], routes: 
       const index = actionName.charAt(0)
       const action = actions.find(action => action.name === actionName.slice(1))
 
-      recentResults[index] = {
-        data: action,
-        type: 'action'
+      if (action) {
+        recentResults[index] = {
+          data: action,
+          type: 'action'
+        }
       }
     }
   }
-  return recentResults
+  return recentResults.filter(rs => rs !== null)
 }
