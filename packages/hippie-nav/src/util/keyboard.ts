@@ -1,5 +1,4 @@
 import { Modifier } from '@/types'
-import { isMac } from './env'
 import { useEventListener } from '@vueuse/core'
 import { Ref, isRef } from 'vue'
 
@@ -9,22 +8,6 @@ export type KeyboardShortcut = string[]
 
 export interface KeyboardShortcutOptions {
     event?: 'keyup' | 'keydown' | 'keypress'
-}
-
-export function formatKey (key: string) {
-  key = key.toLowerCase()
-  const keys = new Map()
-
-  keys.set('ctrl', isMac ? '^' : 'Ctrl')
-  keys.set('alt', isMac ? '⎇' : 'Alt' )
-  keys.set('shift', '⇧')
-  keys.set('meta', '⌘')
-  keys.set('enter', '⏎' )
-  if (keys.has(key)) {
-    return keys.get(key)
-  }
-
-  return key.charAt(0).toUpperCase() + key.substring(1).toLowerCase()
 }
 
 const modifiers: Modifier = {
