@@ -27,10 +27,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { HippieNav } from 'hippie-nav'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'HippieNavPlayground',
+  setup () {
+    const hippieNav = ref<InstanceType<typeof HippieNav>>()
+
+    return { hippieNav }
+  },
   data () {
     return {
       actions: [
@@ -54,9 +60,7 @@ export default defineComponent({
   },
   methods: {
     openModal () {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      this.$refs.hippieNav.openModal()
+      this.hippieNav?.openModal()
     }
   }
 })

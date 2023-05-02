@@ -1,5 +1,4 @@
 import { DirectiveBinding, VNode, onBeforeUnmount, onMounted  } from 'vue'
-
 const replaceWithOriginal = (original: string, newText: string) => `<p style="display:none;">${original}</p>${newText}`
 
 declare global {
