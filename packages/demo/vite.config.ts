@@ -4,7 +4,6 @@ import IconsResolver from 'unplugin-icons/resolver'
 import Vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 import path from 'path'
-
 const outDir = path.resolve(__dirname, '..', '..', 'docs')
 
 // https://vitejs.dev/config/

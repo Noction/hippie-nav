@@ -1,18 +1,17 @@
 {
   "name": "hippie-nav",
   "version": "0.0.0",
-  "main": "dist/hippie-nav.umd.js",
-  "module": "dist/hippie-nav.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/hippie-nav.umd.js",
+  "module": "./dist/hippie-nav.mjs",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
-    "mydev": "vite",
     "dev": "NODE_ENV=development vite build --watch",
     "build:light": "NODE_ENV=development vite build",
-    "build": "NODE_ENV=production vite build && vue-tsc --project tsconfig.build.json -d --emitDeclarationOnly",
+    "build": "NODE_ENV=production vite build && vue-tsc --project tsconfig.build.json -d --emitDeclarationOnly && vue-docgen-web-types",
     "lint:es": "eslint \"src/**/*.{js,ts,vue}\" --fix --color",
     "lint:style": "stylelint src/**/*.{css,scss,vue} --color --fix",
     "type:check": "vue-tsc --noEmit",
@@ -21,17 +20,21 @@
   },
   "devDependencies": {
     "@types/flexsearch": "^0.7.3",
+    "@typescript/lib-dom": "npm:@types/web@^0.0.99",
     "@vitejs/plugin-vue": "^4.1.0",
     "@vitest/coverage-c8": "^0.30.1",
     "jsdom": "^21.1.1",
+    "minimist": "^1.2.8",
     "typescript": "^4.9.3",
     "vite": "^4.3.1",
     "vitest": "^0.30.1",
     "vue": "^3.2.47",
+    "vue-docgen-web-types": "^0.1.8",
     "vue-tsc": "^1.2.0",
     "vue-typegen": "^0.2.0"
   },
   "dependencies": {
+    "@noction/vue-use-flexsearch": "^1.0.2",
     "@vueuse/core": "^10.0.2",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.23",
@@ -40,5 +43,6 @@
   "peerDependencies": {
     "flexsearch": "0.7.21",
     "vue-router": "^4.1.6"
-  }
+  },
+  "web-types": "./dist/web-types.json"
 }

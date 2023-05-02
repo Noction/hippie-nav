@@ -38,16 +38,14 @@
 
 <script lang="ts">
 import 'hippie-nav/dist/style.css'
-import AddRoute from '../../components/PlaygrounPage/HippieNavPlayground.vue'
-import BoxActions from '../../components/PlaygrounPage/BoxActions.vue'
-import BoxRouteConfig from '../../components/PlaygrounPage/BoxRouteConfig.vue'
-import BoxRouteItems from '../../components/PlaygrounPage/BoxRouteItems.vue'
-import BoxRoutes from '../../components/PlaygrounPage/BoxRoutes/BoxRoutes.vue'
-import HippieNavPlayground from '../../components/PlaygrounPage/HippieNavPlayground.vue'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import hippieNav from 'hippie-nav'
-import { App, createApp, defineComponent } from 'vue'
+import AddRoute from '../../components/PlaygrounDPage/HippieNavPlayground.vue'
+import BoxActions from '../../components/PlaygrounDPage/BoxActions.vue'
+import BoxRouteConfig from '../../components/PlaygrounDPage/BoxRouteConfig.vue'
+import BoxRouteItems from '../../components/PlaygrounDPage/BoxRouteItems.vue'
+import BoxRoutes from '../../components/PlaygrounDPage/BoxRoutes/BoxRoutes.vue'
+import HippieNav from 'hippie-nav'
+import HippieNavPlayground from '../../components/PlaygrounDPage/HippieNavPlayground.vue'
+import { App, Component, ComponentPublicInstance, createApp, defineComponent } from 'vue'
 import { RouteRecordNormalized, createMemoryHistory, createRouter } from 'vue-router'
 const actions = [
   {
@@ -160,7 +158,7 @@ export default defineComponent({
       this.playground = createApp(HippieNavPlayground) as unknown as typeof this.playground
 
       this.playground.use(router)
-      this.playground.use(hippieNav, {
+      this.playground.use(HippieNav, {
         excludedPaths: this.excludedPaths
       })
       this.playground.mount('#playground')

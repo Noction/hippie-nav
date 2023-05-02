@@ -1,7 +1,10 @@
 import { RouteRecordNormalized } from 'vue-router'
+import { assignIdsArray } from '@/util/assignIdsArray'
 import { isActionConfig } from '@/types/typePredicates'
+import { transformDataToResultData } from '@/util/transformFlexDataToResult'
 
 import { ActionConfig, ResultItem } from '@/types'
+
 const LocalStorageItems = {
   ACTIONS_NAMES: 'actionsNames',
   ROUTE_PATHS: 'routePaths'
@@ -22,37 +25,32 @@ export const addLocalStorageRecentResults = (recentResults: ResultItem[]) => {
   localStorage.setItem(LocalStorageItems.ROUTE_PATHS, routesPaths.join(','))
 }
 
-export const extractLocalStoreRecentResults = (actions: ActionConfig[], routes: RouteRecordNormalized[]): ResultItem[] => {
+export const extractLocalStoreRecentResults = (actions: ActionConfig[], routes: RouteRecordNormalized[]) => {
   const routesPaths = localStorage.getItem(LocalStorageItems.ROUTE_PATHS)?.split(',')
   const actionNames = localStorage.getItem(LocalStorageItems.ACTIONS_NAMES)?.split(',')
-  const recentResults: ResultItem[] = []
+  const recentResults: (ActionConfig | RouteRecordNormalized)[] = []
 
-  if (routesPaths !== undefined) {
-    for (const routePath of routesPaths) {
-      const index = routePath.charAt(0)
-      const route = routes.find(route => route.path === routePath.slice(1))
+  if (routesPaths) {
+    routesPaths.forEach(path => {
+      const index = path.charAt(0)
+      const route = routes.find(route => route.path === path.slice(1))
 
       if (route) {
-        recentResults[index] = {
-          data: route,
-          type: 'route'
-        }
+        recentResults[index] = route
       }
-    }
+    })
   }
 
-  if (actionNames !== undefined) {
-    for (const actionName of actionNames) {
-      const index = actionName.charAt(0)
-      const action = actions.find(action => action.name === actionName.slice(1))
+  if (actionNames) {
+    actionNames.forEach(name => {
+      const index = name.charAt(0)
+      const action = actions.find(action => action.name === name.slice(1))
 
       if (action) {
-        recentResults[index] = {
-          data: action,
-          type: 'action'
-        }
+        recentResults[index] = action
       }
-    }
+    })
+
   }
-  return recentResults.filter(rs => rs !== null)
+  return transformDataToResultData(assignIdsArray(recentResults.filter(r => r !== null)))
 }

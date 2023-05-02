@@ -10,6 +10,12 @@
   </div>
 </template>
 
+<script lang="ts">
+export default {
+  name: 'SearchModal'
+}
+</script>
+
 <script lang="ts" setup>
 const props = defineProps({
   shown: {
@@ -17,7 +23,6 @@ const props = defineProps({
     type: Boolean
   }
 })
-
 const emit = defineEmits({
   close: () => true
 })

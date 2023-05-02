@@ -28,7 +28,7 @@
             :results="results"
             :current="current"
             :input="searchInput"
-            @mouse-over="onMouseOver"
+            @mouse-over="handleMouseOver"
             @close-modal="closeModal"
           >
             <template #resultItemRoute="route">
@@ -47,28 +47,29 @@
 </template>
 
 <script lang="ts">
-import ExpandTransition from './components/ExpandTransition.vue'
-import NavButtons from './components/NavButtons.vue'
-import RecentResults from './components/RecentResults.vue'
+import ExpandTransition from './ExpandTransition.vue'
+import NavButtons from './NavButtons.vue'
+import RecentResults from './RecentResults.vue'
 import { RouteRecordNormalized } from 'vue-router'
-import SearchModal from './components/SearchModal.vue'
-import SearchPan from './components/SearchPan.vue'
-import SearchResult from './components/SearchResult.vue'
-import { excludedPaths } from './index'
-import { filterExcludedPaths } from './util/filterExcludedPaths'
-import { onKeyboardShortcut } from './util/keyboard'
-import { useFlexSearch } from './util/useFlexSearch.js'
-import { ActionConfig, IndexOptionsHippieNav, ResultItem } from './types'
+import SearchModal from './SearchModal.vue'
+import SearchPan from './SearchPan.vue'
+import SearchResult from './SearchResult.vue'
+import { assignIdsArray } from '@/util/assignIdsArray'
+import { excludedPaths } from '../index'
+import { filterExcludedPaths } from '../util/filterExcludedPaths'
+import { isActionConfig } from '@/types/typePredicates'
+import { isMatchingShortcut } from '@/util/keyboard'
+import { transformDataToResultData } from '@/util/transformFlexDataToResult'
+import { useEventListener } from '@vueuse/core'
+import { useFlexSearch } from '@noction/vue-use-flexsearch'
+import { ActionConfig, IndexOptionsHippieNav, ResultItem } from '../types'
 import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
-import { PropType, defineComponent, inject } from 'vue'
+import { PropType, defineComponent, inject, ref } from 'vue'
 import {
   addLocalStorageRecentResults,
   extractLocalStoreRecentResults
-} from './util/recentResultsLocalStorageUtils'
-import { indexAdd, indexSetup } from './util/indexSetup'
-const isActionConfig = (value: RouteRecordNormalized | ActionConfig): value is ActionConfig => {
-  return 'action' in value
-}
+} from '@/util/recentResultsLocalStorageUtils'
+import { indexAdd, indexSetup } from '@/util/indexSetup'
 
 export default defineComponent({
   name: 'HippieNav',
@@ -99,14 +100,13 @@ export default defineComponent({
       indexRoutes: {} as Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>,
       recentResults: [] as ResultItem[],
       results: [] as ResultItem[],
-      resultsActions: [] as ActionConfig[],
-      resultsRoutes: [] as RouteRecordNormalized[],
       searchInput: '',
       showModal: false
     }
   },
+  cleanUp : null,
   computed: {
-    validConfig () {
+    validRoutes () {
       if (!this.excludedPaths) {
         return this.routes
       }
@@ -114,35 +114,47 @@ export default defineComponent({
     }
   },
   watch: {
-    searchInput (value: string) {
+    searchInput (newSearchInput) {
       this.results = []
-      this.resultsRoutes = useFlexSearch(value, this.indexRoutes, this.validConfig, 'route')
-      this.resultsActions = useFlexSearch(value, this.indexActions, this.actions, 'action')
-      if (this.resultsRoutes?.length > 0) {
-        this.resultsRoutes.forEach((r: RouteRecordNormalized) => {
-          this.results.push({ data: r, type: 'route' })
-        })
-      }
 
-      if (this.resultsActions?.length > 0) {
-        this.resultsActions.forEach((r: ActionConfig) => {
-          this.results.push({ data: r, type: 'action' })
-        })
-      }
+      const queryRef = ref(newSearchInput)
+      const { results: routesResults } = useFlexSearch(
+        queryRef,
+        ref(this.indexRoutes),
+        ref(assignIdsArray(this.validRoutes))
+      )
+      const { results: actionsResults } = useFlexSearch(
+        queryRef,
+        ref(this.indexActions),
+        ref(assignIdsArray(this.actions))
+      )
+
+      this.results = [
+        ...transformDataToResultData(routesResults.value),
+        ...transformDataToResultData(actionsResults.value)
+      ]
       this.current = 0
     }
   },
   mounted () {
-    onKeyboardShortcut(['ctrl+k', 'meta+k'], event => {
-      this.openModal()
-      event.preventDefault()
+    this.$options.cleanUp = useEventListener('keydown', event => {
+      if (isMatchingShortcut(['ctrl+k', 'meta+k'])) {
+        this.openModal()
+        event.preventDefault()
+      }
     })
+
     const indexFields = { id: 'id', index: ['name', 'aliases'] }
 
     this.indexActions = indexSetup('action', indexFields)
-    indexAdd(this.indexActions, this.actions, 'action')
+    indexAdd(this.indexActions, assignIdsArray(this.actions), 'action')
     this.fullReindex()
     this.recentResults = extractLocalStoreRecentResults(this.actions, this.routes)
+  },
+  beforeMount () {
+    if (this.$options.cleanUp) {
+      this.$options.cleanUp()
+    }
   },
   methods: {
     addRecentResult (result: ResultItem) {
@@ -160,7 +172,7 @@ export default defineComponent({
       const indexFields = { id: 'id', index: ['name', 'aliases', 'path'] }
 
       this.indexRoutes = indexSetup('route', indexFields)
-      indexAdd(this.indexRoutes, this.validConfig, 'route')
+      indexAdd(this.indexRoutes, assignIdsArray(this.validRoutes), 'route')
     },
     goto () {
       const result = this.results[this.current]
@@ -177,15 +189,15 @@ export default defineComponent({
       this.addRecentResult(result)
       this.closeModal()
     },
+    handleMouseOver (e: ResultItem) {
+      this.current = this.results?.findIndex(r => r.data.name === e.data.name)
+    },
     move (direction: 'next' | 'previous') {
       if (direction === 'next' && this.results.length - 1 > this.current) {
         this.current++
       } else if (direction === 'previous' && this.current > 0) {
         this.current--
       }
-    },
-    onMouseOver (e: ResultItem) {
-      this.current = this.results?.findIndex(r => r.data.name === e.data.name)
     },
     openModal () {
       this.showModal = true
@@ -196,60 +208,76 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-  hr {
-    height: 1px;
-    margin: 2px;
-    border: 3px;
-    box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
+hr {
+  height: 1px;
+  margin: 2px;
+  border: 3px;
+  box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
+}
+
+.hippie-font-color-main {
+  color: var(--hippie-secondary-color);
+}
+
+.hippie-font-color {
+  color: var(--hippie-font-color);
+}
+
+.hippie-nav {
+  box-sizing: border-box;
+
+  --hippie-animate-duration: .225s;
+  --hippie-primary-color-h: 1deg;
+  --hippie-primary-color-s: 100%;
+  --hippie-primary-color-l: 60%;
+  --hippie-primary-color: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) var(--hippie-primary-color-l));
+  --hippie-secondary-color: hsl(39deg 100% 63%);
+  --hippie-font-color: hsl(143deg 100% 40%);
+  --hippie-hover: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) calc(var(--hippie-primary-color-l) - 10%));
+}
+
+.hippie-enter-active {
+  animation: fade calc(var(--hippie-animate-duration) / 2);
+
+  .modal-content {
+    animation: pulse var(--hippie-animate-duration);
   }
+}
 
-  .hippie-font-color-main {
-    color: var(--hippie-secondary-color);
+.hippie-leave-active {
+  animation: fade calc(var(--hippie-animate-duration) / 2) reverse;
+
+  .modal-content {
+    animation: pulse calc(var(--hippie-animate-duration)) reverse;
   }
+}
 
-  .hippie-font-color {
-    color: var(--hippie-font-color);
+.hippie-enter-from,
+.hippie-leave-to {
+  opacity: 0;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale3d(.9, .9, .9);
   }
-
-  .hippie-nav {
-    box-sizing: border-box;
-
-    --hippie-animate-duration: .225s;
-    --hippie-primary-color-h: 1deg;
-    --hippie-primary-color-s: 100%;
-    --hippie-primary-color-l: 60%;
-    --hippie-primary-color: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) var(--hippie-primary-color-l));
-    --hippie-secondary-color:  hsl(39deg 100% 63%);
-    --hippie-font-color:  	 		hsl(143deg 100% 40%);
-    --hippie-hover: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) calc(var(--hippie-primary-color-l) - 10%));
+  55% {
+    transform: scale3d(.98, .98, .98)
   }
-
-  .hippie-enter-active {
-    animation: fade calc(var(--hippie-animate-duration) / 2);
-
-    .modal-content { animation:  pulse var(--hippie-animate-duration); }
+  100% {
+    transform: scale3d(1, 1, 1);
   }
+}
 
-  .hippie-leave-active {
-    animation: fade calc(var(--hippie-animate-duration) / 2) reverse;
-
-    .modal-content { animation: pulse calc(var(--hippie-animate-duration)) reverse; }
-  }
-
-  .hippie-enter-from,
-  .hippie-leave-to {
+@keyframes fade {
+  0% {
     opacity: 0;
   }
-
-  @keyframes pulse {
-    0% { transform: scale3d(.9, .9, .9); }
-    55% { transform: scale3d(.98, .98, .98) }
-    100% { transform: scale3d(1, 1, 1); }
+  50% {
+    opacity: .75;
   }
-
-  @keyframes fade {
-    0% { opacity: 0; }
-    50% { opacity: .75; }
-    100% { opacity: 1; }
+  100% {
+    opacity: 1;
   }
+}
 </style>

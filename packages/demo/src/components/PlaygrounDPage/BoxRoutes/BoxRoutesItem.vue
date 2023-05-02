@@ -25,15 +25,11 @@
 </template>
 
 <script lang="ts">
-import HippieBtnCollapse from '../../common/HippieBtnCollapse.vue'
 import {  RouteRecordRaw } from 'vue-router'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'BoxRoutesItem',
-  components: {
-    HippieBtnCollapse
-  },
   props: {
     boxType: {
       type: String as PropType<'parent' | 'child' | 'grand-child'>,

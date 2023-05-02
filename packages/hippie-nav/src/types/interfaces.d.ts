@@ -1,10 +1,14 @@
 import { IndexFields } from '@/util/indexSetup'
-import { RouteRecordNormalized } from 'vue-router'
+import { ResultWithId } from '@/types/types'
 
 export interface ActionConfig {
   name: string,
   action: () => void
   aliases: string[]
+}
+
+export interface AppOptions {
+  excludedPaths: (string | RegExp)[]
 }
 
 export interface IndexOptionsHippieNav {
@@ -16,5 +20,5 @@ export interface IndexOptionsHippieNav {
 
 export interface ResultItem {
   type: 'route' | 'action',
-  data: RouteRecordNormalized | ActionConfig
+  data: ResultWithId
 }

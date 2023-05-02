@@ -1,14 +1,6 @@
 import { Modifier } from '@/types'
-import { useEventListener } from '@vueuse/core'
-import { Ref, isRef } from 'vue'
-
-export type KeyboardHandler = (event: KeyboardEvent) => unknown
 
 export type KeyboardShortcut = string[]
-
-export interface KeyboardShortcutOptions {
-    event?: 'keyup' | 'keydown' | 'keypress'
-}
 
 const modifiers: Modifier = {
   alt: { key: 'Alt', pressed: false },
@@ -54,7 +46,7 @@ window.addEventListener('blur', () => {
   }
 })
 
-function isMatchingShortcut (shortcut: KeyboardShortcut): boolean {
+export function isMatchingShortcut (shortcut: KeyboardShortcut): boolean {
   for (const combination of shortcut) {
     if (isMatchingCombination(combination.toLowerCase())) {
       return true
@@ -76,12 +68,4 @@ function isMatchingCombination (combination: string): boolean {
     }
   }
   return pressedKeys.has(targetKey as string)
-}
-
-export function onKeyboardShortcut (shortcut: KeyboardShortcut | Ref<KeyboardShortcut>, handler: KeyboardHandler, options: KeyboardShortcutOptions = {}) {
-  useEventListener(options.event ?? 'keydown', event => {
-    if (isMatchingShortcut(isRef(shortcut) ? shortcut.value : shortcut)) {
-      handler(event)
-    }
-  })
 }

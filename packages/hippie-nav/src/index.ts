@@ -1,6 +1,6 @@
 import { App } from 'vue'
 import HighlightDirective from './directives/textHighlight'
-import PrivateHippieNav from './HippieNav.vue'
+import PrivateHippieNav from './components/HippieNav.vue'
 
 export const HippieNav = PrivateHippieNav
 
@@ -15,10 +15,7 @@ export function install (app: App, options: AppOptions = {
 }) {
   app.component('HippieNav', PrivateHippieNav)
   app.directive('highlight', HighlightDirective)
-
   app.provide(excludedPaths, options.excludedPaths)
 }
 
-export default {
-  install
-}
+export default { install }
