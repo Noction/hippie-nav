@@ -1,21 +1,23 @@
 <template>
   <div
-    v-if="route"
+    v-if="routeItem"
     :class="{ selected: colored }"
     class="hippie-result-item"
-    @click="goto(route.path)"
+    @click="goto(routeItem.path)"
     @mouseover="$emit('mouseOver', result)"
+    @mouseout="$emit('mouseOut')"
   >
     <slot name="routeItemRoute" v-bind="result">
       <p v-highlight="{ keyword: searchInput }" v-html="result.data.name" />
     </slot>
   </div>
   <div
-    v-if="_action"
+    v-if="actionItem"
     :class="{ selected: colored }"
     class="hippie-result-item"
-    @click="_action.action"
+    @click="actionItem.action"
     @mouseover="$emit('mouseOver', result)"
+    @mouseout="$emit('mouseOut')"
   >
     <slot name="resultItemAction" v-bind="result">
       <p v-highlight="{ keyword: searchInput }" v-html="result.data.name" />
@@ -42,18 +44,19 @@ export default defineComponent({
     },
     searchInput: {
       type: String,
-      required: true
+      required: false,
+      default: null
     }
   },
-  emits: ['closeModal', 'mouseOver'],
+  emits: ['closeModal', 'mouseOver', 'mouseOut'],
   computed: {
-    _action (): ActionConfig | undefined {
+    actionItem (): ActionConfig | undefined {
       if (isActionConfig(this.result.data)) {
         return this.result.data
       }
       return undefined
     },
-    route (): RouteRecordNormalized | undefined {
+    routeItem (): RouteRecordNormalized | undefined {
       if (!isActionConfig(this.result.data)) {
         return this.result.data
       }

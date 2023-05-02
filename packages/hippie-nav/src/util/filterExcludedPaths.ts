@@ -13,11 +13,5 @@ export const filterExcludedPaths = (routes: RouteRecordNormalized[], excludedPat
   }
 
   return routes
-    .filter(route => !strings.includes(route.path))
-    .filter(route => {
-      for (const regExp of regExps) {
-        if (regExp.test(route.path)) return false
-      }
-      return true
-    })
+    .filter(route =>  !strings.includes(route.path) && !regExps.some(regExp => regExp.test(route.path)))
 }

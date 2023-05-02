@@ -5,7 +5,7 @@
     </h2>
     <div
       v-for="(result, index) in results"
-      :key="generateUniqueKey(String(index))"
+      :key="result.data.id"
     >
       <search-result-item
         :search-input="searchInput"
@@ -23,7 +23,7 @@
       </search-result-item>
     </div>
   </div>
-  <div v-else-if="results?.length === 0 && input !== ''">
+  <div v-else-if="results.length === 0 && input !== ''">
     Nothing have found
   </div>
 </template>
@@ -31,7 +31,6 @@
 <script lang="ts">
 import { ResultItem } from '@/types'
 import SearchResultItem from './SearchResultItem.vue'
-import { generateUniqueKey } from '@/util/generateUniqueKey'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
@@ -48,7 +47,7 @@ export default defineComponent({
     },
     results: {
       type: Array as PropType<ResultItem[]>,
-      required: false,
+      required: true,
       default: [] as ResultItem[]
     },
     searchInput: {
@@ -56,7 +55,6 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['closeModal', 'mouseOver'],
-  methods: { generateUniqueKey }
+  emits: ['closeModal', 'mouseOver']
 })
 </script>

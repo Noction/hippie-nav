@@ -3,7 +3,7 @@
     <img
       class="search-panel-icon"
       src="../assets/glass.svg"
-      alt=""
+      alt="glass"
     >
     <input
       ref="input"
@@ -20,10 +20,16 @@
   </div>
 </template>
 
+<script lang="ts">
+export default {
+  name: 'SearchPan'
+}
+</script>
+
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
-const props = defineProps<{  modelValue: string }>()
+const props = defineProps<{ modelValue: string }>()
 
 const emits = defineEmits(['close', 'update-model-value', 'next', 'previous', 'goto'])
 
@@ -34,26 +40,25 @@ onMounted(() => {
 })
 </script>
 
-<style>
-  .search-panel-icon {
+<style lang="scss">
+.search-panel-icon {
+    margin-right: 10px;
     width: 20px;
     height: 20px;
-  }
+}
 
-  .search-panel {
+.search-panel {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-  }
+}
 
-  .search-panel-input {
-    padding: 10px;
-    margin-left: 20px;
+.search-panel-input {
     font-size: 30px;
     color: #1a1a1a;
     background-color: inherit;
     border: 0 white;
     outline: none;
-  }
+}
 </style>
