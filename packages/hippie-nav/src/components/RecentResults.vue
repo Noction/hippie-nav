@@ -1,12 +1,8 @@
 <template>
   <div>
-    <h3 class="hippie-font-color-main">
-      Recent results
-    </h3>
     <div
       v-for="result in recentResults"
       :key="result.data.id"
-      class="pointer"
       @click="handleOnClick(result)"
     >
       <search-result-item
@@ -42,6 +38,7 @@ export default defineComponent({
       required: true
     }
   },
+  emits: ['closeModal'],
   data () {
     return {
       selected: -1
@@ -65,9 +62,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style>
-  .pointer {
-    cursor: pointer;
-  }
-</style>

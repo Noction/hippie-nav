@@ -1,0 +1,8 @@
+@mixin colors {
+  --hippie-primary-color-base: 31 100%;
+  --hippie-primary-color-light: 50%;
+  --hippie-secondary-color-base: 215 16%;
+  --hippie-secondary-color-light: 50%;
+  --hippie-font-color: hsl(143deg 100% 40%);
+  --hippie-hover: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) calc(var(--hippie-primary-color-l) - 10%));
+}

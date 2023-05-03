@@ -73,21 +73,20 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-  .selected {
-    background-color: var(--hippie-hover)
-  }
-
   .hippie-result-item {
-    padding: 5px 10px;
+    padding: var(--hippie-spacing-m) var(--hippie-spacing-l);
     cursor: pointer;
-    border-radius: 10px;
 
-    .hippie-highlighted {
-      color: inherit;
+    .hippie-highlighted { color: hsl(var(--hippie-secondary-color-base) 20%) }
+    p { color: hsl(var(--hippie-secondary-color-base) 20%) }
+
+    &:hover,
+    &.selected {
+      background-color: hsl(var(--hippie-primary-color-base) var(--hippie-primary-color-light));
+
+      p { color: #fff; }
+      .hippie-highlighted { color: inherit }
     }
 
-    p {
-      color: var(--hippie-font-color);
-    }
   }
 </style>

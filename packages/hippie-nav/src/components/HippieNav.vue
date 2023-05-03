@@ -7,15 +7,13 @@
         @close="closeModal"
       >
         <search-pan
-          :model-value="searchInput"
+          v-model="searchInput"
           @close="showModal = false"
           @next="move('next')"
           @previous="move('previous')"
           @goto="goto"
-          @update-model-value="newValue => searchInput = newValue"
         />
-        <hr>
-        <div v-if="recentResults.length > 0">
+        <div v-if="recentResults.length > 0 && !searchInput">
           <recent-results :recent-results="recentResults">
             <template #recentResultItem="result">
               <slot name="recentResultItem" v-bind="result" />
@@ -39,8 +37,7 @@
             </template>
           </search-result>
         </expand-transition>
-        <hr>
-        <nav-buttons />
+        <nav-buttons v-if="searchInput" />
       </search-modal>
     </transition>
   </div>
@@ -208,6 +205,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+  @import "src/assets/styles";
+
+  .hippie-nav {
+    --hippie-animate-duration: .225s;
+
+    box-sizing: border-box;
+  }
+
   hr {
     height: 1px;
     margin: 2px;
@@ -221,19 +226,6 @@ export default defineComponent({
 
   .hippie-font-color {
     color: var(--hippie-font-color);
-  }
-
-  .hippie-nav {
-    box-sizing: border-box;
-
-    --hippie-animate-duration: .225s;
-    --hippie-primary-color-h: 1deg;
-    --hippie-primary-color-s: 100%;
-    --hippie-primary-color-l: 60%;
-    --hippie-primary-color: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) var(--hippie-primary-color-l));
-    --hippie-secondary-color: hsl(39deg 100% 63%);
-    --hippie-font-color: hsl(143deg 100% 40%);
-    --hippie-hover: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) calc(var(--hippie-primary-color-l) - 10%));
   }
 
   .hippie-enter-active {
@@ -258,30 +250,14 @@ export default defineComponent({
   }
 
   @keyframes pulse {
-    0% {
-      transform: scale3d(.9, .9, .9);
-    }
-
-    55% {
-      transform: scale3d(.98, .98, .98)
-    }
-
-    100% {
-      transform: scale3d(1, 1, 1);
-    }
+    0% { transform: scale3d(.9, .9, .9) }
+      55% { transform: scale3d(.98, .98, .98) }
+    100% { transform: scale3d(1, 1, 1) }
   }
 
   @keyframes fade {
-    0% {
-      opacity: 0;
-    }
-
-    50% {
-      opacity: .75;
-    }
-
-    100% {
-      opacity: 1;
-    }
+    0% { opacity: 0 }
+      50% { opacity: .75 }
+    100% { opacity: 1 }
   }
 </style>
