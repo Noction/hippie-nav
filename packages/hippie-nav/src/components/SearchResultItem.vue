@@ -7,9 +7,9 @@
     @mouseover="$emit('mouseOver', result)"
     @mouseout="$emit('mouseOut')"
   >
-    <slot name="routeItemRoute" v-bind="result">
-      <p v-highlight="{ keyword: searchInput }" v-html="result.data.name" />
-    </slot>
+    <p v-highlight-search="{ keyword: searchInput }">
+      {{ result.data.name }}
+    </p>
   </div>
   <div
     v-if="actionItem"
@@ -20,7 +20,7 @@
     @mouseout="$emit('mouseOut')"
   >
     <slot name="resultItemAction" v-bind="result">
-      <p v-highlight="{ keyword: searchInput }" v-html="result.data.name" />
+      <p v-highlight-search="{ keyword: searchInput }" v-html="result.data.name" />
     </slot>
   </div>
 </template>
@@ -28,11 +28,15 @@
 <script lang="ts">
 import { RouteRecordNormalized } from 'vue-router'
 import { isActionConfig } from '@/types/typePredicates'
+import textHighlight from '@/directives/textHighlight'
 import { ActionConfig, ResultItem } from '@/types'
 import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SearchResultItem',
+  directives: {
+    highlightSearch: textHighlight
+  },
   props: {
     colored: {
       type: Boolean,
