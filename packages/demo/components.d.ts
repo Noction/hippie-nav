@@ -9,14 +9,14 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    AddRoute: typeof import('./src/components/PlaygrounDPage/AddRoute.vue')['default']
-    BoxActions: typeof import('./src/components/PlaygrounDPage/BoxActions.vue')['default']
-    BoxRouteConfig: typeof import('./src/components/PlaygrounDPage/BoxRouteConfig.vue')['default']
-    BoxRouteItems: typeof import('./src/components/PlaygrounDPage/BoxRouteItems.vue')['default']
-    BoxRoutes: typeof import('./src/components/PlaygrounDPage/BoxRoutes/BoxRoutes.vue')['default']
-    BoxRoutesItem: typeof import('./src/components/PlaygrounDPage/BoxRoutes/BoxRoutesItem.vue')['default']
+    AddRoute: typeof import('./src/components/PlaygroundPage/AddRoute.vue')['default']
+    BoxActions: typeof import('./src/components/PlaygroundPage/BoxActions.vue')['default']
+    BoxRouteConfig: typeof import('./src/components/PlaygroundPage/BoxRouteConfig.vue')['default']
+    BoxRouteItems: typeof import('./src/components/PlaygroundPage/BoxRouteItems.vue')['default']
+    BoxRoutes: typeof import('./src/components/PlaygroundPage/BoxRoutes/BoxRoutes.vue')['default']
+    BoxRoutesItem: typeof import('./src/components/PlaygroundPage/BoxRoutes/BoxRoutesItem.vue')['default']
     HippieBtnCollapse: typeof import('./src/components/common/HippieBtnCollapse.vue')['default']
-    HippieNavPlayground: typeof import('./src/components/PlaygrounDPage/HippieNavPlayground.vue')['default']
+    HippieNavPlayground: typeof import('./src/components/PlaygroundPage/HippieNavPlayground.vue')['default']
     ICarbonBranch: typeof import('~icons/carbon/branch')['default']
     ICarbonCube: typeof import('~icons/carbon/cube')['default']
     ICarbonFunctionMath: typeof import('~icons/carbon/function-math')['default']
