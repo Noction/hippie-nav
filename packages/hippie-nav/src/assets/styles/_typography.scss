@@ -1,0 +1,9 @@
+@mixin typography {
+  --hippie-text-xxs: .625rem; /* 10px */
+  --hippie-text-xs: .75rem; /* 12px */
+  --hippie-text-sm: .875rem; /* 14px */
+  --hippie-text-base: 1rem; /* 16px */
+  --hippie-text-lg: 1.125rem; /* 18px */
+  --hippie-text-xl: 1.25rem; /* 20px */
+  --hippie-text-2xl: 1.5rem; /* 24px */
+}
