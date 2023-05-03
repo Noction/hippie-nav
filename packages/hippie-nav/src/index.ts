@@ -12,7 +12,6 @@ export function install (app: App, options: AppOptions = {
   excludedPaths: []
 }) {
   app.component('HippieNav', PrivateHippieNav)
-  // app.directive('highlight', HighlightDirective)
   app.provide(excludedPaths, options.excludedPaths)
 }
 
