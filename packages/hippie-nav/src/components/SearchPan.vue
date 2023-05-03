@@ -41,24 +41,24 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.search-panel-icon {
-    margin-right: 10px;
+  .search-panel-icon {
     width: 20px;
     height: 20px;
-}
+    margin-right: 10px;
+  }
 
-.search-panel {
+  .search-panel {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-}
+  }
 
-.search-panel-input {
+  .search-panel-input {
     font-size: 30px;
     color: #1a1a1a;
     background-color: inherit;
     border: 0 white;
     outline: none;
-}
+  }
 </style>

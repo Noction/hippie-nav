@@ -28,8 +28,8 @@
 
 <script lang="ts">
 import HippieButton from '../common/HippieBtnCollapse.vue'
-import { routesFlatten } from '../../util/routesFlatten'
-import { routesNormalize } from '../../util/routesNormalize'
+import { flattenRoutes } from '../../util/flattenRoutes'
+import { normalizeRoutes } from '../../util/normalizeRoutes'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 
@@ -49,9 +49,9 @@ export default defineComponent({
   },
   computed: {
     _routesFlatten () {
-      const routesWithoutChildPaths = routesNormalize(this.routes) as RouteRecordNormalized[]
+      const routesWithoutChildPaths = normalizeRoutes(this.routes) as RouteRecordNormalized[]
 
-      return routesFlatten(routesFlatten(routesWithoutChildPaths))
+      return flattenRoutes(flattenRoutes(routesWithoutChildPaths))
     }
   },
   methods: {

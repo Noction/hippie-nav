@@ -19,7 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "strictNullChecks": false
   },
   "exclude": ["node_modules", "dist"],
   "references": [{ "path": "./tsconfig.vite.json"}]

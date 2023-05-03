@@ -1,6 +1,6 @@
 import { RouteRecordNormalized } from 'vue-router'
 
-export const routesFlatten = (nestedRoutes: RouteRecordNormalized[]): RouteRecordNormalized[] => {
+export const flattenRoutes = (nestedRoutes: RouteRecordNormalized[]): RouteRecordNormalized[] => {
   const routes: RouteRecordNormalized[] = []
 
   for (const r of nestedRoutes) {
