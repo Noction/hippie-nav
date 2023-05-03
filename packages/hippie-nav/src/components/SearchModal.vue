@@ -23,6 +23,7 @@ const props = defineProps({
     type: Boolean
   }
 })
+
 const emit = defineEmits({
   close: () => true
 })
@@ -37,15 +38,14 @@ function close (): void {
     position: fixed;
     inset: 0;
     display: flex;
-    background: rgb(0 0 0 / 50%);
+    background-color: hsla(var(--hippie-secondary-color-base) var(--hippie-secondary-color-light) / 50%);
   }
 
   .modal-content {
-    min-width: 300px;
+    min-width: 560px;
     min-height: 50px;
-    padding: 20px;
     margin: 150px auto auto;
-    background: var(--hippie-primary-color);
-    border-radius: 12px;
+    background: #fff;
+    border-radius: 1rem;
   }
 </style>

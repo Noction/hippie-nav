@@ -1,8 +1,5 @@
 <template>
   <div v-if="results?.length !== 0">
-    <h2 class="hippie-font-color-main">
-      Results
-    </h2>
     <div
       v-for="(result, index) in results"
       :key="result.data.id"
@@ -23,8 +20,8 @@
       </search-result-item>
     </div>
   </div>
-  <div v-else-if="results.length === 0 && input !== ''">
-    Nothing have found
+  <div v-else-if="results.length === 0 && searchInput !== ''" class="no-result">
+    No results for <b>“{{ searchInput }}“</b>
   </div>
 </template>
 
@@ -41,10 +38,6 @@ export default defineComponent({
       type: Number,
       required: true
     },
-    input: {
-      type: String,
-      required: true
-    },
     results: {
       type: Array as PropType<ResultItem[]>,
       required: true,
@@ -58,3 +51,12 @@ export default defineComponent({
   emits: ['closeModal', 'mouseOver']
 })
 </script>
+
+<style lang="scss">
+  .no-result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--hippie-spacing-2xl);
+  }
+</style>
