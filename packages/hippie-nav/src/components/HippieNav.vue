@@ -55,20 +55,20 @@ import SearchModal from './SearchModal.vue'
 import SearchPan from './SearchPan.vue'
 import SearchResult from './SearchResult.vue'
 import { assignIdsArray } from '@/util/assignIdsArray'
-import { excludedPaths } from '../index'
-import { filterExcludedPaths } from '../util/filterExcludedPaths'
+import { excludedPaths } from '@/index'
+import { filterExcludedPaths } from '@/util/filterExcludedPaths'
 import { isActionConfig } from '@/types/typePredicates'
 import { isMatchingShortcut } from '@/util/keyboard'
 import { transformDataToResultData } from '@/util/transformFlexDataToResult'
 import { useEventListener } from '@vueuse/core'
 import { useFlexSearch } from '@noction/vue-use-flexsearch'
-import { ActionConfig, IndexOptionsHippieNav, ResultItem } from '../types'
+import { ActionConfig, IndexOptionsHippieNav, ResultItem } from '@/types'
 import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
 import { PropType, defineComponent, inject, ref } from 'vue'
 import {
   addLocalStorageRecentResults,
   extractLocalStoreRecentResults
-} from '@/util/recentResultsLocalStorageUtils'
+} from '@/util/persistiveLocalStorage'
 import { indexAdd, indexSetup } from '@/util/indexSetup'
 
 export default defineComponent({
@@ -208,76 +208,80 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-hr {
-  height: 1px;
-  margin: 2px;
-  border: 3px;
-  box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
-}
-
-.hippie-font-color-main {
-  color: var(--hippie-secondary-color);
-}
-
-.hippie-font-color {
-  color: var(--hippie-font-color);
-}
-
-.hippie-nav {
-  box-sizing: border-box;
-
-  --hippie-animate-duration: .225s;
-  --hippie-primary-color-h: 1deg;
-  --hippie-primary-color-s: 100%;
-  --hippie-primary-color-l: 60%;
-  --hippie-primary-color: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) var(--hippie-primary-color-l));
-  --hippie-secondary-color: hsl(39deg 100% 63%);
-  --hippie-font-color: hsl(143deg 100% 40%);
-  --hippie-hover: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) calc(var(--hippie-primary-color-l) - 10%));
-}
-
-.hippie-enter-active {
-  animation: fade calc(var(--hippie-animate-duration) / 2);
-
-  .modal-content {
-    animation: pulse var(--hippie-animate-duration);
+  hr {
+    height: 1px;
+    margin: 2px;
+    border: 3px;
+    box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
   }
-}
 
-.hippie-leave-active {
-  animation: fade calc(var(--hippie-animate-duration) / 2) reverse;
-
-  .modal-content {
-    animation: pulse calc(var(--hippie-animate-duration)) reverse;
+  .hippie-font-color-main {
+    color: var(--hippie-secondary-color);
   }
-}
 
-.hippie-enter-from,
-.hippie-leave-to {
-  opacity: 0;
-}
+  .hippie-font-color {
+    color: var(--hippie-font-color);
+  }
 
-@keyframes pulse {
-  0% {
-    transform: scale3d(.9, .9, .9);
-  }
-  55% {
-    transform: scale3d(.98, .98, .98)
-  }
-  100% {
-    transform: scale3d(1, 1, 1);
-  }
-}
+  .hippie-nav {
+    box-sizing: border-box;
 
-@keyframes fade {
-  0% {
+    --hippie-animate-duration: .225s;
+    --hippie-primary-color-h: 1deg;
+    --hippie-primary-color-s: 100%;
+    --hippie-primary-color-l: 60%;
+    --hippie-primary-color: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) var(--hippie-primary-color-l));
+    --hippie-secondary-color: hsl(39deg 100% 63%);
+    --hippie-font-color: hsl(143deg 100% 40%);
+    --hippie-hover: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) calc(var(--hippie-primary-color-l) - 10%));
+  }
+
+  .hippie-enter-active {
+    animation: fade calc(var(--hippie-animate-duration) / 2);
+
+    .modal-content {
+      animation: pulse var(--hippie-animate-duration);
+    }
+  }
+
+  .hippie-leave-active {
+    animation: fade calc(var(--hippie-animate-duration) / 2) reverse;
+
+    .modal-content {
+      animation: pulse calc(var(--hippie-animate-duration)) reverse;
+    }
+  }
+
+  .hippie-enter-from,
+  .hippie-leave-to {
     opacity: 0;
   }
-  50% {
-    opacity: .75;
+
+  @keyframes pulse {
+    0% {
+      transform: scale3d(.9, .9, .9);
+    }
+
+    55% {
+      transform: scale3d(.98, .98, .98)
+    }
+
+    100% {
+      transform: scale3d(1, 1, 1);
+    }
   }
-  100% {
-    opacity: 1;
+
+  @keyframes fade {
+    0% {
+      opacity: 0;
+    }
+
+    50% {
+      opacity: .75;
+    }
+
+    100% {
+      opacity: 1;
+    }
   }
-}
 </style>

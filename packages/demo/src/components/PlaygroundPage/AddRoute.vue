@@ -7,13 +7,7 @@
       back
     </button>
     <div class="title">
-      <span class="name">
-        {{
-          String(momRoute.name
-            ? `You are creating a child route for ${String(momRoute.name)}`
-            : 'You are creating a route')
-        }}
-      </span>
+      <span class="name">{{ text }}</span>
     </div>
     <div>
       <input
@@ -36,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { slashCounter } from '../../util/slashCounter'
+import { countSlashes } from '../../util/countSlashes'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordName, RouteRecordNormalized, Router } from 'vue-router'
 
@@ -77,12 +71,20 @@ export default defineComponent({
       }
     }
   },
+  computed: {
+    text () {
+      if (this.momRoute.name) {
+        return `You are creating a child route for ${this.momRoute.name.toString()}`
+      }
+      return 'You are creating a route'
+    }
+  },
   methods: {
     addRoute (): void {
       const routes = this.router.getRoutes()
       const copyOfMomRoute = JSON.parse(JSON.stringify(this.momRoute))
       const fullPathOfMomRoute: string | undefined = copyOfMomRoute.name && getFullPath(copyOfMomRoute.name, routes)
-      const isChildOfChild: boolean = fullPathOfMomRoute ? slashCounter(fullPathOfMomRoute) === 2 : false
+      const isChildOfChild: boolean = fullPathOfMomRoute ? countSlashes(fullPathOfMomRoute) === 2 : false
       const component = { template: `<div>${this.route.displayName}</div>` }
       const aliases: string[] = this.route.aliases.split(',')
       const path: string = copyOfMomRoute.path ? `${copyOfMomRoute.path}${this.route.path}` : this.route.path

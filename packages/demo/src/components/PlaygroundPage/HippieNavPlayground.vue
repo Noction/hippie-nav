@@ -17,11 +17,7 @@
         </button>
       </ul>
     </nav>
-    <hippie-nav
-      ref="hippieNav"
-      :routes="routes"
-      :actions="actions"
-    />
+    <hippie-nav :actions="actions" :routes="routes" />
     <router-view class="view" />
   </div>
 </template>
@@ -29,13 +25,17 @@
 <script lang="ts">
 import { HippieNav } from 'hippie-nav'
 import { defineComponent, ref } from 'vue'
-
+export interface ActionConfig {
+  name: string,
+  action: () => void
+  aliases: string[]
+}
 export default defineComponent({
   name: 'HippieNavPlayground',
   setup () {
-    const hippieNav = ref<InstanceType<typeof HippieNav>>()
+    const hippieNavRef = ref<InstanceType<typeof HippieNav>>()
 
-    return { hippieNav }
+    return { hippieNavRef }
   },
   data () {
     return {
@@ -60,7 +60,7 @@ export default defineComponent({
   },
   methods: {
     openModal () {
-      this.hippieNav?.openModal()
+      this.hippieNavRef?.openModal()
     }
   }
 })
