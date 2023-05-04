@@ -20,9 +20,6 @@
       </search-result-item>
     </div>
   </div>
-  <div v-else-if="results.length === 0 && searchInput !== ''" class="no-result">
-    No results for <b>“{{ searchInput }}“</b>
-  </div>
 </template>
 
 <script lang="ts">
@@ -51,12 +48,3 @@ export default defineComponent({
   emits: ['closeModal', 'mouseOver']
 })
 </script>
-
-<style lang="scss">
-  .no-result {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--hippie-spacing-2xl);
-  }
-</style>
