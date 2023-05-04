@@ -15,14 +15,16 @@
     "lint:es": "eslint \"src/**/*.{js,ts,vue}\" --fix --color",
     "lint:style": "stylelint src/**/*.{css,scss,vue} --color --fix",
     "type:check": "vue-tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@types/flexsearch": "^0.7.3",
     "@typescript/lib-dom": "npm:@types/web@^0.0.99",
     "@vitejs/plugin-vue": "^4.1.0",
     "@vitest/coverage-c8": "^0.30.1",
+    "@vue/test-utils": "^2.3.2",
     "jsdom": "^21.1.1",
     "minimist": "^1.2.8",
     "typescript": "^4.9.3",

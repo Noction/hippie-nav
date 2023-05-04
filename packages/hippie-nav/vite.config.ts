@@ -11,6 +11,7 @@ export default defineConfig({
     rollupOptions: {
       external: ['vue', 'vue-router'],
       output: {
+        exports: 'named',
         globals: { vue: 'Vue', 'vue-router': 'VueRouter' }
       }
     }

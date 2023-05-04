@@ -251,13 +251,13 @@ export default defineComponent({
 
   @keyframes pulse {
     0% { transform: scale3d(.9, .9, .9) }
-      55% { transform: scale3d(.98, .98, .98) }
+    55% { transform: scale3d(.98, .98, .98) }
     100% { transform: scale3d(1, 1, 1) }
   }
 
   @keyframes fade {
     0% { opacity: 0 }
-      50% { opacity: .75 }
+    50% { opacity: .75 }
     100% { opacity: 1 }
   }
 </style>
