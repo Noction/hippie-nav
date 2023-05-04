@@ -25,7 +25,6 @@ function escapeRegExp (str: string) {
 }
 
 function highlightSearch (message: string, keyword: string) {
-  const styleString = 'style="text-decoration: underline"'
   const newKeyword = keyword
   let regexWord = ''
 
@@ -47,7 +46,7 @@ function highlightSearch (message: string, keyword: string) {
     const replaced = message.replace(match, ':;{{:;\$&:;}}:;')
     const matchAgain = new RegExp(`:;{{:;(${escapeHtml(regexWord)}):;}}:;`, 'gi')
 
-    const restoreReplaced = escapeHtml(replaced).replace(matchAgain, `<span class="highlighted" ${styleString}>\$1</span>`)
+    const restoreReplaced = escapeHtml(replaced).replace(matchAgain, `<span class="highlighted">\$1</span>`)
 
     return restoreReplaced
   }

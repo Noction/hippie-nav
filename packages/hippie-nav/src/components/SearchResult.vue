@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { ResultItem } from '@/types'
 import SearchResultItem from './SearchResultItem.vue'
-import {  PropType, defineComponent } from 'vue'
+import { PropType, defineComponent } from 'vue'
 
 defineProps({
   current: {

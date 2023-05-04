@@ -71,6 +71,9 @@ onMounted(() => {
 
 <style lang="scss">
   .search-panel {
+    position: sticky;
+    top: 0;
+    z-index: 60;
     display: grid;
     grid-template: 1fr / auto 1fr auto;
     column-gap: var(--hippie-spacing-l);
@@ -79,11 +82,12 @@ onMounted(() => {
     width: 100%;
     height: 4rem;
     padding: var(--hippie-spacing-l);
+    background-color: white;
 
     .search-panel-icon {
       flex: none;
       height: var(--hippie-text-2xl);
-      color: hsl(var(--hippie-secondary-color-base) 20%);
+      color: hsl(var(--hippie-secondary-color-base) var(--btn-light));
     }
 
     .search-panel-input {
