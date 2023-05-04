@@ -17,7 +17,11 @@
         </button>
       </ul>
     </nav>
-    <hippie-nav :actions="actions" :routes="routes" />
+    <hippie-nav
+      ref="hippieNavRef"
+      :actions="actions"
+      :routes="routes"
+    />
     <router-view class="view" />
   </div>
 </template>
