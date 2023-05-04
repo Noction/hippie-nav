@@ -88,7 +88,7 @@ function handlerAction (actionItem: ActionConfig) {
     padding: var(--hippie-spacing-m) var(--hippie-spacing-l);
     cursor: pointer;
 
-    .hippie-highlighted { color: hsl(var(--hippie-secondary-color-base) 20%) }
+    .highlighted { color: hsl(var(--hippie-primary-color-base) var(--hippie-primary-color-light)) }
     p { color: hsl(var(--hippie-secondary-color-base) 20%) }
 
     &:hover,
@@ -96,8 +96,13 @@ function handlerAction (actionItem: ActionConfig) {
       background-color: hsl(var(--hippie-primary-color-base) var(--hippie-primary-color-light));
 
       p { color: #fff; }
-      .hippie-highlighted { color: inherit }
-    }
 
+      .highlighted {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+      }
+    }
   }
 </style>
