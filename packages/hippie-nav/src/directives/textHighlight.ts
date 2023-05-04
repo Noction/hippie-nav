@@ -2,7 +2,7 @@ import { Directive, VNode } from 'vue'
 /* eslint-disable */
 const replaceWithOriginal = (original: string, newText: string) => `<p style="display:none;">${original}</p>${newText}`
 
-const escapeHtml = (unsafe: string) => {
+function escapeHtml (unsafe: string) {
   return unsafe
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -11,25 +11,26 @@ const escapeHtml = (unsafe: string) => {
     .replace(/'/g, '&#039;')
 }
 
-const unescapeHtml = (safe: string) => safe
-  .replace(/&amp;/g, '&')
-  .replace(/&lt;/g, '<')
-  .replace(/&gt;/g, '>')
-  .replace(/&quot;/g, '"')
-  .replace(/&#039;/g, '\'')
+function unescapeHtml (safe: string) {
+  return safe
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, '\'')
+}
 
-const escapeRegExp = function (str: string) {
+function escapeRegExp (str: string) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\<\>]/g, '\\$&')
 }
 
-const highlightSearch = function (message: string, keyword: string) {
+function highlightSearch (message: string, keyword: string) {
   const styleString = 'style="text-decoration: underline"'
   const newKeyword = keyword
   let regexWord = ''
 
   if (typeof keyword === 'string') {
     if (/^\s*$/.test(keyword)) {
-      // when the keyword is empty string, return the original message.
       return escapeHtml(message)
     }
     regexWord = escapeRegExp(newKeyword)
@@ -39,13 +40,10 @@ const highlightSearch = function (message: string, keyword: string) {
     return escapeHtml(message)
   }
 
-  // const match = new RegExp(`(${regexWord})`, flags)
-  // Can only replace the words out of the html tags.
   const match = new RegExp(`(${regexWord})`, 'gi')
   const testMath = match.test(message)
 
   if (testMath) {
-    // return escapeHtml(message).replace(match, `<span ${styleString}>\$&</span>`)
     const replaced = message.replace(match, ':;{{:;\$&:;}}:;')
     const matchAgain = new RegExp(`:;{{:;(${escapeHtml(regexWord)}):;}}:;`, 'gi')
 

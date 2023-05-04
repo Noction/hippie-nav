@@ -17,7 +17,7 @@
     v-if="actionItem"
     :class="{ selected: colored }"
     class="hippie-result-item"
-    @click="actionItem.action"
+    @click="handlerAction(actionItem)"
     @mouseover="$emit('mouseOver', result)"
     @mouseout="$emit('mouseOut')"
   >
@@ -29,55 +29,58 @@
   </div>
 </template>
 
-<script lang="ts">
-import { RouteRecordNormalized } from 'vue-router'
+<script  setup lang="ts">
 import { isActionConfig } from '@/types/typePredicates'
 import textHighlight from '@/directives/textHighlight'
+import { useRouter } from 'vue-router'
 import { ActionConfig, ResultItem } from '@/types'
-import { PropType, defineComponent } from 'vue'
+import { PropType, computed, defineComponent } from 'vue'
 
-export default defineComponent({
-  name: 'SearchResultItem',
-  directives: {
-    highlightSearch: textHighlight
+const props = defineProps({
+  colored: {
+    required: true,
+    type: Boolean
   },
-  props: {
-    colored: {
-      type: Boolean,
-      required: true
-    },
-    result: {
-      type: Object as PropType<ResultItem>,
-      required: true
-    },
-    searchInput: {
-      type: String,
-      required: false,
-      default: null
-    }
+  result: {
+    required: true,
+    type: Object as PropType<ResultItem>
   },
-  emits: ['closeModal', 'mouseOver', 'mouseOut'],
-  computed: {
-    actionItem (): ActionConfig | undefined {
-      if (isActionConfig(this.result.data)) {
-        return this.result.data
-      }
-      return undefined
-    },
-    routeItem (): RouteRecordNormalized | undefined {
-      if (!isActionConfig(this.result.data)) {
-        return this.result.data
-      }
-      return undefined
-    }
-  },
-  methods: {
-    goto (path: string) {
-      this.$router.push(path)
-      this.$emit('closeModal')
-    }
+  searchInput: {
+    default: null,
+    required: false,
+    type: String
   }
 })
+
+const emits = defineEmits( ['closeModal', 'mouseOver', 'mouseOut'])
+
+defineComponent({
+  name: 'SearchResultItem'
+})
+const vHighlightSearch = textHighlight
+
+const actionItem = computed(() => {
+  if (isActionConfig(props.result.data)) {
+    return props.result.data
+  }
+  return undefined
+})
+const routeItem = computed(() => {
+  if (!isActionConfig(props.result.data)) {
+    return props.result.data
+  }
+  return undefined
+})
+const router = useRouter()
+
+function goto (path: string) {
+  router.push(path)
+  emits('closeModal')
+}
+function handlerAction (actionItem: ActionConfig) {
+  actionItem.action
+  emits('closeModal')
+}
 </script>
 
 <style lang="scss">

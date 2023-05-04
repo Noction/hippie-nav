@@ -58,10 +58,9 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import ExpandTransition from './ExpandTransition.vue'
 import NavButtons from './NavButtons.vue'
-import { RouteRecordNormalized } from 'vue-router'
 import SearchModal from './SearchModal.vue'
 import SearchPan from './SearchPan.vue'
 import SearchResult from './SearchResult.vue'
@@ -73,148 +72,143 @@ import { isMatchingShortcut } from '@/util/keyboard'
 import { transformDataToResultData } from '@/util/transformFlexDataToResult'
 import { useEventListener } from '@vueuse/core'
 import { useFlexSearch } from '@noction/vue-use-flexsearch'
+import { useRouter } from 'vue-router'
 import { ActionConfig, IndexOptionsHippieNav, ResultItem } from '@/types'
 import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
-import { PropType, defineComponent, inject, ref } from 'vue'
+import { PropType, Ref, computed, defineComponent, inject, onBeforeMount, onMounted, ref, watch } from 'vue'
 import {
   addLocalStorageRecentResults,
   extractLocalStoreRecentResults
 } from '@/util/persistiveLocalStorage'
 import { indexAdd, indexSetup } from '@/util/indexSetup'
 
-export default defineComponent({
-  name: 'HippieNav',
-  components: {
-    ExpandTransition,
-    NavButtons,
-    SearchModal,
-    SearchPan,
-    SearchResult
-  },
-  expose: ['fullReindex', 'openModal'],
-  props: {
-    actions: {
-      type: Array as PropType<ActionConfig[]>,
-      required: true
-    },
-    routes: {
-      type: Array as PropType<RouteRecordNormalized[]>,
-      required: true
-    }
-  },
-  data () {
-    return {
-      current: 0,
-      excludedPaths: inject(excludedPaths) as string[],
-      indexActions: {} as Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>,
-      indexRoutes: {} as Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>,
-      recentResults: [] as ResultItem[],
-      results: [] as ResultItem[],
-      searchInput: '',
-      showModal: false
-    }
-  },
-  cleanUp : null,
-  computed: {
-    validRoutes () {
-      if (!this.excludedPaths) {
-        return this.routes
-      }
-      return filterExcludedPaths(this.routes, this.excludedPaths)
-    }
-  },
-  watch: {
-    searchInput (newSearchInput) {
-      this.results = []
-
-      const queryRef = ref(newSearchInput)
-      const { results: routesResults } = useFlexSearch(
-        queryRef,
-        ref(this.indexRoutes),
-        ref(assignIdsArray(this.validRoutes))
-      )
-      const { results: actionsResults } = useFlexSearch(
-        queryRef,
-        ref(this.indexActions),
-        ref(assignIdsArray(this.actions))
-      )
-
-      this.results = [
-        ...transformDataToResultData(routesResults.value),
-        ...transformDataToResultData(actionsResults.value)
-      ]
-      this.current = 0
-    }
-  },
-  mounted () {
-    this.$options.cleanUp = useEventListener('keydown', event => {
-      if (isMatchingShortcut(['ctrl+k', 'meta+k'])) {
-        this.openModal()
-        event.preventDefault()
-      }
-    })
-
-    const indexFields = { id: 'id', index: ['name', 'aliases'] }
-
-    this.indexActions = indexSetup('action', indexFields)
-    indexAdd(this.indexActions, assignIdsArray(this.actions), 'action')
-    this.fullReindex()
-    this.recentResults = extractLocalStoreRecentResults(this.actions, this.routes)
-  },
-  beforeMount () {
-    if (this.$options.cleanUp) {
-      this.$options.cleanUp()
-    }
-  },
-  methods: {
-    addRecentResult (result: ResultItem) {
-      this.recentResults.unshift(result)
-      if (this.recentResults.length > 3) {
-        this.recentResults.pop()
-      }
-      addLocalStorageRecentResults(this.recentResults)
-    },
-    closeModal () {
-      this.showModal = false
-      this.searchInput = ''
-    },
-    fullReindex () {
-      const indexFields = { id: 'id', index: ['name', 'aliases', 'path'] }
-
-      this.indexRoutes = indexSetup('route', indexFields)
-      indexAdd(this.indexRoutes, assignIdsArray(this.validRoutes), 'route')
-    },
-    goto () {
-      const result = this.results[this.current]
-
-      if (!isActionConfig(result.data)) {
-        const route = result.data
-
-        this.$router.push(route.path)
-      } else {
-        const actionItem = result.data
-
-        actionItem.action()
-      }
-      this.addRecentResult(result)
-      this.closeModal()
-    },
-    handleMouseOver (e: ResultItem) {
-      this.current = this.results?.findIndex(r => r.data.name === e.data.name)
-    },
-    move (direction: 'next' | 'previous') {
-      if (direction === 'next' && this.results.length - 1 > this.current) {
-        this.current++
-      } else if (direction === 'previous' && this.current > 0) {
-        this.current--
-      }
-    },
-    openModal () {
-      this.showModal = true
-    }
+const props = defineProps({
+  actions: {
+    default: [] as ActionConfig[],
+    required: false,
+    type: Array as PropType<ActionConfig[]>
   }
 })
 
+const router = useRouter()
+const current = ref(0)
+const optionsExcludedPaths = ref<string[]>(inject(excludedPaths))
+const indexActions = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
+const indexRoutes = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
+
+const recentResults= ref<ResultItem[]>([]) as Ref<ResultItem[]>
+const results = ref<ResultItem[]>([]) as Ref<ResultItem[]>
+const searchInput= ref('')
+const showModal= ref(false)
+const routes = router.getRoutes()
+let cleanUp: ()  => void = null
+const validRoutes = computed(() => {
+  if (!optionsExcludedPaths.value) {
+    return routes
+  }
+  return filterExcludedPaths(routes, optionsExcludedPaths.value)
+})
+
+watch([searchInput], () => {
+  results.value = []
+  const { results: routesResults } = useFlexSearch(
+    searchInput,
+    ref(indexRoutes.value),
+    ref(assignIdsArray(validRoutes.value))
+  )
+  const { results: actionsResults } = useFlexSearch(
+    searchInput,
+    indexActions,
+    ref(assignIdsArray(props.actions))
+  )
+
+  results.value = [
+    ...transformDataToResultData(routesResults.value),
+    ...transformDataToResultData(actionsResults.value)
+  ]
+  current.value = 0
+})
+
+function openModal () {
+  showModal.value = true
+}
+
+function closeModal () {
+  showModal.value = false
+  searchInput.value = ''
+}
+
+function fullReindex () {
+  const indexFields = { id: 'id', index: ['name', 'aliases', 'path'] }
+
+  indexRoutes.value = indexSetup('route', indexFields)
+  indexAdd(indexRoutes.value, assignIdsArray(validRoutes.value), 'route')
+}
+
+function addRecentResult (result: ResultItem) {
+  recentResults.value.unshift(result)
+  if (recentResults.value.length > 3) {
+    recentResults.value.pop()
+  }
+  addLocalStorageRecentResults(recentResults.value)
+}
+
+function goto () {
+  const result = results.value[current.value]
+
+  if (!isActionConfig(result.data)) {
+    const route = result.data
+
+    router.push(route.path)
+  } else {
+    const actionItem = result.data
+
+    actionItem.action()
+  }
+  addRecentResult(result)
+  closeModal()
+}
+
+function handleMouseOver (e: ResultItem) {
+  current.value = results.value?.findIndex(r => r.data.name === e.data.name)
+}
+
+function move (direction: 'next' | 'previous') {
+  console.log('1')
+  if (direction === 'next' && results.value.length - 1 > current.value) {
+    current.value++
+  } else if (direction === 'previous' && current.value > 0) {
+    current.value--
+  }
+}
+
+defineExpose({ fullReindex, openModal })
+
+onMounted(() => {
+  cleanUp = useEventListener('keydown', event => {
+    if (isMatchingShortcut(['ctrl+k', 'meta+k'])) {
+      openModal()
+      event.preventDefault()
+    }
+  })
+
+  const indexFields = { id: 'id', index: ['name', 'aliases'] }
+
+  indexActions.value = indexSetup('action', indexFields)
+  indexAdd(indexActions.value, assignIdsArray(props.actions), 'action')
+  fullReindex()
+  recentResults.value = extractLocalStoreRecentResults(props.actions, routes)
+})
+
+onBeforeMount(() => {
+  if (cleanUp) {
+    cleanUp()
+  }
+})
+
+defineComponent({
+  name: 'HippieNav'
+})
 </script>
 
 <style lang="scss">
