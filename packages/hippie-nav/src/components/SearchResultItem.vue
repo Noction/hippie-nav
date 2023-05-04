@@ -7,9 +7,11 @@
     @mouseover="$emit('mouseOver', result)"
     @mouseout="$emit('mouseOut')"
   >
-    <p v-highlight-search="{ keyword: searchInput }">
-      {{ result.data.name }}
-    </p>
+    <slot name="resultItemRoute" v-bind="result">
+      <p v-highlight-search="{ keyword: searchInput }">
+        {{ result.data.name }}
+      </p>
+    </slot>
   </div>
   <div
     v-if="actionItem"
