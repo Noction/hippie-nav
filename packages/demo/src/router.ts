@@ -1,9 +1,8 @@
-import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
-const AboutPage = defineAsyncComponent(() => import('./pages/AboutPage/AboutPage.vue'))
-const HomePage = defineAsyncComponent(() => import('./pages/HomePage/HomePage.vue'))
-const PlaygroundPage = defineAsyncComponent(() => import( './pages/PlaygroundPage/PlaygroundPage.vue'))
+const AboutPage = () => import('./pages/AboutPage/AboutPage.vue')
+const HomePage = () => import('./pages/HomePage/HomePage.vue')
+const PlaygroundPage = () => import( './pages/PlaygroundPage/PlaygroundPage.vue')
 
 export const routes = [
   { component: HomePage, path: '/' },

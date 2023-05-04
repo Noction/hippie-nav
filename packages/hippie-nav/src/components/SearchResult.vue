@@ -22,29 +22,30 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { ResultItem } from '@/types'
 import SearchResultItem from './SearchResultItem.vue'
-import { PropType, defineComponent } from 'vue'
+import {  PropType, defineComponent } from 'vue'
 
-export default defineComponent({
-  name: 'SearchResult',
-  components: { SearchResultItem },
-  props: {
-    current: {
-      type: Number,
-      required: true
-    },
-    results: {
-      type: Array as PropType<ResultItem[]>,
-      required: true,
-      default: [] as ResultItem[]
-    },
-    searchInput: {
-      type: String,
-      required: true
-    }
+defineProps({
+  current: {
+    required: true,
+    type: Number
   },
-  emits: ['closeModal', 'mouseOver']
+  results: {
+    required: true,
+    type: Array as PropType<ResultItem[]>
+  },
+  searchInput: {
+    required: true,
+    type: String
+  }
 })
+
+defineEmits(['closeModal', 'mouseOver'])
+
+defineComponent({
+  name: 'SearchResult'
+})
+
 </script>
