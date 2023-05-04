@@ -1,27 +1,15 @@
 <template>
   <div
-    v-if="routeItem"
     :class="{ selected: colored }"
     class="hippie-result-item"
-    @click="goto(routeItem.path)"
+    @click="handler(result)"
     @mouseover="$emit('mouseOver', result)"
     @mouseout="$emit('mouseOut')"
   >
-    <slot name="resultItemRoute" v-bind="result">
-      <p v-highlight-search="{ keyword: searchInput }">
-        {{ result.data.name }}
-      </p>
-    </slot>
-  </div>
-  <div
-    v-if="actionItem"
-    :class="{ selected: colored }"
-    class="hippie-result-item"
-    @click="handlerAction(actionItem)"
-    @mouseover="$emit('mouseOver', result)"
-    @mouseout="$emit('mouseOut')"
-  >
-    <slot name="resultItemAction" v-bind="result">
+    <slot
+      name="resultItem"
+      v-bind="result"
+    >
       <p v-highlight-search="{ keyword: searchInput }">
         {{ result.data.name }}
       </p>
@@ -30,57 +18,36 @@
 </template>
 
 <script  setup lang="ts">
+import { ResultItem } from '@/types'
 import { isActionConfig } from '@/types/typePredicates'
 import textHighlight from '@/directives/textHighlight'
 import { useRouter } from 'vue-router'
-import { ActionConfig, ResultItem } from '@/types'
-import { PropType, computed, defineComponent } from 'vue'
 
-const props = defineProps({
-  colored: {
-    required: true,
-    type: Boolean
-  },
-  result: {
-    required: true,
-    type: Object as PropType<ResultItem>
-  },
-  searchInput: {
-    default: null,
-    required: false,
-    type: String
-  }
-})
+withDefaults(defineProps<{
+  colored: boolean,
+  result: ResultItem
+  searchInput: string
+}>(), { searchInput: null })
 
-const emits = defineEmits( ['closeModal', 'mouseOver', 'mouseOut'])
+const emits = defineEmits<{
+  (e: 'closeModal'): void,
+  (e: 'mouseOver', result: ResultItem): void,
+  (e: 'mouseOut'): void,
+}>()
 
-defineComponent({
-  name: 'SearchResultItem'
-})
 const vHighlightSearch = textHighlight
-
-const actionItem = computed(() => {
-  if (isActionConfig(props.result.data)) {
-    return props.result.data
-  }
-  return undefined
-})
-const routeItem = computed(() => {
-  if (!isActionConfig(props.result.data)) {
-    return props.result.data
-  }
-  return undefined
-})
 const router = useRouter()
 
-function goto (path: string) {
-  router.push(path)
+function handler (result: ResultItem) {
+  if (isActionConfig(result.data)) {
+    result.data.action()
+    emits('closeModal')
+    return
+  }
+  router.push(result.data.path)
   emits('closeModal')
 }
-function handlerAction (actionItem: ActionConfig) {
-  actionItem.action
-  emits('closeModal')
-}
+
 </script>
 
 <style lang="scss">

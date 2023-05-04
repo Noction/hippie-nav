@@ -1,7 +1,7 @@
 import { RouteRecordNormalized } from 'vue-router'
-import { assignIdsArray } from '@/util/assignIdsArray'
+import { assignIdsArray } from '@/util/helpers'
 import { isActionConfig } from '@/types/typePredicates'
-import { transformDataToResultData } from '@/util/transformFlexDataToResult'
+import { transformDataToResultData } from '@/util/helpers'
 
 import { ActionConfig, ResultItem } from '@/types'
 
@@ -36,7 +36,7 @@ export const extractLocalStoreRecentResults = (actions: ActionConfig[], routes: 
       const route = routes.find(route => route.path === path.slice(1))
 
       if (route) {
-        recentResults[index] = route
+        recentResults[+index] = route
       }
     })
   }
@@ -47,7 +47,7 @@ export const extractLocalStoreRecentResults = (actions: ActionConfig[], routes: 
       const action = actions.find(action => action.name === name.slice(1))
 
       if (action) {
-        recentResults[index] = action
+        recentResults[+index] = action
       }
     })
 

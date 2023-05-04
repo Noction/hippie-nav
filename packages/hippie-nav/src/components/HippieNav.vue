@@ -3,52 +3,47 @@
     <transition name="hippie">
       <search-modal
         :shown="showModal"
-        :input="searchInput"
         @close="closeModal"
       >
         <search-pan
           v-model="searchInput"
-          @close="showModal = false"
+          @close="closeModal"
           @next="move('next')"
           @previous="move('previous')"
           @goto="goto"
         />
         <div class="search-results">
-          <template v-if="recentResults.length > 0 && !searchInput">
-            <expand-transition>
-              <search-result
-                :search-input="searchInput"
-                :results="recentResults"
-                :current="current"
-                :input="searchInput"
-                @mouse-over="handleMouseOver"
-                @close-modal="closeModal"
-              >
-                <template #resultItemRoute="route">
-                  <slot name="resultItemRoute" v-bind="route" />
-                </template>
-                <template #resultItemAction="action">
-                  <slot name="resultItemAction" v-bind="action" />
-                </template>
-              </search-result>
-            </expand-transition>
-          </template>
-          <expand-transition>
-            <search-result
+          <div v-if="recentResults.length && !searchInput">
+            <search-result-item
+              v-for="(result, index) in recentResults"
+              :key="result.data.id"
               :search-input="searchInput"
-              :results="results"
-              :current="current"
-              :input="searchInput"
+              :colored="index === current"
+              :result="result"
               @mouse-over="handleMouseOver"
               @close-modal="closeModal"
             >
-              <template #resultItemRoute="route">
-                <slot name="resultItemRoute" v-bind="route" />
+              <template #resultItem="result">
+                <slot name="resultItem" v-bind="result" />
               </template>
-              <template #resultItemAction="action">
-                <slot name="resultItemAction" v-bind="action" />
-              </template>
-            </search-result>
+            </search-result-item>
+          </div>
+          <expand-transition v-else>
+            <div v-if="results.length">
+              <search-result-item
+                v-for="(result, index) in results"
+                :key="result.data.id"
+                :search-input="searchInput"
+                :colored="index === current"
+                :result="result"
+                @mouse-over="handleMouseOver"
+                @close-modal="closeModal"
+              >
+                <template #resultItem="result">
+                  <slot name="resultItem" v-bind="result" />
+                </template>
+              </search-result-item>
+            </div>
           </expand-transition>
         </div>
         <div v-if="results.length === 0 && searchInput !== ''" class="no-result">
@@ -61,64 +56,58 @@
 </template>
 
 <script setup lang="ts">
-import ExpandTransition from './ExpandTransition.vue'
+import ExpandTransition from '@/components/ExpandTransition.vue'
 import NavButtons from './NavButtons.vue'
 import SearchModal from './SearchModal.vue'
 import SearchPan from './SearchPan.vue'
-import SearchResult from './SearchResult.vue'
-import { assignIdsArray } from '@/util/assignIdsArray'
+import SearchResultItem from '@/components/SearchResultItem.vue'
+import { assignIdsArray } from '@/util/helpers'
 import { excludedPaths } from '@/index'
-import { filterExcludedPaths } from '@/util/filterExcludedPaths'
+import { filterExcludedPaths } from '@/util/helpers'
 import { isActionConfig } from '@/types/typePredicates'
 import { isMatchingShortcut } from '@/util/keyboard'
-import { transformDataToResultData } from '@/util/transformFlexDataToResult'
+import { transformDataToResultData } from '@/util/helpers'
 import { useEventListener } from '@vueuse/core'
 import { useFlexSearch } from '@noction/vue-use-flexsearch'
 import { useRouter } from 'vue-router'
-import { ActionConfig, IndexOptionsHippieNav, ResultItem } from '@/types'
+import { ActionConfig, IndexOptionsHippieNav, ResultItem, ResultWithId } from '@/types'
 import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
-import { PropType, Ref, computed, defineComponent, inject, onBeforeMount, onMounted, ref, watch } from 'vue'
+import { Ref, computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   addLocalStorageRecentResults,
   extractLocalStoreRecentResults
 } from '@/util/persistiveLocalStorage'
 import { indexAdd, indexSetup } from '@/util/indexSetup'
 
-const props = defineProps({
-  actions: {
-    default: [] as ActionConfig[],
-    required: false,
-    type: Array as PropType<ActionConfig[]>
-  }
-})
+const props = withDefaults(defineProps<{
+  actions?: ActionConfig[]
+}>(), { actions: () => [] as ActionConfig[] })
 
 const router = useRouter()
 const current = ref(0)
 const optionsExcludedPaths = ref<string[]>(inject(excludedPaths))
 const indexActions = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
 const indexRoutes = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
-
-const recentResults= ref<ResultItem[]>([]) as Ref<ResultItem[]>
+const recentResults = ref<ResultItem[]>([]) as Ref<ResultItem[]>
 const results = ref<ResultItem[]>([]) as Ref<ResultItem[]>
-const searchInput= ref('')
-const showModal= ref(false)
+const searchInput = ref('')
+const showModal = ref(false)
 const routes = router.getRoutes()
-let cleanUp: () => void = null
 const validRoutes = computed(() => {
-  if (!optionsExcludedPaths.value) {
-    return routes
-  }
+  if (!optionsExcludedPaths.value) return routes
+
   return filterExcludedPaths(routes, optionsExcludedPaths.value)
 })
+let cleanUp: () => void = null
 
 watch([searchInput], () => {
   results.value = []
-  const { results: routesResults } = useFlexSearch(
+  const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
     searchInput,
     ref(indexRoutes.value),
     ref(assignIdsArray(validRoutes.value))
   )
-  const { results: actionsResults } = useFlexSearch(
+  const { results: actionsResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
     searchInput,
     indexActions,
     ref(assignIdsArray(props.actions))
@@ -132,6 +121,7 @@ watch([searchInput], () => {
 })
 
 function openModal () {
+  current.value = 0
   showModal.value = true
 }
 
@@ -140,7 +130,7 @@ function closeModal () {
   searchInput.value = ''
 }
 
-function fullReindex () {
+function reindexRoutes () {
   const indexFields = { id: 'id', index: ['name', 'aliases', 'path'] }
 
   indexRoutes.value = indexSetup('route', indexFields)
@@ -148,15 +138,31 @@ function fullReindex () {
 }
 
 function addRecentResult (result: ResultItem) {
-  recentResults.value.unshift(result)
-  if (recentResults.value.length > 3) {
-    recentResults.value.pop()
+  const idx = recentResults.value.findIndex(recentResult => {
+    if (recentResult.type !== result.type) return false
+
+    return recentResult.data.name === result.data.name
+  })
+
+  if (idx !== -1) {
+    const elementZero = recentResults.value[idx]
+    const filteredRecentResults = recentResults.value.filter(rs => rs.data.id !== elementZero.data.id)
+
+    recentResults.value = [elementZero, ...filteredRecentResults]
+  } else {
+    recentResults.value.unshift(result)
+    if (recentResults.value.length > 3) recentResults.value.pop()
   }
   addLocalStorageRecentResults(recentResults.value)
 }
 
 function goto () {
-  const result = results.value[current.value]
+  if (current.value < 0) return
+  let result: ResultItem
+
+  if (results.value.length !== 0) {
+    result = results.value[current.value]
+  } else result = recentResults.value[current.value]
 
   if (!isActionConfig(result.data)) {
     const route = result.data
@@ -176,40 +182,52 @@ function handleMouseOver (e: ResultItem) {
 }
 
 function move (direction: 'next' | 'previous') {
-  if (direction === 'next' && results.value.length - 1 > current.value) {
+  const isNextResult = direction === 'next' && results.value.length - 1 > current.value && results.value.length !== 0
+  const isNextRecentResult = direction === 'next' && recentResults.value.length - 1 > current.value && recentResults.value.length !== 0
+  const isPrevious = direction === 'previous' && current.value > 0
+
+  if (isNextResult) {
     current.value++
-  } else if (direction === 'previous' && current.value > 0) {
+  } else if (isNextRecentResult) {
+    current.value++
+  } else if (isPrevious) {
     current.value--
   }
 }
 
-defineExpose({ fullReindex, openModal })
-
-onMounted(() => {
-  cleanUp = useEventListener('keydown', event => {
-    if (isMatchingShortcut(['ctrl+k', 'meta+k'])) {
-      openModal()
-      event.preventDefault()
-    }
-  })
-
-  const indexFields = { id: 'id', index: ['name', 'aliases'] }
+function setupActionsIndex () {
+  const indexFields = { id: 'id', index: ['name', 'aliases', 'description'] }
 
   indexActions.value = indexSetup('action', indexFields)
   indexAdd(indexActions.value, assignIdsArray(props.actions), 'action')
-  fullReindex()
+}
+
+function setupShortcut () {
+  cleanUp = useEventListener('keydown', event => {
+    if (isMatchingShortcut(['ctrl+k', 'meta+k'])) {
+      current.value = 0
+      showModal.value = !showModal.value
+      if (showModal.value === false) {
+        searchInput.value = ''
+      }
+      event.preventDefault()
+    }
+  })
+}
+
+defineExpose({ openModal, reindexRoutes })
+
+onMounted(() => {
+  setupShortcut()
+  setupActionsIndex()
+  reindexRoutes()
   recentResults.value = extractLocalStoreRecentResults(props.actions, routes)
 })
 
-onBeforeMount(() => {
-  if (cleanUp) {
-    cleanUp()
-  }
+onBeforeUnmount(() => {
+  if (cleanUp) cleanUp()
 })
 
-defineComponent({
-  name: 'HippieNav'
-})
 </script>
 
 <style lang="scss">
@@ -254,15 +272,31 @@ defineComponent({
   }
 
   @keyframes pulse {
-    0% { transform: scale3d(.9, .9, .9) }
-    55% { transform: scale3d(.98, .98, .98) }
-    100% { transform: scale3d(1, 1, 1) }
+    0% {
+      transform: scale3d(.9, .9, .9)
+    }
+
+    55% {
+      transform: scale3d(.98, .98, .98)
+    }
+
+    100% {
+      transform: scale3d(1, 1, 1)
+    }
   }
 
   @keyframes fade {
-    0% { opacity: 0 }
-    50% { opacity: .75 }
-    100% { opacity: 1 }
+    0% {
+      opacity: 0
+    }
+
+    50% {
+      opacity: .75
+    }
+
+    100% {
+      opacity: 1
+    }
   }
 
   .no-result {

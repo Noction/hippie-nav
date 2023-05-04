@@ -13,7 +13,7 @@
           </RouterLink>
         </li>
         <button @click="openModal">
-          Open Serchbar
+          Open Searchbar
         </button>
       </ul>
     </nav>
@@ -28,10 +28,12 @@
 
 <script lang="ts">
 import { HippieNav } from 'hippie-nav'
+import { actions } from '../../pages/PlaygroundPage/PlaygroundPage.vue'
 import { defineComponent, ref } from 'vue'
 export interface ActionConfig {
   name: string,
-  action: () => void
+  action: () => void,
+  description?: string,
   aliases: string[]
 }
 export default defineComponent({
@@ -43,22 +45,7 @@ export default defineComponent({
   },
   data () {
     return {
-      actions: [
-        {
-          action: () => {
-            this.$router.push('/')
-          },
-          aliases: ['logOut', 'signOut', 'exit'],
-          name: 'Log out'
-        },
-        {
-          action: () => {
-            this.$router.push('/')
-          },
-          aliases: ['show', 'graph'],
-          name: 'Show graph'
-        }
-      ],
+      actions,
       routes: this.$router.getRoutes()
     }
   },

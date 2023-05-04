@@ -1,5 +1,5 @@
 import { Directive, VNode } from 'vue'
-/* eslint-disable */
+
 const replaceWithOriginal = (original: string, newText: string) => `<p style="display:none;">${original}</p>${newText}`
 
 function escapeHtml (unsafe: string) {
@@ -21,6 +21,7 @@ function unescapeHtml (safe: string) {
 }
 
 function escapeRegExp (str: string) {
+  //eslint-disable-next-line
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\<\>]/g, '\\$&')
 }
 
@@ -43,12 +44,12 @@ function highlightSearch (message: string, keyword: string) {
   const testMath = match.test(message)
 
   if (testMath) {
+    //eslint-disable-next-line
     const replaced = message.replace(match, ':;{{:;\$&:;}}:;')
     const matchAgain = new RegExp(`:;{{:;(${escapeHtml(regexWord)}):;}}:;`, 'gi')
 
-    const restoreReplaced = escapeHtml(replaced).replace(matchAgain, `<span class="highlighted">\$1</span>`)
-
-    return restoreReplaced
+    //eslint-disable-next-line
+    return escapeHtml(replaced).replace(matchAgain, '<span class="highlighted">\$1</span>')
   }
   return escapeHtml(message)
 }
@@ -75,7 +76,7 @@ interface HighlightSearchDirective {
   updated: (el: Element, binding: { value: { keyword: string } }, vnode: VNode) => void
   unmounted: (el: Element) => void
 }
-const textHighlight: HighlightSearchDirective & Directive =  {
+const textHighlight: HighlightSearchDirective & Directive=  {
   mounted (el: Element, binding: { value: { keyword: string }}) {
     const originalString = `${el.innerHTML}`
 
@@ -86,6 +87,7 @@ const textHighlight: HighlightSearchDirective & Directive =  {
     el.innerHTML = el.children[0].innerHTML
   },
   updated (el: Element, binding: { value: { keyword: string }}, vnode: VNode) {
+    if (!isVNodeCustomArray(vnode)) return
     const originalString = vnode.children[0].el.textContent
 
     el.innerHTML = replaceWithOriginal(originalString, originalString)
@@ -95,3 +97,21 @@ const textHighlight: HighlightSearchDirective & Directive =  {
 }
 
 export default textHighlight
+type VNodeCustom = VNode & { children: {el: {textContent: string}}[]}
+function isVNodeCustomArray (value: VNode): value is VNodeCustom {
+  if (typeof value !== 'object' || value === null) {
+    return false
+  }
+
+  const { children } = value as VNodeCustom
+
+  if (!Array.isArray(children)) {
+    return false
+  }
+
+  return children.every(child => {
+    const { el } = child
+
+    return typeof el === 'object' && el !== null && typeof el.textContent === 'string'
+  })
+}

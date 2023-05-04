@@ -1,27 +1,20 @@
 <template>
-  <button class="button-39" @click="action">
-    <img src="/triangle.svg" :class="{ 'button-collapsed': collapsed }">
+  <button class="button-39" @click="$emit('action')">
+    <icon-triangle class="triangle-icon" :class="{ 'button-collapsed': collapsed }" />
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import IconTriangle from '../../assets/icons/triangle.svg?component'
 
-export default defineComponent({
-  name: 'HippieBtnCollapse',
-  props: {
-    collapsed: {
-      type: Boolean,
-      required: true
-    }
-  },
-  emits: ['action'],
-  methods: {
-    action () {
-      this.$emit('action')
-    }
-  }
-})
+defineProps<{
+  collapsed: boolean
+}>()
+
+defineEmits<{
+  (e: 'action'): void
+}>()
+
 </script>
 
 <style scoped>
@@ -32,7 +25,7 @@ export default defineComponent({
     border-color: transparent;
   }
 
-  img {
+  .triangle-icon {
     width: 17px;
     height: 17px;
   }

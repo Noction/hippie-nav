@@ -5,6 +5,7 @@ export interface ActionConfig {
   name: string,
   action: () => void
   aliases: string[]
+  description?: string[]
 }
 
 export interface AppOptions {

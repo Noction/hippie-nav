@@ -14,22 +14,19 @@
       <li>
         <h3>{{ action.name }}</h3>
         <h4>Aliases: <span>{{ action.aliases }}</span></h4>
+        <h4 v-if="action.description">
+          Description: <span>{{ action.description }}</span>
+        </h4>
       </li>
     </ul>
   </div>
 </template>
 
-<script lang="ts">
-import { ActionConfig } from 'hippie-nav/src/types'
-import {  PropType, defineComponent } from 'vue'
+<script setup lang="ts">
+import { ActionConfig } from './HippieNavPlayground.vue'
 
-export default defineComponent({
-  name: 'BoxActions',
-  props: {
-    actions: {
-      type: Array as PropType<ActionConfig[]>,
-      required: true
-    }
-  }
-})
+defineProps<{
+  actions: ActionConfig[]
+}>()
+
 </script>

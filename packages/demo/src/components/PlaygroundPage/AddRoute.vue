@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { countSlashes } from '../../util/countSlashes'
+import { countSlashes } from '../../util/helpers'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordName, RouteRecordNormalized, Router } from 'vue-router'
 
