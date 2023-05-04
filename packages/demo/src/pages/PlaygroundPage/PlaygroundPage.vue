@@ -38,21 +38,22 @@
 
 <script lang="ts">
 import 'hippie-nav/dist/style.css'
-import AddRoute from '../../components/PlaygroundPage/HippieNavPlayground.vue'
 import BoxActions from '../../components/PlaygroundPage/BoxActions.vue'
 import BoxRouteConfig from '../../components/PlaygroundPage/BoxRouteConfig.vue'
 import BoxRouteItems from '../../components/PlaygroundPage/BoxRouteItems.vue'
 import BoxRoutes from '../../components/PlaygroundPage/BoxRoutes/BoxRoutes.vue'
 import HippieNav from 'hippie-nav'
 import HippieNavPlayground from '../../components/PlaygroundPage/HippieNavPlayground.vue'
+import AddRoute, { ActionConfig } from '../../components/PlaygroundPage/HippieNavPlayground.vue'
 import { App, createApp, defineComponent } from 'vue'
 import { RouteRecordNormalized, createMemoryHistory, createRouter } from 'vue-router'
-const actions = [
+export const actions: ActionConfig[] = [
   {
     action: () => {
       router.push('/')
     },
     aliases: ['logOut', 'signOut', 'exit'],
+    description: 'bunny hunter',
     name: 'Log out'
   },
   {

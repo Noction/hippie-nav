@@ -15,7 +15,7 @@
       </h5>
       <h5>Add excluded paths</h5>
       <div class="flex">
-        <input v-model="excludedPathModel" type="text">
+        <input v-model="newExcludedPath" type="text">
         <button @click="addExcludedPath">
           +
         </button>
@@ -24,29 +24,22 @@
   </div>
 </template>
 
-<script lang="ts">
-import { PropType, defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 
-export default defineComponent({
-  name: 'BoxRouteConfig',
-  props: {
-    excludedPaths: {
-      type: Array as PropType<(string | RegExp)[]>,
-      required: true
-    }
-  },
-  emits: ['addExcludedPath'],
-  data () {
-    return {
-      excludedPathModel: ''
-    }
-  },
-  methods: {
-    addExcludedPath () {
-      this.$emit('addExcludedPath', this.excludedPathModel)
-      this.excludedPathModel = ''
-    }
-  }
+defineProps<{
+  excludedPaths: (string | RegExp)[]
+}>()
 
-})
+const emits = defineEmits<{
+  (e: 'addExcludedPath', excludedPath: string): void
+}>()
+
+const newExcludedPath = ref('')
+
+function addExcludedPath () {
+  emits('addExcludedPath', newExcludedPath.value)
+  newExcludedPath.value = ''
+}
+
 </script>

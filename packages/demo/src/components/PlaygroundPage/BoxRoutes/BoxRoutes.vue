@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import BoxRoutesItem from './BoxRoutesItem.vue'
-import { normalizeRoutes } from '../../../util/normalizeRoutes'
+import { normalizeRoutes } from '../../../util/helpers'
 import { PropType, defineComponent } from 'vue'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 

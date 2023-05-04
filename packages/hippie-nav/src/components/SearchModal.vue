@@ -10,23 +10,14 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'SearchModal'
-}
-</script>
-
 <script lang="ts" setup>
-const props = defineProps({
-  shown: {
-    default: false,
-    type: Boolean
-  }
-})
+const props = defineProps<{
+  shown: boolean
+}>()
 
-const emit = defineEmits({
-  close: () => true
-})
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
 
 function close (): void {
   emit('close')

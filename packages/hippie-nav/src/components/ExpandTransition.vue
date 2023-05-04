@@ -12,7 +12,6 @@
 
 <script setup lang="ts">
 import { RendererElement, onMounted, ref } from 'vue'
-
 const lastHeight = ref<string>('')
 const wrap = ref<HTMLElement | null>(null)
 
@@ -20,49 +19,45 @@ onMounted(() => {
   if (!(wrap.value instanceof Element)) {
     return
   }
-
   if (wrap.value) {
     lastHeight.value = getComputedStyle(wrap.value).height
   }
 })
-
 function afterEnter (element: HTMLElement) {
-  const el = element as HTMLElement
-
-  el.style.height = 'auto'
+  element.style.height = 'auto'
 }
-
 function enter (element: RendererElement) {
   const { width } = getComputedStyle(element as HTMLElement)
 
+  /* eslint-disable no-param-reassign */
   element.style.width = width
   element.style.position = 'absolute'
   element.style.visibility = 'hidden'
   element.style.height = 'auto'
-
+  /* eslint-enable */
   const { height } = getComputedStyle(element as HTMLElement)
 
+  /* eslint-disable no-param-reassign */
   element.style.width = null
   element.style.position = null
   element.style.visibility = null
   element.style.height = lastHeight.value ?? 0
-
+  /* eslint-enable */
+  // Force repaint to make sure the
+  // animation is triggered correctly.
   getComputedStyle(element as HTMLElement).height
-
   requestAnimationFrame(() => {
     element.style.height = height
-
     lastHeight.value = height
   })
 }
-
 function leave (element: RendererElement) {
   const { height } = getComputedStyle(element as HTMLElement)
 
   element.style.height = height
-
+  // Force repaint to make sure the
+  // animation is triggered correctly.
   getComputedStyle(element as HTMLElement).height
-
   requestAnimationFrame(() => {
     element.style.height = 0
   })
