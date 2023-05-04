@@ -8,7 +8,7 @@ export interface IndexFields {
 }
 export type IndexType = 'route' | 'action'
 
-export const indexAdd = (index: Document<any>, data: ResultWithId[], type: IndexType) => {
+export const indexAdd = (index: Document<unknown>, data: ResultWithId[], type: IndexType) => {
   if (type === 'route') {
     data.sort((a, b) => {
       const nameA = String(a.name).toUpperCase() || ''

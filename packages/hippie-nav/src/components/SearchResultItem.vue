@@ -22,7 +22,9 @@
     @mouseout="$emit('mouseOut')"
   >
     <slot name="resultItemAction" v-bind="result">
-      <p v-highlight-search="{ keyword: searchInput }" v-html="result.data.name" />
+      <p v-highlight-search="{ keyword: searchInput }">
+        {{ result.data.name }}
+      </p>
     </slot>
   </div>
 </template>

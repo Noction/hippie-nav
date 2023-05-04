@@ -1,5 +1,4 @@
 import { App } from 'vue'
-import HighlightDirective from './directives/textHighlight'
 import PrivateHippieNav from './components/HippieNav.vue'
 export const HippieNav = PrivateHippieNav
 interface AppOptions {
