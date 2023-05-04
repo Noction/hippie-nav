@@ -15,11 +15,11 @@ const component = defineComponent({
       text: ''
     }
   },
-  template: '<div>\n' +
-    '    <p v-text-highlight="{ keyword }" data-test="highlightedParagraph">\n' +
-    '      {{ text }}\n' +
-    '    </p>\n' +
-    '  </div>'
+  template: `<div>
+    <p v-text-highlight="{ keyword }" data-test="highlightedParagraph">
+      {{ text }}
+    </p>
+  </div>`
 })
 
 const highlightedSpan = (keyword: string) => {
@@ -46,7 +46,7 @@ describe('textHighlight directive', () => {
     expect(wrapper.find(HIGHLIGHTED_PARAGRAPH).html()).toContain(highlightedSpan(keyword))
   })
 
-  it('should contain highlighted span partial, after to changes of keyword', async () => {
+  it('should contain highlighted span partial, after two changes of keyword', async () => {
     const text = faker.random.words()
     const keywords =  [text.slice(0, text.length / 2), text.slice(0, text.length - 1)]
 
