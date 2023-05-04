@@ -11,7 +11,6 @@
     "outDir": "./dist",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "suppressImplicitAnyIndexErrors": true,
     "lib": ["esnext", "dom"],
     "allowJs": true,
     "checkJs": false,

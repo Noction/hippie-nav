@@ -7,7 +7,7 @@
       </span>
     </div>
     <div class="box-content">
-      <ul v-for="route in _routesFlatten" :key="route.name">
+      <ul v-for="route in routesFlatten" :key="route.name">
         <li class="box-list">
           <div class="box-list-main">
             <h5>{{ route.name }}</h5>
@@ -16,7 +16,7 @@
           <ul v-if="route.name === showRouteConfig" class="box-list-secondary">
             <li>displayName: {{ route.name }}</li>
             <li>Path:{{ route.path }}</li>
-            <li v-if="route.meta.aliases">
+            <li v-if="route.meta">
               Aliases: {{ route.meta.aliases }}
             </li>
           </ul>
@@ -26,44 +26,31 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import HippieButton from '../common/HippieBtnCollapse.vue'
-import { flattenRoutes } from '../../util/flattenRoutes'
-import { normalizeRoutes } from '../../util/normalizeRoutes'
-import { PropType, defineComponent } from 'vue'
-import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
+import { RouteRecordRaw } from 'vue-router'
+import { flattenRoutes } from '../../util/helpers'
+import { normalizeRoutes } from '../../util/helpers'
+import { computed, ref } from 'vue'
 
-export default defineComponent({
-  name: 'BoxRouteItems',
-  components: { HippieButton },
-  props: {
-    routes: {
-      type: Array as PropType<RouteRecordRaw[]>,
-      required: true
-    }
-  },
-  data () {
-    return {
-      showRouteConfig: '' as RouteRecordRaw['name']
-    }
-  },
-  computed: {
-    _routesFlatten () {
-      const routesWithoutChildPaths = normalizeRoutes(this.routes) as RouteRecordNormalized[]
+const props = defineProps<{
+  routes: RouteRecordRaw[]
+}>()
 
-      return flattenRoutes(flattenRoutes(routesWithoutChildPaths))
-    }
-  },
-  methods: {
-    setShowRouteConfig (routeName: RouteRecordRaw['name']) {
-      if (routeName === this.showRouteConfig) {
-        this.showRouteConfig = ''
-        return
-      }
-      this.showRouteConfig = routeName
-    }
-  }
+const showRouteConfig = ref('' as RouteRecordRaw['name'])
+const routesFlatten = computed(() => {
+  const routesWithoutChildPaths = normalizeRoutes(props.routes)
+
+  return flattenRoutes(flattenRoutes(routesWithoutChildPaths))
 })
+
+function setShowRouteConfig (routeName: RouteRecordRaw['name']) {
+  if (routeName === showRouteConfig.value) {
+    showRouteConfig.value = ''
+    return
+  }
+  showRouteConfig.value = routeName
+}
 </script>
 
 <style scoped>

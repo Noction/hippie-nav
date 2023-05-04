@@ -3,13 +3,12 @@ import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
-import path from 'path'
-const outDir = path.resolve(__dirname, '..', '..', 'docs')
+import { resolve } from 'path'
+import svgLoader from 'vite-svg-loader'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   build: {
-    outDir
+    outDir: resolve(__dirname, '..', '..', 'docs')
   },
   plugins: [
     Vue(),
@@ -18,9 +17,8 @@ export default defineConfig({
         IconsResolver()
       ]
     }),
-    Icons({
-      autoInstall: true
-    })
+    Icons({ autoInstall: true }),
+    svgLoader()
   ],
   resolve: {
     alias: { vue: 'vue/dist/vue.esm-bundler.js' },

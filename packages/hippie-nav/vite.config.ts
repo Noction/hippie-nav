@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
+import svgLoader from 'vite-svg-loader'
 import vue from '@vitejs/plugin-vue'
+
 export default defineConfig({
   build: {
     emptyOutDir: process.env.NODE_ENV !== 'development',
@@ -16,7 +18,7 @@ export default defineConfig({
       }
     }
   },
-  plugins: [vue()],
+  plugins: [vue(), svgLoader()],
   resolve: {
     alias: {
       '@': resolve(__dirname, './src')
