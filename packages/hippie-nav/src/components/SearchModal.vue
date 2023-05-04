@@ -33,19 +33,26 @@ function close (): void {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .modal {
     position: fixed;
     inset: 0;
+    z-index: 60;
     display: flex;
+    align-items: start;
+    padding: 150px;
     background-color: hsla(var(--hippie-secondary-color-base) var(--hippie-secondary-color-light) / 50%);
+
+    .modal-content {
+      position: relative;
+      min-width: 560px;
+      min-height: 50px;
+      max-height: 100%;
+      margin: 0 auto;
+      overflow-y: auto;
+      background: #fff;
+      border-radius: 1rem;
+    }
   }
 
-  .modal-content {
-    min-width: 560px;
-    min-height: 50px;
-    margin: 150px auto auto;
-    background: #fff;
-    border-radius: 1rem;
-  }
 </style>

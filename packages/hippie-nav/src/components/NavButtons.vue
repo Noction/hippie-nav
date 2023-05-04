@@ -49,7 +49,7 @@
           </g>
         </svg>
       </div>
-      <p>to navigate</p>
+      <span>to navigate</span>
     </div>
     <div class="key-cap-content">
       <div class="key-cap-btn">
@@ -103,11 +103,15 @@
 
 <style lang="scss">
   .key-caps {
+    position: sticky;
+    bottom: 0;
+    z-index: 60;
     display: flex;
     column-gap: 1rem;
     align-items: center;
     justify-content: flex-start;
     padding: var(--hippie-spacing-m) var(--hippie-spacing-l);
+    background-color: white;
 
     .key-cap-content {
       display: flex;
@@ -121,6 +125,10 @@
         color: hsl(var(--hippie-secondary-color-base) 20%);
         background-color: hsl(var(--hippie-secondary-color-base) 90%);
         border-radius: 5px;
+      }
+
+      span {
+        color: hsl(var(--hippie-secondary-color-base) var(--hippie-primary-color-light))
       }
     }
   }

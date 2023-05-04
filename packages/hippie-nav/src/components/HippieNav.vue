@@ -13,11 +13,30 @@
           @previous="move('previous')"
           @goto="goto"
         />
-        <div v-if="recentResults.length > 0 && !searchInput">
+        <div class="search-results">
+          <template v-if="recentResults.length > 0 && !searchInput">
+            <expand-transition>
+              <search-result
+                :search-input="searchInput"
+                :results="recentResults"
+                :current="current"
+                :input="searchInput"
+                @mouse-over="handleMouseOver"
+                @close-modal="closeModal"
+              >
+                <template #resultItemRoute="route">
+                  <slot name="resultItemRoute" v-bind="route" />
+                </template>
+                <template #resultItemAction="action">
+                  <slot name="resultItemAction" v-bind="action" />
+                </template>
+              </search-result>
+            </expand-transition>
+          </template>
           <expand-transition>
             <search-result
               :search-input="searchInput"
-              :results="recentResults"
+              :results="results"
               :current="current"
               :input="searchInput"
               @mouse-over="handleMouseOver"
@@ -32,23 +51,6 @@
             </search-result>
           </expand-transition>
         </div>
-        <expand-transition>
-          <search-result
-            :search-input="searchInput"
-            :results="results"
-            :current="current"
-            :input="searchInput"
-            @mouse-over="handleMouseOver"
-            @close-modal="closeModal"
-          >
-            <template #resultItemRoute="route">
-              <slot name="resultItemRoute" v-bind="route" />
-            </template>
-            <template #resultItemAction="action">
-              <slot name="resultItemAction" v-bind="action" />
-            </template>
-          </search-result>
-        </expand-transition>
         <div v-if="results.length === 0 && searchInput !== ''" class="no-result">
           No results for <b>“{{ searchInput }}“</b>
         </div>
@@ -174,7 +176,6 @@ function handleMouseOver (e: ResultItem) {
 }
 
 function move (direction: 'next' | 'previous') {
-  console.log('1')
   if (direction === 'next' && results.value.length - 1 > current.value) {
     current.value++
   } else if (direction === 'previous' && current.value > 0) {
@@ -273,5 +274,6 @@ defineComponent({
     align-items: center;
     justify-content: center;
     padding: var(--hippie-spacing-2xl);
+    color: hsl(var(--hippie-secondary-color-base) 20%)
   }
 </style>
