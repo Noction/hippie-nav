@@ -14,11 +14,23 @@
           @goto="goto"
         />
         <div v-if="recentResults.length > 0 && !searchInput">
-          <recent-results :recent-results="recentResults">
-            <template #recentResultItem="result">
-              <slot name="recentResultItem" v-bind="result" />
-            </template>
-          </recent-results>
+          <expand-transition>
+            <search-result
+              :search-input="searchInput"
+              :results="recentResults"
+              :current="current"
+              :input="searchInput"
+              @mouse-over="handleMouseOver"
+              @close-modal="closeModal"
+            >
+              <template #resultItemRoute="route">
+                <slot name="resultItemRoute" v-bind="route" />
+              </template>
+              <template #resultItemAction="action">
+                <slot name="resultItemAction" v-bind="action" />
+              </template>
+            </search-result>
+          </expand-transition>
         </div>
         <expand-transition>
           <search-result
@@ -37,6 +49,9 @@
             </template>
           </search-result>
         </expand-transition>
+        <div v-if="results.length === 0 && searchInput !== ''" class="no-result">
+          No results for <b>“{{ searchInput }}“</b>
+        </div>
         <nav-buttons v-if="searchInput" />
       </search-modal>
     </transition>
@@ -46,7 +61,6 @@
 <script lang="ts">
 import ExpandTransition from './ExpandTransition.vue'
 import NavButtons from './NavButtons.vue'
-import RecentResults from './RecentResults.vue'
 import { RouteRecordNormalized } from 'vue-router'
 import SearchModal from './SearchModal.vue'
 import SearchPan from './SearchPan.vue'
@@ -73,7 +87,6 @@ export default defineComponent({
   components: {
     ExpandTransition,
     NavButtons,
-    RecentResults,
     SearchModal,
     SearchPan,
     SearchResult
@@ -259,5 +272,12 @@ export default defineComponent({
     0% { opacity: 0 }
     50% { opacity: .75 }
     100% { opacity: 1 }
+  }
+
+  .no-result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--hippie-spacing-2xl);
   }
 </style>

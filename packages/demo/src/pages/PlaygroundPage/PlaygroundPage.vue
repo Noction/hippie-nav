@@ -45,7 +45,7 @@ import BoxRouteItems from '../../components/PlaygroundPage/BoxRouteItems.vue'
 import BoxRoutes from '../../components/PlaygroundPage/BoxRoutes/BoxRoutes.vue'
 import HippieNav from 'hippie-nav'
 import HippieNavPlayground from '../../components/PlaygroundPage/HippieNavPlayground.vue'
-import { App, Component, ComponentPublicInstance, createApp, defineComponent } from 'vue'
+import { App, createApp, defineComponent } from 'vue'
 import { RouteRecordNormalized, createMemoryHistory, createRouter } from 'vue-router'
 const actions = [
   {
