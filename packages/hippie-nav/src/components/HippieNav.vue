@@ -103,7 +103,7 @@ const results = ref<ResultItem[]>([]) as Ref<ResultItem[]>
 const searchInput= ref('')
 const showModal= ref(false)
 const routes = router.getRoutes()
-let cleanUp: ()  => void = null
+let cleanUp: () => void = null
 const validRoutes = computed(() => {
   if (!optionsExcludedPaths.value) {
     return routes
@@ -230,10 +230,6 @@ defineComponent({
 
   .hippie-font-color-main {
     color: var(--hippie-secondary-color);
-  }
-
-  .hippie-font-color {
-    color: var(--hippie-font-color);
   }
 
   .hippie-enter-active {
