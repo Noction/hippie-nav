@@ -2,7 +2,6 @@ import { defineComponent } from 'vue'
 import { faker } from '@faker-js/faker'
 import textHighlight from '@/directives/textHighlight'
 import { VueWrapper, enableAutoUnmount, shallowMount } from '@vue/test-utils'
-import { afterEach, beforeEach, describe, expect } from 'vitest'
 
 const component = defineComponent({
   name: 'TextHighLight',

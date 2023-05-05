@@ -39,7 +39,7 @@ function close (): void {
     inset: 0;
     z-index: 60;
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     padding: 150px;
     background-color: hsla(var(--hippie-secondary-color-base) var(--hippie-secondary-color-light) / 50%);
 
