@@ -35,8 +35,6 @@ function highlightSearch (message: string, keyword: string) {
     }
     regexWord = escapeRegExp(newKeyword)
   } else {
-    console.warn('type is not String')
-    // return ''
     return escapeHtml(message)
   }
 

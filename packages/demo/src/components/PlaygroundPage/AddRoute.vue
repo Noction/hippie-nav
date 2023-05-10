@@ -98,7 +98,7 @@ export default defineComponent({
         if (!copyOfMomRoute.name) {
           this.router.addRoute({
             component,
-            meta: { aliases },
+            meta: { hippieNavFields: { aliases } },
             name: this.route.displayName,
             path: this.route.path
           })
