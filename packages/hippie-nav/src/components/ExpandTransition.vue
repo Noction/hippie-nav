@@ -12,6 +12,7 @@
 
 <script setup lang="ts">
 import { RendererElement, onMounted, ref } from 'vue'
+
 const lastHeight = ref<string>('')
 const wrap = ref<HTMLElement | null>(null)
 
@@ -23,18 +24,18 @@ onMounted(() => {
     lastHeight.value = getComputedStyle(wrap.value).height
   }
 })
+
 function afterEnter (element: HTMLElement) {
   element.style.height = 'auto'
 }
+
 function enter (element: RendererElement) {
   const { width } = getComputedStyle(element as HTMLElement)
 
-  /* eslint-disable no-param-reassign */
   element.style.width = width
   element.style.position = 'absolute'
   element.style.visibility = 'hidden'
   element.style.height = 'auto'
-  /* eslint-enable */
   const { height } = getComputedStyle(element as HTMLElement)
 
   /* eslint-disable no-param-reassign */
@@ -42,21 +43,17 @@ function enter (element: RendererElement) {
   element.style.position = null
   element.style.visibility = null
   element.style.height = lastHeight.value ?? 0
-  /* eslint-enable */
-  // Force repaint to make sure the
-  // animation is triggered correctly.
   getComputedStyle(element as HTMLElement).height
   requestAnimationFrame(() => {
     element.style.height = height
     lastHeight.value = height
   })
 }
+
 function leave (element: RendererElement) {
   const { height } = getComputedStyle(element as HTMLElement)
 
   element.style.height = height
-  // Force repaint to make sure the
-  // animation is triggered correctly.
   getComputedStyle(element as HTMLElement).height
   requestAnimationFrame(() => {
     element.style.height = 0
@@ -68,7 +65,7 @@ function leave (element: RendererElement) {
   .expand-enter-active,
   .expand-leave-active {
     overflow: hidden;
-    transition: height .2s ease-in-out;
+    transition: height .5s ease-in-out;
   }
 
   .expand-enter,

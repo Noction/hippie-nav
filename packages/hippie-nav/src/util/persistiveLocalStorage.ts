@@ -5,7 +5,7 @@ import { transformDataToResultData } from '@/util/helpers'
 
 import { ActionConfig, ResultItem } from '@/types'
 
-const LocalStorageItems = {
+export const LocalStorageItems = {
   ACTIONS_NAMES: 'actionsNames',
   ROUTE_PATHS: 'routePaths'
 } as const
@@ -14,40 +14,41 @@ export const addLocalStorageRecentResults = (recentResults: ResultItem[]) => {
   const routesPaths: string[] = []
   const actionsNames: string[] = []
 
-  for (const [i, recentResult] of recentResults.entries()) {
-    if (!isActionConfig(recentResult.data)) {
-      routesPaths.push(String(i) + recentResult.data.path)
+  recentResults.forEach((rs, idx) => {
+    if (!isActionConfig(rs.data)) {
+      routesPaths[idx] = rs.data.path
     } else {
-      actionsNames.push(String(i) + recentResult.data.name)
+      actionsNames[idx] = rs.data.name
     }
-  }
-  localStorage.setItem(LocalStorageItems.ACTIONS_NAMES, actionsNames.join(','))
-  localStorage.setItem(LocalStorageItems.ROUTE_PATHS, routesPaths.join(','))
+  })
+
+  localStorage.setItem(LocalStorageItems.ACTIONS_NAMES, JSON.stringify(actionsNames))
+  localStorage.setItem(LocalStorageItems.ROUTE_PATHS, JSON.stringify(routesPaths))
 }
 
 export const extractLocalStoreRecentResults = (actions: ActionConfig[], routes: RouteRecordNormalized[]) => {
-  const routesPaths = localStorage.getItem(LocalStorageItems.ROUTE_PATHS)?.split(',')
-  const actionNames = localStorage.getItem(LocalStorageItems.ACTIONS_NAMES)?.split(',')
+  const routesPaths: string[] = JSON.parse(localStorage.getItem(LocalStorageItems.ROUTE_PATHS))
+  const actionNames: string[] = JSON.parse(localStorage.getItem(LocalStorageItems.ACTIONS_NAMES))
   const recentResults: (ActionConfig | RouteRecordNormalized)[] = []
 
   if (routesPaths) {
-    routesPaths.forEach(path => {
-      const index = path.charAt(0)
-      const route = routes.find(route => route.path === path.slice(1))
+    routesPaths.forEach((path, idx) => {
+      if (path === null) return
+      const route = routes.find(route => route.path === path)
 
       if (route) {
-        recentResults[+index] = route
+        recentResults[idx] = route
       }
     })
   }
 
   if (actionNames) {
-    actionNames.forEach(name => {
-      const index = name.charAt(0)
-      const action = actions.find(action => action.name === name.slice(1))
+    actionNames.forEach((name, idx) => {
+      if (!name === null) return
+      const action = actions.find(action => action.name === name)
 
       if (action) {
-        recentResults[+index] = action
+        recentResults[idx] = action
       }
     })
 

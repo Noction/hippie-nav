@@ -13,29 +13,31 @@
           @goto="goto"
         />
         <div class="search-results">
-          <div v-if="recentResults.length && !searchInput">
-            <search-result-item
-              v-for="(result, index) in recentResults"
-              :key="result.data.id"
-              :search-input="searchInput"
-              :colored="index === current"
-              :result="result"
-              @mouse-over="handleMouseOver"
-              @close-modal="closeModal"
-            >
-              <template #resultItem="result">
-                <slot name="resultItem" v-bind="result" />
-              </template>
-            </search-result-item>
-          </div>
-          <expand-transition v-else>
-            <div v-if="results.length">
+          <expand-transition>
+            <div v-if="recentResults.length && !searchInput">
               <search-result-item
-                v-for="(result, index) in results"
-                :key="result.data.id"
+                v-for="(resultItem, index) in recentResults"
+                :key="index"
+                is-recent-result
                 :search-input="searchInput"
                 :colored="index === current"
-                :result="result"
+                :result="resultItem"
+                @mouse-over="handleMouseOver"
+                @close-modal="closeModal"
+                @remove-recent-result="removeRecentResult(index, resultItem)"
+              >
+                <template #resultItem="result">
+                  <slot name="resultItem" v-bind="result" />
+                </template>
+              </search-result-item>
+            </div>
+            <div v-else-if="results.length">
+              <search-result-item
+                v-for="(resultItem, index) in results"
+                :key="resultItem.data.id"
+                :search-input="searchInput"
+                :colored="index === current"
+                :result="resultItem"
                 @mouse-over="handleMouseOver"
                 @close-modal="closeModal"
               >
@@ -62,22 +64,22 @@ import SearchModal from './SearchModal.vue'
 import SearchPan from './SearchPan.vue'
 import SearchResultItem from '@/components/SearchResultItem.vue'
 import { assignIdsArray } from '@/util/helpers'
-import { excludedPaths } from '@/index'
 import { filterExcludedPaths } from '@/util/helpers'
+import { hippieNavOptions } from '@/index'
 import { isActionConfig } from '@/types/typePredicates'
 import { isMatchingShortcut } from '@/util/keyboard'
 import { transformDataToResultData } from '@/util/helpers'
-import { useEventListener } from '@vueuse/core'
 import { useFlexSearch } from '@noction/vue-use-flexsearch'
 import { useRouter } from 'vue-router'
-import { ActionConfig, IndexOptionsHippieNav, ResultItem, ResultWithId } from '@/types'
+import { ActionConfig, AppOptions, IndexOptionsHippieNav, ResultItem, ResultWithId } from '@/types'
 import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
-import { Ref, computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
-  addLocalStorageRecentResults,
-  extractLocalStoreRecentResults
+  LocalStorageItems,
+  addLocalStorageRecentResults, extractLocalStoreRecentResults
 } from '@/util/persistiveLocalStorage'
+import { Ref, computed, inject, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { indexAdd, indexSetup } from '@/util/indexSetup'
+import { useEventListener, useLocalStorage } from '@vueuse/core'
 
 const props = withDefaults(defineProps<{
   actions?: ActionConfig[]
@@ -85,18 +87,18 @@ const props = withDefaults(defineProps<{
 
 const router = useRouter()
 const current = ref(0)
-const optionsExcludedPaths = ref<string[]>(inject(excludedPaths))
+const options = ref<AppOptions>(inject(hippieNavOptions))
 const indexActions = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
 const indexRoutes = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
-const recentResults = ref<ResultItem[]>([]) as Ref<ResultItem[]>
+const recentResults = shallowRef<ResultItem[]>([])
 const results = ref<ResultItem[]>([]) as Ref<ResultItem[]>
 const searchInput = ref('')
 const showModal = ref(false)
 const routes = router.getRoutes()
 const validRoutes = computed(() => {
-  if (!optionsExcludedPaths.value) return routes
+  if (!options.value) return routes
 
-  return filterExcludedPaths(routes, optionsExcludedPaths.value)
+  return filterExcludedPaths(routes, options.value.excludedPaths)
 })
 let cleanUp: () => void = null
 
@@ -131,7 +133,8 @@ function closeModal () {
 }
 
 function reindexRoutes () {
-  const indexFields = { id: 'id', index: ['name', 'aliases', 'path'] }
+  const routesIndexFields = options.value.indexFields.routes
+  const indexFields = { id: 'id', index: routesIndexFields }
 
   indexRoutes.value = indexSetup('route', indexFields)
   indexAdd(indexRoutes.value, assignIdsArray(validRoutes.value), 'route')
@@ -144,7 +147,7 @@ function addRecentResult (result: ResultItem) {
     return recentResult.data.name === result.data.name
   })
 
-  if (idx !== -1) {
+  if (~idx) {
     const elementZero = recentResults.value[idx]
     const filteredRecentResults = recentResults.value.filter(rs => rs.data.id !== elementZero.data.id)
 
@@ -196,7 +199,8 @@ function move (direction: 'next' | 'previous') {
 }
 
 function setupActionsIndex () {
-  const indexFields = { id: 'id', index: ['name', 'aliases', 'description'] }
+  const actionsIndexFields = options.value.indexFields.actions
+  const indexFields = { id: 'id', index: actionsIndexFields }
 
   indexActions.value = indexSetup('action', indexFields)
   indexAdd(indexActions.value, assignIdsArray(props.actions), 'action')
@@ -213,6 +217,23 @@ function setupShortcut () {
       event.preventDefault()
     }
   })
+}
+
+function removeRecentResult (resultIndex: number, resultItem: ResultItem) {
+  recentResults.value = recentResults.value.filter((rs, idx) => idx !== resultIndex)
+  const key = resultItem.type === 'action' ? LocalStorageItems.ACTIONS_NAMES : LocalStorageItems.ROUTE_PATHS
+
+  const keyRef = useLocalStorage(key, '')
+
+  const array = JSON.parse(keyRef.value)
+  const idx = array.findIndex((str: string) => {
+    if (isActionConfig(resultItem.data)) return resultItem.data.name === str
+
+    return resultItem.data.path === str
+  })
+
+  array[idx] = null
+  keyRef.value = JSON.stringify(array)
 }
 
 defineExpose({ openModal, reindexRoutes })

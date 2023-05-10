@@ -69,16 +69,15 @@ const routes = [
   {
     component: { template: '<div>Home page</div>' },
     meta: {
-      aliases: ['main', 'home']
+      hippieNavMeta: {
+        aliases: ['main', 'home']
+      }
     },
     name: 'Home Page',
     path: '/'
   },
   {
     component: { template: '<div>About Page</div>' },
-    meta: {
-      aliases: ['about', 'second']
-    },
     name: 'About Page',
     path: '/about'
   },
@@ -102,7 +101,7 @@ const routes = [
       }
     ],
     meta: {
-      aliases: ['child']
+
     },
     name: 'Child page ',
     path: '/child'
@@ -160,7 +159,11 @@ export default defineComponent({
 
       this.playground.use(router)
       this.playground.use(HippieNav, {
-        excludedPaths: this.excludedPaths
+        excludedPaths: this.excludedPaths,
+        indexFields: {
+          actions: ['name', 'description'],
+          routes: ['name', 'path', 'aliases', 'arnold', 'skinny']
+        }
       })
       this.playground.mount('#playground')
     },

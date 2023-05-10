@@ -10,6 +10,7 @@
     "type:check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@vueuse/core": "^10.1.2",
     "autoprefixer": "^10.4.14",
     "hippie-nav": "workspace:^0.0.0",
     "postcss": "^8.4.23",

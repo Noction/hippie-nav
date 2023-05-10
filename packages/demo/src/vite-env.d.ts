@@ -5,6 +5,10 @@ import 'vue-router'
 
 declare module 'vue-router' {
   interface RouteMeta {
-    aliases?: string[]
+    hippieNavMeta?: HippieNavMeta
   }
+}
+
+interface HippieNavMeta {
+  [k: string]: string | string[]
 }

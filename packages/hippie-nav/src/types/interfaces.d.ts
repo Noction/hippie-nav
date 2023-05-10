@@ -4,12 +4,16 @@ import { ResultWithId } from '@/types/types'
 export interface ActionConfig {
   name: string,
   action: () => void
-  aliases: string[]
+  aliases?: string[]
   description?: string[]
 }
 
 export interface AppOptions {
   excludedPaths: (string | RegExp)[]
+  indexFields: {
+    routes: string[],
+    actions?: string[],
+  }
 }
 
 export interface IndexOptionsHippieNav {
