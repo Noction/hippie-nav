@@ -7,19 +7,24 @@ export interface IndexFields {
   id: string,
   index: string[]
 }
+
 export type IndexType = 'route' | 'action'
 
 export function indexAdd (index: Document<unknown>, data: ResultWithId[], type: IndexType) {
   if (type === 'route') {
     sortAzByName(data).forEach(route => {
-      if (!isActionConfig(route)) {
-        index.add({ aliases: route.meta.aliases, id: route.id, name: route.name, path: route.path })
+      if (!isActionConfig(route) && route.meta.hippieNavMeta && typeof route.meta.hippieNavMeta === 'object') {
+        const { hippieNavMeta } = route.meta
+
+        index.add(route.id, { name: route.name, path: route.path, ...hippieNavMeta })
+      } else if (!isActionConfig(route)) {
+        index.add(route.id, { name: route.name, path: route.path })
       }
     })
   }
   sortAzByName(data).forEach(action => {
     if (isActionConfig(action)) {
-      index.add({ aliases: action.aliases, description: action.description ?? '', id: action.id })
+      index.add(action.id, { aliases: action?.aliases ?? '', description: action.description ?? '', name: action.name })
     }
   })
 
