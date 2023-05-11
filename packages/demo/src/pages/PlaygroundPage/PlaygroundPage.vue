@@ -71,7 +71,8 @@ const routes = [
     meta: {
       hippieNavMeta: {
         aliases: ['main', 'home']
-      }
+      },
+      title: 'No home'
     },
     name: 'Home Page',
     path: '/'
@@ -159,6 +160,12 @@ export default defineComponent({
 
       this.playground.use(router)
       this.playground.use(HippieNav, {
+        displayField: {
+          route: {
+            field: 'title',
+            meta: 'own'
+          }
+        },
         excludedPaths: this.excludedPaths,
         indexFields: {
           actions: ['name', 'description'],

@@ -13,7 +13,17 @@ export interface AppOptions {
   indexFields: {
     routes: string[],
     actions?: string[],
+  },
+  displayField?: {
+    route: {
+      meta?: 'hippie'
+      field: string
+    },
   }
+}
+
+export interface HippieNavMeta {
+  [key: string]: string;
 }
 
 export interface IndexOptionsHippieNav {

@@ -71,7 +71,7 @@ import { isMatchingShortcut } from '@/util/keyboard'
 import { transformDataToResultData } from '@/util/helpers'
 import { useFlexSearch } from '@noction/vue-use-flexsearch'
 import { useRouter } from 'vue-router'
-import { ActionConfig, AppOptions, IndexOptionsHippieNav, ResultItem, ResultWithId } from '@/types'
+import { ActionConfig, IndexOptionsHippieNav, ResultItem, ResultWithId } from '@/types'
 import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
 import {
   LocalStorageItems,
@@ -87,18 +87,18 @@ const props = withDefaults(defineProps<{
 
 const router = useRouter()
 const current = ref(0)
-const options = ref<AppOptions>(inject(hippieNavOptions))
+const options = inject(hippieNavOptions)
 const indexActions = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
 const indexRoutes = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
 const recentResults = shallowRef<ResultItem[]>([])
-const results = ref<ResultItem[]>([]) as Ref<ResultItem[]>
+const results = shallowRef<ResultItem[]>([])
 const searchInput = ref('')
 const showModal = ref(false)
 const routes = router.getRoutes()
 const validRoutes = computed(() => {
-  if (!options.value) return routes
+  if (!options) return routes
 
-  return filterExcludedPaths(routes, options.value.excludedPaths)
+  return filterExcludedPaths(routes, options.excludedPaths)
 })
 let cleanUp: () => void = null
 
@@ -106,7 +106,7 @@ watch([searchInput], () => {
   results.value = []
   const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
     searchInput,
-    ref(indexRoutes.value),
+    indexRoutes,
     ref(assignIdsArray(validRoutes.value))
   )
   const { results: actionsResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
@@ -133,8 +133,8 @@ function closeModal () {
 }
 
 function reindexRoutes () {
-  const routesIndexFields = options.value.indexFields.routes
-  const indexFields = { id: 'id', index: routesIndexFields }
+  const routesIndexFields = options.indexFields.routes
+  const indexFields = { id: 'id', index: routesIndexFields ?? ['path', 'name'] }
 
   indexRoutes.value = indexSetup('route', indexFields)
   indexAdd(indexRoutes.value, assignIdsArray(validRoutes.value), 'route')
@@ -199,8 +199,8 @@ function move (direction: 'next' | 'previous') {
 }
 
 function setupActionsIndex () {
-  const actionsIndexFields = options.value.indexFields.actions
-  const indexFields = { id: 'id', index: actionsIndexFields }
+  const actionsIndexFields = options.indexFields.actions
+  const indexFields = { id: 'id', index: actionsIndexFields ?? ['name'] }
 
   indexActions.value = indexSetup('action', indexFields)
   indexAdd(indexActions.value, assignIdsArray(props.actions), 'action')
