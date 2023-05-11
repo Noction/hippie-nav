@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "suppressImplicitAnyIndexErrors": false,
     "types": ["vitest/globals"]
   },
   "include": [
