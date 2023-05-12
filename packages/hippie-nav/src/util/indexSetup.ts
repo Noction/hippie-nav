@@ -1,7 +1,7 @@
 import { Document } from 'flexsearch'
 import { isActionConfig } from '@/types/typePredicates'
 import { sortAzByName } from '@/util/helpers'
-import {  IndexOptionsHippieNav, ResultWithId } from '@/types'
+import { IndexOptionsHippieNav, ResultWithId } from '@/types'
 
 export interface IndexFields {
   id: string,
