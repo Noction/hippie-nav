@@ -65,7 +65,7 @@ function leave (element: RendererElement) {
   .expand-enter-active,
   .expand-leave-active {
     overflow: hidden;
-    transition: height .5s ease-in-out;
+    transition: height .2s ease-in-out .1s;
   }
 
   .expand-enter,
