@@ -6,6 +6,7 @@
         @close="closeModal"
       >
         <search-pan
+          ref="searchPan"
           v-model="searchInput"
           @close="closeModal"
           @next="move('next')"
@@ -20,9 +21,9 @@
                 :key="index"
                 is-recent-result
                 :search-input="searchInput"
-                :colored="index === current"
                 :result="resultItem"
-                @mouse-over="handleMouseOver"
+                :class="{ selected: index === current }"
+                @mouse-over="handleMouseOver(resultItem, 'recentResults')"
                 @close-modal="closeModal"
                 @remove-recent-result="removeRecentResult(index, resultItem)"
               >
@@ -36,9 +37,9 @@
                 v-for="(resultItem, index) in results"
                 :key="resultItem.data.id"
                 :search-input="searchInput"
-                :colored="index === current"
+                :class="{ selected: index === current }"
                 :result="resultItem"
-                @mouse-over="handleMouseOver"
+                @mouse-over="handleMouseOver(resultItem, 'results')"
                 @close-modal="closeModal"
               >
                 <template #resultItem="result">
@@ -63,21 +64,16 @@ import NavButtons from './NavButtons.vue'
 import SearchModal from './SearchModal.vue'
 import SearchPan from './SearchPan.vue'
 import SearchResultItem from '@/components/SearchResultItem.vue'
-import { assignIdsArray } from '@/util/helpers'
-import { filterExcludedPaths } from '@/util/helpers'
 import { hippieNavOptions } from '@/index'
 import { isActionConfig } from '@/types/typePredicates'
 import { isMatchingShortcut } from '@/util/keyboard'
-import { transformDataToResultData } from '@/util/helpers'
 import { useFlexSearch } from '@noction/vue-use-flexsearch'
 import { useRouter } from 'vue-router'
 import { ActionConfig, IndexOptionsHippieNav, ResultItem, ResultWithId } from '@/types'
 import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
-import {
-  LocalStorageItems,
-  addLocalStorageRecentResults, extractLocalStoreRecentResults
-} from '@/util/persistiveLocalStorage'
+import { HippieLocalStorage, usePersistiveLocalStorage } from '@/composable/usePersistiveLocalStorage'
 import { Ref, computed, inject, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { assignIdsArray, filterExcludedPaths, transformDataToResultData } from '@/util/helpers'
 import { indexAdd, indexSetup } from '@/util/indexSetup'
 import { useEventListener, useLocalStorage } from '@vueuse/core'
 
@@ -85,12 +81,13 @@ const props = withDefaults(defineProps<{
   actions?: ActionConfig[]
 }>(), { actions: () => [] as ActionConfig[] })
 
+const searchPan = ref<InstanceType<typeof SearchPan>>()
 const router = useRouter()
 const current = ref(0)
 const options = inject(hippieNavOptions)
 const indexActions = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
 const indexRoutes = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
-const recentResults = shallowRef<ResultItem[]>([])
+const recentResults = ref<ResultItem[]>([]) as Ref<ResultItem[]>
 const results = shallowRef<ResultItem[]>([])
 const searchInput = ref('')
 const showModal = ref(false)
@@ -123,7 +120,6 @@ watch([searchInput], () => {
 })
 
 function openModal () {
-  current.value = 0
   showModal.value = true
 }
 
@@ -156,7 +152,6 @@ function addRecentResult (result: ResultItem) {
     recentResults.value.unshift(result)
     if (recentResults.value.length > 3) recentResults.value.pop()
   }
-  addLocalStorageRecentResults(recentResults.value)
 }
 
 function goto () {
@@ -167,35 +162,37 @@ function goto () {
     result = results.value[current.value]
   } else result = recentResults.value[current.value]
 
-  if (!isActionConfig(result.data)) {
-    const route = result.data
-
-    router.push(route.path)
+  if (isActionConfig(result.data)) {
+    result.data.action()
   } else {
-    const actionItem = result.data
-
-    actionItem.action()
+    router.push(result.data.path)
   }
   addRecentResult(result)
   closeModal()
 }
 
-function handleMouseOver (e: ResultItem) {
-  current.value = results.value?.findIndex(r => r.data.name === e.data.name)
+function handleMouseOver (e: ResultItem, type: 'recentResults' | 'results') {
+  if (type === 'results') {
+    current.value = results.value?.findIndex(r => r.data.id === e.data.id)
+    return
+  }
+  current.value = recentResults.value?.findIndex(r => r.data.id === e.data.id)
 }
 
 function move (direction: 'next' | 'previous') {
-  const isNextResult = direction === 'next' && results.value.length - 1 > current.value && results.value.length !== 0
-  const isNextRecentResult = direction === 'next' && recentResults.value.length - 1 > current.value && recentResults.value.length !== 0
+
+  if (direction === 'next') {
+    const isNextResult = results.value.length - 1 > current.value && results.value.length !== 0
+    const isNextRecentResult = recentResults.value.length - 1 > current.value && recentResults.value.length !== 0
+
+    if (isNextResult || isNextRecentResult) {
+      current.value++
+      return
+    }
+  }
   const isPrevious = direction === 'previous' && current.value > 0
 
-  if (isNextResult) {
-    current.value++
-  } else if (isNextRecentResult) {
-    current.value++
-  } else if (isPrevious) {
-    current.value--
-  }
+  if (isPrevious) current.value--
 }
 
 function setupActionsIndex () {
@@ -206,43 +203,58 @@ function setupActionsIndex () {
   indexAdd(indexActions.value, assignIdsArray(props.actions), 'action')
 }
 
-function setupShortcut () {
-  cleanUp = useEventListener('keydown', event => {
+function setupShortcuts () {
+  const cleanUpOpenModal = useEventListener('keydown', event => {
     if (isMatchingShortcut(['ctrl+k', 'meta+k'])) {
       current.value = 0
       showModal.value = !showModal.value
-      if (showModal.value === false) {
-        searchInput.value = ''
-      }
+
+      if (showModal.value === false) searchInput.value = ''
+
       event.preventDefault()
     }
   })
+
+  const cleanUpTabPrevent = useEventListener('keydown', event => {
+    if (isMatchingShortcut(['tab'])) {
+      if (showModal.value === true) searchPan.value.focusInput()
+
+      event.preventDefault()
+    }
+  })
+
+  cleanUp = function () {
+    cleanUpOpenModal()
+    cleanUpTabPrevent()
+  }
 }
 
 function removeRecentResult (resultIndex: number, resultItem: ResultItem) {
   recentResults.value = recentResults.value.filter((rs, idx) => idx !== resultIndex)
-  const key = resultItem.type === 'action' ? LocalStorageItems.ACTIONS_NAMES : LocalStorageItems.ROUTE_PATHS
-
-  const keyRef = useLocalStorage(key, '')
+  const keyRef = useLocalStorage(HippieLocalStorage, '')
 
   const array = JSON.parse(keyRef.value)
-  const idx = array.findIndex((str: string) => {
-    if (isActionConfig(resultItem.data)) return resultItem.data.name === str
 
-    return resultItem.data.path === str
+  if (!Array.isArray(array)) return
+
+  const recentResultsLocalStorage = array.filter(item => {
+    if (item.type === resultItem.type) {
+      return resultItem.data.name !== item.name
+    }
+    return true
   })
 
-  array[idx] = null
-  keyRef.value = JSON.stringify(array)
+  keyRef.value = JSON.stringify(recentResultsLocalStorage)
 }
 
 defineExpose({ openModal, reindexRoutes })
 
+usePersistiveLocalStorage(recentResults, props.actions)
+
 onMounted(() => {
-  setupShortcut()
+  setupShortcuts()
   setupActionsIndex()
   reindexRoutes()
-  recentResults.value = extractLocalStoreRecentResults(props.actions, routes)
 })
 
 onBeforeUnmount(() => {
@@ -252,6 +264,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
+
   @import "src/assets/styles";
 
   .hippie-nav {

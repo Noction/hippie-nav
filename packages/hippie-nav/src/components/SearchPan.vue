@@ -40,8 +40,14 @@ const emits = defineEmits<{
 
 const input = ref<HTMLInputElement | null>(null)
 
-onMounted(() => {
+defineExpose({ focusInput } )
+
+function focusInput () {
   input.value.focus()
+}
+
+onMounted(() => {
+  focusInput()
 })
 
 </script>
