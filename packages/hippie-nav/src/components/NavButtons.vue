@@ -58,9 +58,7 @@ import IconEscape from '../assets/icons/escape.svg?component'
         border-radius: 5px;
       }
 
-      span {
-        color: hsl(var(--hippie-secondary-color-base) var(--hippie-primary-color-light))
-      }
+      span { color: hsl(var(--hippie-secondary-color-base) var(--hippie-primary-color-light)) }
     }
   }
 </style>

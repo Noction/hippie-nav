@@ -9,21 +9,23 @@ export interface ActionConfig {
 }
 
 export interface AppOptions {
-  excludedPaths: (string | RegExp)[]
-  indexFields: {
+  excludedPaths?: (string | RegExp)[]
+  indexFields?: {
     routes: string[],
     actions?: string[],
   },
   displayField?: {
-    route: {
-      meta?: 'hippie'
-      field: string
-    },
+    route: string
   }
 }
 
 export interface HippieNavMeta {
   [key: string]: string;
+}
+
+export interface IndexFields {
+  id: string,
+  index: string[]
 }
 
 export interface IndexOptionsHippieNav {

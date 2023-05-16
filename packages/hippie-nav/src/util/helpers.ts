@@ -2,43 +2,45 @@ import { RouteRecordNormalized } from 'vue-router'
 import { isActionConfig } from '@/types/typePredicates'
 import { ActionConfig, ResultItem, ResultWithId } from '@/types'
 
-export function assignIdsArray (store: ActionConfig[] | RouteRecordNormalized[] | (ActionConfig | RouteRecordNormalized)[]): ResultWithId[] {
-  return store.map((item, idx) => {
-    if (isActionConfig(item)) {
-      return { id: idx, ...item }
-    }
+export function assignIdsArray (store: (ActionConfig | RouteRecordNormalized)[]) {
+  const storeWithIds: ResultWithId[] = store.map((item, idx) => {
     return { id: idx, ...item }
   })
+
+  return storeWithIds
 }
 
 export function filterExcludedPaths (routes: RouteRecordNormalized[], excludedPaths: (string | RegExp)[])  {
   const regExps: RegExp[] = []
   const strings: string[] = []
 
-  for (const e of excludedPaths) {
+  excludedPaths.forEach(e => {
     if (typeof e === 'string') {
       strings.push(e)
     } else {
       regExps.push(e)
     }
-  }
+  })
 
   return routes
     .filter(route =>  !strings.includes(route.path) && !regExps.some(regExp => regExp.test(route.path)))
 }
 
-export function sortAzByName (data: ResultWithId[]) {
-  return data.sort((a, b) => {
-    const nameA = String(a.name).toUpperCase() || ''
-    const nameB = String(b.name).toUpperCase() || ''
+export function getValue<T extends object> (object: T, path: string) {
+  if (path === undefined) return undefined
 
-    return nameA.localeCompare(nameB)
-  })
+  return path
+    .replace(/\[/g, '.')
+    .replace(/\]/g, '')
+    .split('.')
+    .reduce((o, k) => (o || {})[k], object)
 }
 
-export function transformDataToResultData (data: ResultWithId[]): ResultItem[] {
-  return data.map(item => ({
+export function transformDataToResultData (data: ResultWithId[]) {
+  const resultData: ResultItem[] = data.map(item => ({
     data: item,
     type: isActionConfig(item) ? 'action' : 'route'
   }))
+
+  return resultData
 }
