@@ -1,18 +1,10 @@
 import { Document } from 'flexsearch'
 import { isActionConfig } from '@/types/typePredicates'
-import { sortAzByName } from '@/util/helpers'
-import { IndexOptionsHippieNav, ResultWithId } from '@/types'
-
-export interface IndexFields {
-  id: string,
-  index: string[]
-}
-
-export type IndexType = 'route' | 'action'
+import { IndexFields, IndexOptionsHippieNav, IndexType, ResultWithId } from '@/types'
 
 export function indexAdd (index: Document<unknown>, data: ResultWithId[], type: IndexType) {
   if (type === 'route') {
-    sortAzByName(data).forEach(route => {
+    data.forEach(route => {
       if (!isActionConfig(route) && route.meta.hippieNavMeta && typeof route.meta.hippieNavMeta === 'object') {
         const { hippieNavMeta } = route.meta
 
@@ -21,8 +13,9 @@ export function indexAdd (index: Document<unknown>, data: ResultWithId[], type: 
         index.add(route.id, { name: route.name, path: route.path })
       }
     })
+    return
   }
-  sortAzByName(data).forEach(action => {
+  data.forEach(action => {
     if (isActionConfig(action)) {
       index.add(action.id, { aliases: action?.aliases ?? '', description: action.description ?? '', name: action.name })
     }

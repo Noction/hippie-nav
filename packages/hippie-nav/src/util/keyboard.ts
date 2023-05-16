@@ -1,15 +1,25 @@
 import { Modifier } from '@/types'
+import { useEventListener } from '@vueuse/core'
 
 export type KeyboardShortcut = string[]
 
-const modifiers: Modifier = {
+export function isMatchingShortcut (shortcut: KeyboardShortcut) {
+  for (const combination of shortcut) {
+    if (isMatchingCombination(combination.toLowerCase())) {
+      return true
+    }
+  }
+  return false
+}
+
+const pressedKeys = new Set<string>()
+
+export const modifiers: Modifier = {
   alt: { key: 'Alt', pressed: false },
   ctrl: { key: 'Control', pressed: false },
   meta: { key: 'Meta', pressed: false },
   shift: { key: 'Shift', pressed: false }
 }
-
-const pressedKeys = new Set<string>()
 
 window.addEventListener('keydown', event => {
   for (const i in modifiers) {
@@ -46,16 +56,7 @@ window.addEventListener('blur', () => {
   }
 })
 
-export function isMatchingShortcut (shortcut: KeyboardShortcut): boolean {
-  for (const combination of shortcut) {
-    if (isMatchingCombination(combination.toLowerCase())) {
-      return true
-    }
-  }
-  return false
-}
-
-function isMatchingCombination (combination: string): boolean {
+function isMatchingCombination (combination: string) {
   const splitted = combination.split('+').map(key => key.trim())
   const targetKey = splitted.pop()
 
@@ -68,4 +69,15 @@ function isMatchingCombination (combination: string): boolean {
     }
   }
   return pressedKeys.has(targetKey as string)
+}
+
+export function useShortcut (handler: () => void, shortcut: string[]): () => void {
+
+  return useEventListener('keydown', event => {
+    if (isMatchingShortcut(shortcut)) {
+      handler()
+      event.preventDefault()
+    }
+  })
+
 }

@@ -15,17 +15,17 @@
     "hippie-nav": "workspace:^0.0.0",
     "postcss": "^8.4.23",
     "sass": "^1.62.1",
-    "vue": "^3.2.47"
+    "vue": "^3.2.45"
   },
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.16",
-    "@iconify-json/mdi": "^1.1.50",
-    "@vitejs/plugin-vue": "^4.2.1",
+    "@iconify-json/mdi": "^1.1.52",
+    "@vitejs/plugin-vue": "^4.2.3",
     "typescript": "^5.0.4",
     "unplugin-icons": "^0.16.1",
     "unplugin-vue-components": "^0.24.1",
-    "vite": "^4.3.5",
+    "vite": "^4.3.7",
     "vite-svg-loader": "^4.0.0",
-    "vue-tsc": "^1.4.3"
+    "vue-tsc": "^1.6.5"
   }
 }

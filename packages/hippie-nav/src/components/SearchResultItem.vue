@@ -1,30 +1,21 @@
 <template>
   <div
-    :class="{ selected: colored }"
     class="hippie-result-item"
-    @mouseover="$emit('mouseOver', result)"
+    @mouseover="$emit('mouseOver')"
     @mouseout="$emit('mouseOut')"
   >
     <div class="hippie-result-item-content" @click="handler(result)">
-      <slot
-        name="resultItem"
-        v-bind="result"
-      >
+      <slot name="resultItem" v-bind="result">
         <component :is="iconsComponents[result.type]" class="type-icon" />
         <div class="item-info">
-          <span
-            v-highlight-search="{ keyword: searchInput }"
-            class="title"
-            v-text="result.data.name"
-          />
+          <span v-highlight-search="{ keyword: searchInput }">
+            {{ displayText }}
+          </span>
           <span class="sub-title" v-text="subtitle" />
         </div>
       </slot>
     </div>
-    <button
-      class="clear-btn"
-      @click="emits('removeRecentResult')"
-    >
+    <button class="clear-btn" @click="emit('removeRecentResult')">
       <icon-crosshair v-if="isRecentResult" />
     </button>
   </div>
@@ -35,21 +26,22 @@ import IconAction from '../assets/icons/action.svg?component'
 import IconCrosshair from '../assets/icons/crosshair.svg?component'
 import IconPage from '../assets/icons/page.svg?component'
 import { ResultItem } from '@/types'
-import { computed } from 'vue'
+import { getValue } from '@/util/helpers'
+import { hippieNavOptions } from '@/index'
 import { isActionConfig } from '@/types/typePredicates'
 import textHighlight from '@/directives/textHighlight'
 import { useRouter } from 'vue-router'
+import { computed, inject } from 'vue'
 
 const props = withDefaults(defineProps<{
-  colored: boolean,
   result: ResultItem
   searchInput: string
   isRecentResult?: boolean
 }>(), { isRecentResult: false, searchInput: null })
 
-const emits = defineEmits<{
+const emit = defineEmits<{
   (e: 'closeModal'): void,
-  (e: 'mouseOver', result: ResultItem): void,
+  (e: 'mouseOver'): void,
   (e: 'mouseOut'): void,
   (e: 'removeRecentResult'): void
 }>()
@@ -61,12 +53,13 @@ const iconsComponents = {
 
 const vHighlightSearch = textHighlight
 const router = useRouter()
+const options = inject(hippieNavOptions)
 const subtitle = computed(() => {
   if (isActionConfig(props.result.data)) {
     return props.result.data.description
-  } else {
-    return props.result.data.path
   }
+
+  return props.result.data.path
 })
 
 function handler (result: ResultItem) {
@@ -75,9 +68,16 @@ function handler (result: ResultItem) {
   } else {
     router.push(result.data.path)
   }
-
-  emits('closeModal')
+  emit('closeModal')
 }
+
+const displayText = computed(() => {
+  if (props.result.type === 'action') return props.result.data.name
+
+  const displayNamePath = options?.displayField?.route
+
+  return getValue(props.result.data, displayNamePath) ?? props.result.data.name
+})
 
 </script>
 
@@ -93,18 +93,16 @@ function handler (result: ResultItem) {
     transition-property: background-color;
 
     .highlighted { color: hsl(var(--hippie-primary-color-base) var(--hippie-primary-color-light)) }
+
     .title, .sub-title, .type-icon { color: hsl(var(--hippie-secondary-color-base) 20%) }
 
-    .title {
-      font-size: var(--hippie-text-sm);
-    }
+    .title { font-size: var(--hippie-text-sm); }
 
     .sub-title {
       font-size: var(--hippie-text-xs);
       opacity: .7;
     }
 
-    &:hover,
     &.selected {
       background-color: hsl(var(--hippie-primary-color-base) var(--hippie-primary-color-light));
 
@@ -123,6 +121,7 @@ function handler (result: ResultItem) {
       grid: 1fr / var(--hippie-text-lg) 1fr;
       column-gap: var(--hippie-spacing-m);
       align-items: center;
+      width: 95%;
 
       .item-info {
         display: flex;

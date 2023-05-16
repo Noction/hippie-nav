@@ -69,9 +69,6 @@ const routes = [
   {
     component: { template: '<div>Home page</div>' },
     meta: {
-      hippieNavMeta: {
-        aliases: ['main', 'home']
-      },
       title: 'No home'
     },
     name: 'Home Page',
@@ -79,8 +76,12 @@ const routes = [
   },
   {
     component: { template: '<div>About Page</div>' },
+    meta: {
+      title: '!About page'
+    },
     name: 'About Page',
     path: '/about'
+
   },
   {
     children: [
@@ -102,7 +103,7 @@ const routes = [
       }
     ],
     meta: {
-
+      title: '!Child page'
     },
     name: 'Child page ',
     path: '/child'
@@ -159,19 +160,7 @@ export default defineComponent({
       this.playground = createApp(HippieNavPlayground) as unknown as typeof this.playground
 
       this.playground.use(router)
-      this.playground.use(HippieNav, {
-        displayField: {
-          route: {
-            field: 'title',
-            meta: 'own'
-          }
-        },
-        excludedPaths: this.excludedPaths,
-        indexFields: {
-          actions: ['name', 'description'],
-          routes: ['name', 'path', 'aliases', 'arnold', 'skinny']
-        }
-      })
+      this.playground.use(HippieNav)
       this.playground.mount('#playground')
     },
     setShowAddRoute (value: boolean) {

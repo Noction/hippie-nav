@@ -1,10 +1,7 @@
 <template>
   <div class="hippie-nav">
     <transition name="hippie">
-      <search-modal
-        :shown="showModal"
-        @close="closeModal"
-      >
+      <search-modal :shown="showModal" @close="closeModal">
         <search-pan
           ref="searchPan"
           v-model="searchInput"
@@ -66,34 +63,33 @@ import SearchPan from './SearchPan.vue'
 import SearchResultItem from '@/components/SearchResultItem.vue'
 import { hippieNavOptions } from '@/index'
 import { isActionConfig } from '@/types/typePredicates'
-import { isMatchingShortcut } from '@/util/keyboard'
 import { useFlexSearch } from '@noction/vue-use-flexsearch'
+import { usePersistiveLocalStorage } from '@/composable/usePersistiveLocalStorage'
 import { useRouter } from 'vue-router'
-import { ActionConfig, IndexOptionsHippieNav, ResultItem, ResultWithId } from '@/types'
-import { Document, IndexOptionsForDocumentSearch } from 'flexsearch'
-import { HippieLocalStorage, usePersistiveLocalStorage } from '@/composable/usePersistiveLocalStorage'
+import { useShortcut } from '@/util/keyboard'
+import { ActionConfig, HippieIndex, ResultItem, ResultWithId } from '@/types'
 import { Ref, computed, inject, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { assignIdsArray, filterExcludedPaths, transformDataToResultData } from '@/util/helpers'
 import { indexAdd, indexSetup } from '@/util/indexSetup'
-import { useEventListener, useLocalStorage } from '@vueuse/core'
 
 const props = withDefaults(defineProps<{
   actions?: ActionConfig[]
 }>(), { actions: () => [] as ActionConfig[] })
 
+defineExpose({ openModal, reindexRoutes })
+
 const searchPan = ref<InstanceType<typeof SearchPan>>()
 const router = useRouter()
 const current = ref(0)
 const options = inject(hippieNavOptions)
-const indexActions = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
-const indexRoutes = ref<Document<IndexOptionsForDocumentSearch<IndexOptionsHippieNav>>>()
-const recentResults = ref<ResultItem[]>([]) as Ref<ResultItem[]>
+const indexActions = ref<HippieIndex>()
+const indexRoutes = ref<HippieIndex>()
 const results = shallowRef<ResultItem[]>([])
 const searchInput = ref('')
 const showModal = ref(false)
 const routes = router.getRoutes()
 const validRoutes = computed(() => {
-  if (!options) return routes
+  if (!options.excludedPaths) return routes
 
   return filterExcludedPaths(routes, options.excludedPaths)
 })
@@ -129,29 +125,11 @@ function closeModal () {
 }
 
 function reindexRoutes () {
-  const routesIndexFields = options.indexFields.routes
+  const routesIndexFields = options?.indexFields?.routes
   const indexFields = { id: 'id', index: routesIndexFields ?? ['path', 'name'] }
 
   indexRoutes.value = indexSetup('route', indexFields)
   indexAdd(indexRoutes.value, assignIdsArray(validRoutes.value), 'route')
-}
-
-function addRecentResult (result: ResultItem) {
-  const idx = recentResults.value.findIndex(recentResult => {
-    if (recentResult.type !== result.type) return false
-
-    return recentResult.data.name === result.data.name
-  })
-
-  if (~idx) {
-    const elementZero = recentResults.value[idx]
-    const filteredRecentResults = recentResults.value.filter(rs => rs.data.id !== elementZero.data.id)
-
-    recentResults.value = [elementZero, ...filteredRecentResults]
-  } else {
-    recentResults.value.unshift(result)
-    if (recentResults.value.length > 3) recentResults.value.pop()
-  }
 }
 
 function goto () {
@@ -196,32 +174,27 @@ function move (direction: 'next' | 'previous') {
 }
 
 function setupActionsIndex () {
-  const actionsIndexFields = options.indexFields.actions
-  const indexFields = { id: 'id', index: actionsIndexFields ?? ['name'] }
+  const actionsIndexFields = options?.indexFields?.actions ?? ['name', 'aliases']
+  const indexFields = { id: 'id', index: actionsIndexFields }
 
   indexActions.value = indexSetup('action', indexFields)
   indexAdd(indexActions.value, assignIdsArray(props.actions), 'action')
 }
 
+function handlerOpenModalShortCut () {
+  current.value = 0
+  showModal.value = !showModal.value
+
+  if (showModal.value === false) searchInput.value = ''
+}
+
+function handlerTabPreventShortCut () {
+  if (showModal.value === true) searchPan.value.focusInput()
+}
+
 function setupShortcuts () {
-  const cleanUpOpenModal = useEventListener('keydown', event => {
-    if (isMatchingShortcut(['ctrl+k', 'meta+k'])) {
-      current.value = 0
-      showModal.value = !showModal.value
-
-      if (showModal.value === false) searchInput.value = ''
-
-      event.preventDefault()
-    }
-  })
-
-  const cleanUpTabPrevent = useEventListener('keydown', event => {
-    if (isMatchingShortcut(['tab'])) {
-      if (showModal.value === true) searchPan.value.focusInput()
-
-      event.preventDefault()
-    }
-  })
+  const cleanUpOpenModal = useShortcut(handlerOpenModalShortCut, ['ctrl+k', 'meta+k'])
+  const cleanUpTabPrevent = useShortcut(handlerTabPreventShortCut, ['tab'])
 
   cleanUp = function () {
     cleanUpOpenModal()
@@ -229,27 +202,11 @@ function setupShortcuts () {
   }
 }
 
-function removeRecentResult (resultIndex: number, resultItem: ResultItem) {
-  recentResults.value = recentResults.value.filter((rs, idx) => idx !== resultIndex)
-  const keyRef = useLocalStorage(HippieLocalStorage, '')
-
-  const array = JSON.parse(keyRef.value)
-
-  if (!Array.isArray(array)) return
-
-  const recentResultsLocalStorage = array.filter(item => {
-    if (item.type === resultItem.type) {
-      return resultItem.data.name !== item.name
-    }
-    return true
-  })
-
-  keyRef.value = JSON.stringify(recentResultsLocalStorage)
-}
-
-defineExpose({ openModal, reindexRoutes })
-
-usePersistiveLocalStorage(recentResults, props.actions)
+const {
+  recentResults,
+  addItem: addRecentResult,
+  removeItem: removeRecentResult
+} = usePersistiveLocalStorage(props.actions)
 
 onMounted(() => {
   setupShortcuts()
@@ -280,57 +237,36 @@ onBeforeUnmount(() => {
     box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
   }
 
-  .hippie-font-color-main {
-    color: var(--hippie-secondary-color);
-  }
+  .hippie-font-color-main { color: var(--hippie-secondary-color); }
 
   .hippie-enter-active {
     animation: fade calc(var(--hippie-animate-duration) / 2);
 
-    .modal-content {
-      animation: pulse var(--hippie-animate-duration);
-    }
+    .modal-content { animation: pulse var(--hippie-animate-duration); }
   }
 
   .hippie-leave-active {
     animation: fade calc(var(--hippie-animate-duration) / 2) reverse;
 
-    .modal-content {
-      animation: pulse calc(var(--hippie-animate-duration)) reverse;
-    }
+    .modal-content { animation: pulse calc(var(--hippie-animate-duration)) reverse; }
   }
 
-  .hippie-enter-from,
-  .hippie-leave-to {
-    opacity: 0;
-  }
+  .hippie-enter-from, .hippie-leave-to { opacity: 0; }
 
   @keyframes pulse {
-    0% {
-      transform: scale3d(.9, .9, .9)
-    }
+    0% { transform: scale3d(.9, .9, .9) }
 
-    55% {
-      transform: scale3d(.98, .98, .98)
-    }
+    55% { transform: scale3d(.98, .98, .98) }
 
-    100% {
-      transform: scale3d(1, 1, 1)
-    }
+    100% { transform: scale3d(1, 1, 1) }
   }
 
   @keyframes fade {
-    0% {
-      opacity: 0
-    }
+    0% { opacity: 0 }
 
-    50% {
-      opacity: .75
-    }
+    50% { opacity: .75 }
 
-    100% {
-      opacity: 1
-    }
+    100% { opacity: 1 }
   }
 
   .no-result {

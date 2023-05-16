@@ -6,7 +6,15 @@ export const HippieNav = PrivateHippieNav
 
 export const hippieNavOptions: InjectionKey<AppOptions> = Symbol()
 
-export function install (app: App, options: AppOptions) {
+const defaultOptions: AppOptions = {
+  excludedPaths: ['/register', '/login', '/signin', '/signup'],
+  indexFields: {
+    actions: ['name', 'aliases'],
+    routes: ['path', 'name', 'aliases']
+  }
+}
+
+export function install (app: App, options = defaultOptions ) {
   app.component('HippieNav', PrivateHippieNav)
   app.provide(hippieNavOptions, options)
 }
