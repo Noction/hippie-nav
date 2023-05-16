@@ -38,7 +38,7 @@ const emits = defineEmits<{
   (e: 'goto'): void
 }>()
 
-const input = ref<HTMLInputElement | null>(null)
+const input = ref<HTMLInputElement | null>()
 
 defineExpose({ focusInput } )
 

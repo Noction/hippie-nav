@@ -1,24 +1,31 @@
 import { assignIdsArray } from '@/util/helpers'
 import { isActionConfig } from '@/types/typePredicates'
 import { transformDataToResultData } from '@/util/helpers'
+import { useLocalStorage } from '@vueuse/core'
 import { ActionConfig, LocalStorageData, ResultItem } from '@/types'
-import { Ref, onMounted, watch } from 'vue'
+import { Ref, ref } from 'vue'
 import { RouteRecordNormalized, useRouter } from 'vue-router'
 
-export const HippieLocalStorage = 'hippieLocalStorage'
+export const HippieLocalStorageKey = 'hippieLocalStorage'
 
-export function addLocalStorageRecentResults (recentResults: ResultItem[]): void {
+export interface UsePersistiveLocalStorage {
+  addItem: (result: ResultItem) => void;
+  recentResults: Ref<ResultItem[]>;
+  removeItem: (index: number, resultItem: ResultItem) => void;
+}
+
+export function addLocalStorageRecentResults (recentResults: ResultItem[]) {
   const localStorageData: LocalStorageData[] = recentResults.map(rs => {
     if (isActionConfig(rs.data)) return {  name: rs.data.name, type: 'action' }
 
     return {  name: rs.data.name, type: 'route' }
   })
 
-  localStorage.setItem(HippieLocalStorage, JSON.stringify(localStorageData))
+  localStorage.setItem(HippieLocalStorageKey, JSON.stringify(localStorageData))
 }
 
 export function extractLocalStoreRecentResults (actions: ActionConfig[], routes: RouteRecordNormalized[]): ResultItem[] {
-  const localStorageData: LocalStorageData[] | null = JSON.parse(localStorage.getItem(HippieLocalStorage))
+  const localStorageData: LocalStorageData[] | null = JSON.parse(localStorage.getItem(HippieLocalStorageKey))
 
   if (!Array.isArray(localStorageData)) return [] as ResultItem[]
 
@@ -36,16 +43,50 @@ export function extractLocalStoreRecentResults (actions: ActionConfig[], routes:
   return transformDataToResultData(assignIdsArray(recentResults))
 }
 
-export function usePersistiveLocalStorage (recentResults: Ref<ResultItem[]>, actions: ActionConfig[]) {
+function addItem (result: ResultItem, recentResults: Ref<ResultItem[]>) {
+  const idx = recentResults.value.findIndex(recentResult => {
+    if (recentResult.type !== result.type) return false
+
+    return recentResult.data.name === result.data.name
+  })
+
+  if (~idx) {
+    const elementZero = recentResults.value[idx]
+    const filteredRecentResults = recentResults.value.filter(rs => rs.data.id !== elementZero.data.id)
+
+    recentResults.value = [elementZero, ...filteredRecentResults]
+  } else {
+    recentResults.value.unshift(result)
+    if (recentResults.value.length > 3) recentResults.value.pop()
+  }
+  addLocalStorageRecentResults(recentResults.value)
+}
+
+function removeItem (resultIndex: number, resultItem: ResultItem, recentResults: Ref<ResultItem[]>) {
+  recentResults.value = recentResults.value.filter((rs, idx) => idx !== resultIndex)
+  const keyRef = useLocalStorage(HippieLocalStorageKey, '')
+
+  const array = JSON.parse(keyRef.value)
+
+  if (!Array.isArray(array)) return
+
+  const recentResultsLocalStorage = array.filter(item => {
+    if (item.type === resultItem.type) {
+      return resultItem.data.name !== item.name
+    }
+    return true
+  })
+
+  keyRef.value = JSON.stringify(recentResultsLocalStorage)
+}
+
+export function usePersistiveLocalStorage ( actions: ActionConfig[]): UsePersistiveLocalStorage {
   const router = useRouter()
+  const recentResults = ref(extractLocalStoreRecentResults(actions, router.getRoutes()))
 
-  onMounted(() => {
-    recentResults.value = extractLocalStoreRecentResults(actions, router.getRoutes())
-  })
-
-  watch([recentResults], () => {
-    addLocalStorageRecentResults(recentResults.value)
-  }, {
-    deep: true
-  })
+  return {
+    addItem: result => { addItem(result, recentResults) },
+    recentResults,
+    removeItem: (resultIndex, resultItem) => { removeItem(resultIndex, resultItem, recentResults) }
+  }
 }

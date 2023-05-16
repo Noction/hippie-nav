@@ -14,7 +14,7 @@
 import { RendererElement, onMounted, ref } from 'vue'
 
 const lastHeight = ref<string>('')
-const wrap = ref<HTMLElement | null>(null)
+const wrap = ref<HTMLElement>()
 
 onMounted(() => {
   if (!(wrap.value instanceof Element)) {
@@ -62,16 +62,12 @@ function leave (element: RendererElement) {
 </script>
 
 <style>
-  .expand-enter-active,
-  .expand-leave-active {
+  .expand-enter-active, .expand-leave-active {
     overflow: hidden;
     transition: height .2s ease-in-out .1s;
   }
 
-  .expand-enter,
-  .expand-leave-to {
-    height: 0;
-  }
+  .expand-enter, .expand-leave-to { height: 0; }
 </style>
 
 <style scoped>

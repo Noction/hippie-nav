@@ -29,6 +29,7 @@
 <script lang="ts">
 import { HippieNav } from 'hippie-nav'
 import { actions } from '../../pages/PlaygroundPage/PlaygroundPage.vue'
+import { useRouter } from 'vue-router'
 import { defineComponent, ref } from 'vue'
 export interface ActionConfig {
   name: string,
@@ -40,13 +41,14 @@ export default defineComponent({
   name: 'HippieNavPlayground',
   setup () {
     const hippieNavRef = ref<InstanceType<typeof HippieNav>>()
+    const router = useRouter()
+    const routes = router.getRoutes()
 
-    return { hippieNavRef }
+    return { hippieNavRef, routes }
   },
   data () {
     return {
-      actions,
-      routes: this.$router.getRoutes()
+      actions
     }
   },
   methods: {

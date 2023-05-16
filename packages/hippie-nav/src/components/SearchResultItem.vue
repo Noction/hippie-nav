@@ -1,30 +1,21 @@
 <template>
   <div
     class="hippie-result-item"
-    @mouseover="$emit('mouseOver', result)"
+    @mouseover="$emit('mouseOver')"
     @mouseout="$emit('mouseOut')"
   >
     <div class="hippie-result-item-content" @click="handler(result)">
-      <slot
-        name="resultItem"
-        v-bind="result"
-      >
+      <slot name="resultItem" v-bind="result">
         <component :is="iconsComponents[result.type]" class="type-icon" />
         <div class="item-info">
-          <span
-            v-highlight-search="{ keyword: searchInput }"
-            class="title"
-          >
+          <span v-highlight-search="{ keyword: searchInput }">
             {{ displayText }}
           </span>
           <span class="sub-title" v-text="subtitle" />
         </div>
       </slot>
     </div>
-    <button
-      class="clear-btn"
-      @click="emit('removeRecentResult')"
-    >
+    <button class="clear-btn" @click="emit('removeRecentResult')">
       <icon-crosshair v-if="isRecentResult" />
     </button>
   </div>
@@ -34,11 +25,12 @@
 import IconAction from '../assets/icons/action.svg?component'
 import IconCrosshair from '../assets/icons/crosshair.svg?component'
 import IconPage from '../assets/icons/page.svg?component'
+import { ResultItem } from '@/types'
+import { getValue } from '@/util/helpers'
 import { hippieNavOptions } from '@/index'
 import { isActionConfig } from '@/types/typePredicates'
 import textHighlight from '@/directives/textHighlight'
 import { useRouter } from 'vue-router'
-import { HippieNavMeta, ResultItem } from '@/types'
 import { computed, inject } from 'vue'
 
 const props = withDefaults(defineProps<{
@@ -49,7 +41,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   (e: 'closeModal'): void,
-  (e: 'mouseOver', result: ResultItem): void,
+  (e: 'mouseOver'): void,
   (e: 'mouseOut'): void,
   (e: 'removeRecentResult'): void
 }>()
@@ -80,33 +72,11 @@ function handler (result: ResultItem) {
 }
 
 const displayText = computed(() => {
-  const isRoute = props.result.type === 'route'
-  const isHippieMeta = options.displayField.route.meta === 'hippie'
-  const isOwnMeta = !options.displayField.route.meta && options.displayField.route.field
-  const { field } = options.displayField.route
+  if (props.result.type === 'action') return props.result.data.name
 
-  if (!isActionConfig(props.result.data) && isHippieMeta && isRoute) {
-    const hippieMeta = props.result.data.meta.hippieNavMeta
+  const displayNamePath = options?.displayField?.route
 
-    if (hippieMeta) {
-      const metaField = (hippieMeta as HippieNavMeta)[field]
-
-      if (typeof metaField !== 'string') return props.result.data.name
-
-      return metaField
-    }
-  }
-
-  if (!isActionConfig(props.result.data) && isOwnMeta && isRoute) {
-    const { meta } = props.result.data
-    const metaField = meta[field]
-
-    if (typeof metaField !== 'string') return props.result.data.name
-
-    return metaField
-  }
-
-  return props.result.data.name
+  return getValue(props.result.data, displayNamePath) ?? props.result.data.name
 })
 
 </script>
@@ -122,17 +92,11 @@ const displayText = computed(() => {
     transition: .07s ease-in;
     transition-property: background-color;
 
-    .highlighted {
-      color: hsl(var(--hippie-primary-color-base) var(--hippie-primary-color-light))
-    }
+    .highlighted { color: hsl(var(--hippie-primary-color-base) var(--hippie-primary-color-light)) }
 
-    .title, .sub-title, .type-icon {
-      color: hsl(var(--hippie-secondary-color-base) 20%)
-    }
+    .title, .sub-title, .type-icon { color: hsl(var(--hippie-secondary-color-base) 20%) }
 
-    .title {
-      font-size: var(--hippie-text-sm);
-    }
+    .title { font-size: var(--hippie-text-sm); }
 
     .sub-title {
       font-size: var(--hippie-text-xs);
@@ -142,9 +106,7 @@ const displayText = computed(() => {
     &.selected {
       background-color: hsl(var(--hippie-primary-color-base) var(--hippie-primary-color-light));
 
-      .title, .sub-title, .type-icon {
-        color: #fff;
-      }
+      .title, .sub-title, .type-icon { color: #fff; }
 
       .highlighted {
         color: inherit;
@@ -176,13 +138,9 @@ const displayText = computed(() => {
       border: 0;
       transition: color .2s;
 
-      > * {
-        height: var(--hippie-text-sm)
-      }
+      > * { height: var(--hippie-text-sm) }
 
-      &:hover {
-        --btn-light: 20%
-    }
+      &:hover { --btn-light: 20% }
     }
   }
 </style>
