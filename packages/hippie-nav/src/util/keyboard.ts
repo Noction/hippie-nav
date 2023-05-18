@@ -68,7 +68,7 @@ function isMatchingCombination (combination: string) {
       return false
     }
   }
-  return pressedKeys.has(targetKey as string)
+  return pressedKeys.has(targetKey)
 }
 
 export function useShortcut (handler: () => void, shortcut: string[]): () => void {
