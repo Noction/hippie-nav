@@ -16,6 +16,7 @@
               <search-result-item
                 v-for="(resultItem, index) in recentResults"
                 :key="index"
+                :options="options"
                 is-recent-result
                 :search-input="searchInput"
                 :result="resultItem"
@@ -33,6 +34,7 @@
               <search-result-item
                 v-for="(resultItem, index) in results"
                 :key="resultItem.data.id"
+                :options="options"
                 :search-input="searchInput"
                 :class="{ selected: index === current }"
                 :result="resultItem"
@@ -61,27 +63,28 @@ import NavButtons from './NavButtons.vue'
 import SearchModal from './SearchModal.vue'
 import SearchPan from './SearchPan.vue'
 import SearchResultItem from '@/components/SearchResultItem.vue'
-import { hippieNavOptions } from '@/index'
 import { isActionConfig } from '@/types/typePredicates'
 import { useFlexSearch } from '@noction/vue-use-flexsearch'
 import { usePersistiveLocalStorage } from '@/composable/usePersistiveLocalStorage'
 import { useRouter } from 'vue-router'
 import { useShortcut } from '@/util/keyboard'
-import { ActionConfig, HippieIndex, ResultItem, ResultWithId } from '@/types'
+import { ActionConfig, AppOptions, HippieIndex, ResultItem, ResultWithId } from '@/types'
 import { Ref, computed, inject, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { assignIdsArray, filterExcludedPaths, transformDataToResultData } from '@/util/helpers'
+import { defaultOptions, hippieNavOptions } from '@/index'
 import { indexAdd, indexSetup } from '@/util/indexSetup'
 
 const props = withDefaults(defineProps<{
   actions?: ActionConfig[]
-}>(), { actions: () => [] as ActionConfig[] })
+  options?: AppOptions
+}>(), { actions: () => [] as ActionConfig[], options: () => defaultOptions })
 
 defineExpose({ openModal, reindexRoutes })
 
 const searchPan = ref<InstanceType<typeof SearchPan>>()
 const router = useRouter()
 const current = ref(0)
-const options = inject(hippieNavOptions)
+const options = ref(inject(hippieNavOptions) || props.options)
 const indexActions = ref<HippieIndex>()
 const indexRoutes = ref<HippieIndex>()
 const results = shallowRef<ResultItem[]>([])
@@ -89,9 +92,9 @@ const searchInput = ref('')
 const showModal = ref(false)
 const routes = router.getRoutes()
 const validRoutes = computed(() => {
-  if (!options.excludedPaths) return routes
+  if (!options.value.excludedPaths) return routes
 
-  return filterExcludedPaths(routes, options.excludedPaths)
+  return filterExcludedPaths(routes, options.value.excludedPaths)
 })
 let cleanUp: () => void = null
 
@@ -125,7 +128,7 @@ function closeModal () {
 }
 
 function reindexRoutes () {
-  const routesIndexFields = options?.indexFields?.routes
+  const routesIndexFields = options.value?.indexFields?.routes
   const indexFields = { id: 'id', index: routesIndexFields ?? ['path', 'name'] }
 
   indexRoutes.value = indexSetup('route', indexFields)
@@ -174,7 +177,7 @@ function move (direction: 'next' | 'previous') {
 }
 
 function setupActionsIndex () {
-  const actionsIndexFields = options?.indexFields?.actions ?? ['name', 'aliases']
+  const actionsIndexFields = options.value?.indexFields?.actions ?? ['name', 'aliases']
   const indexFields = { id: 'id', index: actionsIndexFields }
 
   indexActions.value = indexSetup('action', indexFields)

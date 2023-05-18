@@ -160,7 +160,6 @@ export default defineComponent({
       this.playground = createApp(HippieNavPlayground) as unknown as typeof this.playground
 
       this.playground.use(router)
-      this.playground.use(HippieNav)
       this.playground.mount('#playground')
     },
     setShowAddRoute (value: boolean) {

@@ -25,18 +25,18 @@
 import IconAction from '../assets/icons/action.svg?component'
 import IconCrosshair from '../assets/icons/crosshair.svg?component'
 import IconPage from '../assets/icons/page.svg?component'
-import { ResultItem } from '@/types'
 import { getValue } from '@/util/helpers'
-import { hippieNavOptions } from '@/index'
 import { isActionConfig } from '@/types/typePredicates'
 import textHighlight from '@/directives/textHighlight'
 import { useRouter } from 'vue-router'
+import { AppOptions, ResultItem } from '@/types'
 import { computed, inject } from 'vue'
 
 const props = withDefaults(defineProps<{
   result: ResultItem
   searchInput: string
   isRecentResult?: boolean
+  options: AppOptions
 }>(), { isRecentResult: false, searchInput: null })
 
 const emit = defineEmits<{
@@ -53,7 +53,6 @@ const iconsComponents = {
 
 const vHighlightSearch = textHighlight
 const router = useRouter()
-const options = inject(hippieNavOptions)
 const subtitle = computed(() => {
   if (isActionConfig(props.result.data)) {
     return props.result.data.description
@@ -74,7 +73,7 @@ function handler (result: ResultItem) {
 const displayText = computed(() => {
   if (props.result.type === 'action') return props.result.data.name
 
-  const displayNamePath = options?.displayField?.route
+  const displayNamePath = props.options?.displayField?.route
 
   return getValue(props.result.data, displayNamePath) ?? props.result.data.name
 })
