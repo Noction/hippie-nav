@@ -19,8 +19,7 @@
     </nav>
     <hippie-nav
       ref="hippieNavRef"
-      :actions="actions"
-      :routes="routes"
+      :options="{ displayField: { route: 'meta.title' } }"
     />
     <router-view class="view" />
   </div>
@@ -39,6 +38,7 @@ export interface ActionConfig {
 }
 export default defineComponent({
   name: 'HippieNavPlayground',
+  components: { HippieNav },
   setup () {
     const hippieNavRef = ref<InstanceType<typeof HippieNav>>()
     const router = useRouter()

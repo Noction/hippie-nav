@@ -42,12 +42,10 @@ function highlightSearch (message: string, keyword: string) {
   const testMath = match.test(message)
 
   if (testMath) {
-    //eslint-disable-next-line
-    const replaced = message.replace(match, ':;{{:;\$&:;}}:;')
+    const replaced = message.replace(match, ':;{{:;$&:;}}:;')
     const matchAgain = new RegExp(`:;{{:;(${escapeHtml(regexWord)}):;}}:;`, 'gi')
 
-    //eslint-disable-next-line
-    return escapeHtml(replaced).replace(matchAgain, '<span class="highlighted">\$1</span>')
+    return escapeHtml(replaced).replace(matchAgain, '<span class="highlighted">$1</span>')
   }
   return escapeHtml(message)
 }
