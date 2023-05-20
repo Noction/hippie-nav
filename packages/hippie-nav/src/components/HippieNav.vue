@@ -23,7 +23,7 @@
                 :class="{ selected: index === current }"
                 @mouse-over="handleMouseOver(resultItem, 'recentResults')"
                 @close-modal="closeModal"
-                @remove-recent-result="removeRecentResult(index, resultItem)"
+                @remove-recent-result="removeRecentResult(resultItem)"
               >
                 <template #resultItem="result">
                   <slot name="resultItem" v-bind="result" />
@@ -38,6 +38,7 @@
                 :search-input="searchInput"
                 :class="{ selected: index === current }"
                 :result="resultItem"
+                @goto="goto"
                 @mouse-over="handleMouseOver(resultItem, 'results')"
                 @close-modal="closeModal"
               >
@@ -49,7 +50,7 @@
           </expand-transition>
         </div>
         <div v-if="results.length === 0 && searchInput !== ''" class="no-result">
-          No results for <b>“{{ searchInput }}“</b>
+          No results for&nbsp;<b>“{{ searchInput }}“</b>
         </div>
         <nav-buttons v-if="searchInput" />
       </search-modal>
@@ -99,6 +100,8 @@ const validRoutes = computed(() => {
 let cleanUp: () => void = null
 
 watch([searchInput], () => {
+  if (searchInput.value.length > 40) searchInput.value = searchInput.value.slice(0, searchInput.value.length - 1)
+
   results.value = []
   const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
     searchInput,
@@ -131,12 +134,13 @@ function reindexRoutes () {
   const routesIndexFields = options.value?.indexFields?.routes
   const indexFields = { id: 'id', index: routesIndexFields ?? ['path', 'name'] }
 
-  indexRoutes.value = indexSetup('route', indexFields)
+  indexRoutes.value = indexSetup(indexFields)
   indexAdd(indexRoutes.value, assignIdsArray(validRoutes.value), 'route')
 }
 
 function goto () {
-  if (current.value < 0) return
+  if (current.value < 0 || (results.value.length === 0 && searchInput.value !== '')) return
+
   let result: ResultItem
 
   if (results.value.length !== 0) {
@@ -180,7 +184,7 @@ function setupActionsIndex () {
   const actionsIndexFields = options.value?.indexFields?.actions ?? ['name', 'aliases']
   const indexFields = { id: 'id', index: actionsIndexFields }
 
-  indexActions.value = indexSetup('action', indexFields)
+  indexActions.value = indexSetup(indexFields)
   indexAdd(indexActions.value, assignIdsArray(props.actions), 'action')
 }
 
