@@ -1,5 +1,4 @@
 import {  useShortcut } from '@/util/keyboard'
-import {  beforeEach, expect } from 'vitest'
 function simulateShortcut (firstKey: string, secondKey: string) {
   window.dispatchEvent(new KeyboardEvent('keydown', { key: firstKey }))
   window.dispatchEvent(new KeyboardEvent('keydown', { key: secondKey }))

@@ -23,7 +23,7 @@ export function indexAdd (index: Document<unknown>, data: ResultWithId[], type: 
 
 }
 
-export function indexSetup  (type: IndexType, indexFields: IndexFields): Document<IndexOptionsHippieNav> {
+export function indexSetup (indexFields: IndexFields): Document<IndexOptionsHippieNav> {
   return new Document({
     charset: 'latin:extra',
     document: indexFields,

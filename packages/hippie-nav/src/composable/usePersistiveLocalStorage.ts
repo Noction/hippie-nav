@@ -11,10 +11,10 @@ export const HippieLocalStorageKey = 'hippieLocalStorage'
 export interface UsePersistiveLocalStorage {
   addItem: (result: ResultItem) => void;
   recentResults: Ref<ResultItem[]>;
-  removeItem: (index: number, resultItem: ResultItem) => void;
+  removeItem: (resultItem: ResultItem) => void;
 }
 
-export function addLocalStorageRecentResults (recentResults: ResultItem[]) {
+function addLocalStorageRecentResults (recentResults: ResultItem[]) {
   const localStorageData: LocalStorageData[] = recentResults.map(rs => {
     if (isActionConfig(rs.data)) return {  name: rs.data.name, type: 'action' }
 
@@ -23,8 +23,7 @@ export function addLocalStorageRecentResults (recentResults: ResultItem[]) {
 
   localStorage.setItem(HippieLocalStorageKey, JSON.stringify(localStorageData))
 }
-
-export function extractLocalStoreRecentResults (actions: ActionConfig[], routes: RouteRecordNormalized[]): ResultItem[] {
+function extractLocalStoreRecentResults (actions: ActionConfig[], routes: RouteRecordNormalized[]): ResultItem[] {
   const localStorageData: LocalStorageData[] | null = JSON.parse(localStorage.getItem(HippieLocalStorageKey))
 
   if (!Array.isArray(localStorageData)) return []
@@ -52,9 +51,9 @@ function addItem (result: ResultItem, recentResults: Ref<ResultItem[]>) {
 
   if (~idx) {
     const elementZero = recentResults.value[idx]
-    const filteredRecentResults = recentResults.value.filter(rs => rs.data.id !== elementZero.data.id)
+    const filteredRecentResults = recentResults.value.filter(rs => rs.data.name !== elementZero.data.name)
 
-    recentResults.value = [elementZero, ...filteredRecentResults]
+    recentResults.value = [elementZero, ...filteredRecentResults].map((result, idx): ResultItem => ({ ...result, data: { ...result.data, id: idx } }))
   } else {
     recentResults.value.unshift(result)
     if (recentResults.value.length > 3) recentResults.value.pop()
@@ -62,8 +61,8 @@ function addItem (result: ResultItem, recentResults: Ref<ResultItem[]>) {
   addLocalStorageRecentResults(recentResults.value)
 }
 
-function removeItem (resultIndex: number, resultItem: ResultItem, recentResults: Ref<ResultItem[]>) {
-  recentResults.value = recentResults.value.filter((rs, idx) => idx !== resultIndex)
+function removeItem (resultItem: ResultItem, recentResults: Ref<ResultItem[]>) {
+  recentResults.value = recentResults.value.filter(rs => rs.data.id !== resultItem.data.id)
   const keyRef = useLocalStorage(HippieLocalStorageKey, '')
 
   const array = JSON.parse(keyRef.value)
@@ -87,6 +86,6 @@ export function usePersistiveLocalStorage ( actions: ActionConfig[]): UsePersist
   return {
     addItem: result => { addItem(result, recentResults) },
     recentResults,
-    removeItem: (resultIndex, resultItem) => { removeItem(resultIndex, resultItem, recentResults) }
+    removeItem: resultItem => { removeItem( resultItem, recentResults) }
   }
 }
