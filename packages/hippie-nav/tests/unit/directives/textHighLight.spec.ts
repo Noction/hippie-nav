@@ -36,7 +36,7 @@ describe('textHighlight directive', () => {
   })
 
   it('should contain highlighted span partial', async () => {
-    const text = faker.random.words()
+    const text = faker.lorem.word()
     const keyword =  text.slice(0, text.length / 2)
 
     await wrapper.setData({ text })
@@ -46,7 +46,7 @@ describe('textHighlight directive', () => {
   })
 
   it('should contain highlighted span partial, after two changes of keyword', async () => {
-    const text = faker.random.words()
+    const text = faker.lorem.word()
     const keywords =  [text.slice(0, text.length / 2), text.slice(0, text.length - 1)]
 
     await wrapper.setData({ text })
@@ -57,7 +57,7 @@ describe('textHighlight directive', () => {
   })
 
   it('should contain highlighted span full', async () => {
-    const text = faker.random.words()
+    const text = faker.lorem.word()
 
     await wrapper.setData({ text })
     await wrapper.setData({ keyword: text })
@@ -66,7 +66,7 @@ describe('textHighlight directive', () => {
   })
 
   it('should not contain highlighted span, no keyword', async () => {
-    await wrapper.setData({ text: faker.random.words() })
+    await wrapper.setData({ text: faker.lorem.word() })
     const keyword = ''
 
     await wrapper.setData({ keyword })
@@ -75,8 +75,8 @@ describe('textHighlight directive', () => {
   })
 
   it('should not contain highlighted span, text does not contain the keyword', async () => {
-    await wrapper.setData({ text: faker.random.words() })
-    const keyword = faker.random.words(+faker.random.numeric())
+    await wrapper.setData({ text: faker.lorem.word() })
+    const keyword = faker.lorem.word(+faker.random.numeric())
 
     await wrapper.setData({ keyword })
 

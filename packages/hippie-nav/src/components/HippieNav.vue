@@ -85,7 +85,7 @@ defineExpose({ openModal, reindexRoutes })
 const searchPan = ref<InstanceType<typeof SearchPan>>()
 const router = useRouter()
 const current = ref(0)
-const options = ref(inject(hippieNavOptions) || props.options)
+const options = ref( props.options || inject(hippieNavOptions))
 const indexActions = ref<HippieIndex>()
 const indexRoutes = ref<HippieIndex>()
 const results = shallowRef<ResultItem[]>([])
@@ -159,8 +159,10 @@ function goto () {
 function handleMouseOver (e: ResultItem, type: 'recentResults' | 'results') {
   if (type === 'results') {
     current.value = results.value?.findIndex(r => r.data.id === e.data.id)
+
     return
   }
+
   current.value = recentResults.value?.findIndex(r => r.data.id === e.data.id)
 }
 
@@ -172,6 +174,7 @@ function move (direction: 'next' | 'previous') {
 
     if (isNextResult || isNextRecentResult) {
       current.value++
+
       return
     }
   }
@@ -188,7 +191,7 @@ function setupActionsIndex () {
   indexAdd(indexActions.value, assignIdsArray(props.actions), 'action')
 }
 
-function handlerOpenModalShortCut () {
+function handlerModalShortCut () {
   current.value = 0
   showModal.value = !showModal.value
 
@@ -200,7 +203,7 @@ function handlerTabPreventShortCut () {
 }
 
 function setupShortcuts () {
-  const cleanUpOpenModal = useShortcut(handlerOpenModalShortCut, ['ctrl+k', 'meta+k'])
+  const cleanUpOpenModal = useShortcut(handlerModalShortCut, ['ctrl+k', 'meta+k'])
   const cleanUpTabPrevent = useShortcut(handlerTabPreventShortCut, ['tab'])
 
   cleanUp = function () {
