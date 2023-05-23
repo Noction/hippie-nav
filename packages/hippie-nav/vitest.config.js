@@ -1,14 +1,15 @@
-import * as path from 'path'
+import { resolve } from 'node:path'
 import vue from '@vitejs/plugin-vue'
+import svgLoader from 'vite-svg-loader'
 import { configDefaults, defineConfig } from 'vitest/config'
 
 const reportsDirectory = process.env.REPORTS_DIR ? process.env.REPORTS_DIR : './coverage'
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(), svgLoader()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': resolve(__dirname, './src')
     }
   },
   test: {

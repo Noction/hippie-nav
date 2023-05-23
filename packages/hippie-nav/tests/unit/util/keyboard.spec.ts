@@ -1,15 +1,5 @@
-import {  useShortcut } from '@/util/keyboard'
-function simulateShortcut (firstKey: string, secondKey: string) {
-  window.dispatchEvent(new KeyboardEvent('keydown', { key: firstKey }))
-  window.dispatchEvent(new KeyboardEvent('keydown', { key: secondKey }))
-
-  blurPressedKeys(firstKey, secondKey)
-}
-
-function blurPressedKeys (firstKey: string, secondKey: string) {
-  window.dispatchEvent(new KeyboardEvent('blur', { key: firstKey }))
-  window.dispatchEvent(new KeyboardEvent('blur', { key: secondKey }))
-}
+import simulateShortcut from '../../utils/simulateShorcut'
+import { useShortcut } from '@/util/keyboard'
 
 let cleanUp: () => void
 
