@@ -15,7 +15,7 @@
     "lint:es": "eslint \"src/**/*.{js,ts,vue}\" --fix --color",
     "lint:style": "stylelint src/**/*.{css,scss,vue} --color --fix",
     "type:check": "vue-tsc --noEmit",
-    "test": "vitest",
+    "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
@@ -24,7 +24,7 @@
     "@typescript/lib-dom": "npm:@types/web@^0.0.99",
     "@vitejs/plugin-vue": "^4.2.1",
     "@vitest/coverage-c8": "^0.31.1",
-    "@vue/test-utils": "^2.3.2",
+    "@vue/test-utils": "^2.2.10",
     "jsdom": "^22.0.0",
     "minimist": "^1.2.8",
     "typescript": "^4.9.5",
@@ -45,7 +45,7 @@
   },
   "peerDependencies": {
     "flexsearch": "0.7.21",
-    "vue-router": "^4.2.0"
+    "vue-router": "^4.1.6"
   },
   "web-types": "./dist/web-types.json"
 }
