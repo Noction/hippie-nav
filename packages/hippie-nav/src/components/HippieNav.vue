@@ -102,18 +102,20 @@ const validRoutes = computed(() => {
 let cleanUp: () => void = null
 
 watch([searchInput], () => {
-  if (searchInput.value.length > 40) searchInput.value = searchInput.value.slice(0, searchInput.value.length - 1)
-
   results.value = []
+  const resultsLimit = options.value.resultsLimit ?? 7
+
   const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
     searchInput,
     indexRoutes,
-    ref(assignIdsArray(validRoutes.value))
+    ref(assignIdsArray(validRoutes.value)),
+    { limit: resultsLimit }
   )
   const { results: actionsResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
     searchInput,
     indexActions,
-    ref(assignIdsArray(props.actions))
+    ref(assignIdsArray(props.actions)),
+    { limit: resultsLimit }
   )
 
   results.value = [
@@ -134,7 +136,7 @@ function closeModal () {
 
 function reindexRoutes () {
   const routesIndexFields = options.value?.indexFields?.routes
-  const indexFields = { id: 'id', index: routesIndexFields ?? ['path', 'name'] }
+  const indexFields = { id: 'id', index: routesIndexFields ?? defaultOptions.indexFields.routes }
 
   indexRoutes.value = indexSetup(indexFields)
   addIndex(indexRoutes.value, assignIdsArray(validRoutes.value))
@@ -186,7 +188,7 @@ function move (direction: 'next' | 'previous') {
 }
 
 function setupActionsIndex () {
-  const actionsIndexFields = options.value?.indexFields?.actions ?? ['name', 'aliases']
+  const actionsIndexFields = options.value?.indexFields?.actions ?? defaultOptions.indexFields.actions
   const indexFields = { id: 'id', index: actionsIndexFields }
 
   indexActions.value = indexSetup(indexFields)

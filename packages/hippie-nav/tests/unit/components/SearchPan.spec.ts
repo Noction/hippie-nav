@@ -1,4 +1,5 @@
 import SearchPan from '@/components/SearchPan.vue'
+import { expect } from 'vitest'
 import { enableAutoUnmount, shallowMount } from '@vue/test-utils'
 
 describe('SearchPan component', () => {
@@ -103,5 +104,16 @@ describe('SearchPan component', () => {
     const button = await wrapper.find('.clear-btn')
 
     expect(button.exists()).toBeFalsy()
+  })
+
+  it('should have input maxLength 39', async function () {
+    const wrapper = shallowMount(SearchPan, {
+      props: {
+        modelValue: ''
+      }
+    })
+    const input = wrapper.find({ ref: 'input' })
+
+    expect(input.attributes('maxlength')).toBe('39')
   })
 })

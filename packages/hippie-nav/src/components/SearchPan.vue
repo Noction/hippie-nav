@@ -7,6 +7,7 @@
       class="search-panel-input"
       type="text"
       placeholder="Search"
+      maxlength="39"
       @input="emit('update:model-value', ($event.target as HTMLInputElement).value)"
       @keydown.esc.prevent="emit('close')"
       @keydown.down.prevent="emit('next')"
@@ -16,7 +17,7 @@
     <button
       v-if="props.modelValue"
       class="clear-btn"
-      @click="emit('update:model-value', '')"
+      @click="clearInput"
     >
       <icon-crosshair />
     </button>
@@ -44,6 +45,11 @@ defineExpose({ focusInput } )
 
 function focusInput () {
   input.value.focus()
+}
+
+function clearInput () {
+  emit('update:model-value', '')
+  focusInput()
 }
 
 onMounted(() => {
