@@ -1,6 +1,6 @@
 import { resolve } from 'node:path'
-import vue from '@vitejs/plugin-vue'
 import svgLoader from 'vite-svg-loader'
+import vue from '@vitejs/plugin-vue'
 import { configDefaults, defineConfig } from 'vitest/config'
 
 const reportsDirectory = process.env.REPORTS_DIR ? process.env.REPORTS_DIR : './coverage'
