@@ -16,11 +16,8 @@ export interface AppOptions {
   },
   displayField?: {
     route: string
-  }
-}
-
-export interface HippieNavMeta {
-  [key: string]: string;
+  },
+  resultsLimit?: number
 }
 
 export interface IndexFields {

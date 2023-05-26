@@ -5,12 +5,15 @@ import { IndexFields, IndexOptionsHippieNav, ResultWithId } from '@/types'
 const isStringArray = (arr: unknown) =>  Array.isArray(arr) && arr.every(i => typeof i === 'string')
 
 function validateMeta <T extends object> (meta: T): T  {
-  for (const metaKey in meta) {
-    if (typeof meta[metaKey] !== 'string' && !isStringArray(meta[metaKey])) {
-      delete meta[metaKey]
+  const metaClone = { ...meta }
+
+  for (const metaKey in metaClone) {
+    if (typeof metaClone[metaKey] !== 'string' && !isStringArray(metaClone[metaKey])) {
+      delete metaClone[metaKey]
     }
   }
-  return meta
+
+  return metaClone
 }
 
 export function addIndex (index: Document<unknown>, data: ResultWithId[]) {
