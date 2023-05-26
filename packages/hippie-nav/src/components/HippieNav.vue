@@ -21,6 +21,7 @@
                 :search-input="searchInput"
                 :result="resultItem"
                 :class="{ selected: index === current }"
+                data-test="recentResults"
                 @mouse-over="handleMouseOver(resultItem, 'recentResults')"
                 @close-modal="closeModal"
                 @remove-recent-result="removeRecentResult(resultItem)"
@@ -34,6 +35,7 @@
               <search-result-item
                 v-for="(resultItem, index) in results"
                 :key="resultItem.data.id"
+                data-test="results"
                 :options="options"
                 :search-input="searchInput"
                 :class="{ selected: index === current }"
@@ -71,9 +73,9 @@ import { useRouter } from 'vue-router'
 import { useShortcut } from '@/util/keyboard'
 import { ActionConfig, AppOptions, HippieIndex, ResultItem, ResultWithId } from '@/types'
 import { Ref, computed, inject, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { addIndex, indexSetup } from '@/util/indexSetup'
 import { assignIdsArray, filterExcludedPaths, transformDataToResultData } from '@/util/helpers'
 import { defaultOptions, hippieNavOptions } from '@/index'
-import { indexAdd, indexSetup } from '@/util/indexSetup'
 
 const props = withDefaults(defineProps<{
   actions?: ActionConfig[]
@@ -135,7 +137,7 @@ function reindexRoutes () {
   const indexFields = { id: 'id', index: routesIndexFields ?? ['path', 'name'] }
 
   indexRoutes.value = indexSetup(indexFields)
-  indexAdd(indexRoutes.value, assignIdsArray(validRoutes.value), 'route')
+  addIndex(indexRoutes.value, assignIdsArray(validRoutes.value))
 }
 
 function goto () {
@@ -188,7 +190,7 @@ function setupActionsIndex () {
   const indexFields = { id: 'id', index: actionsIndexFields }
 
   indexActions.value = indexSetup(indexFields)
-  indexAdd(indexActions.value, assignIdsArray(props.actions), 'action')
+  addIndex(indexActions.value, assignIdsArray(props.actions))
 }
 
 function handlerModalShortCut () {

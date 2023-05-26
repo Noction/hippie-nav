@@ -15,8 +15,12 @@
         </div>
       </slot>
     </div>
-    <button class="clear-btn" @click="emit('removeRecentResult')">
-      <icon-crosshair v-if="isRecentResult" />
+    <button
+      v-if="isRecentResult"
+      class="clear-btn"
+      @click="emit('removeRecentResult')"
+    >
+      <icon-crosshair />
     </button>
   </div>
 </template>
@@ -36,7 +40,7 @@ const props = withDefaults(defineProps<{
   searchInput: string
   isRecentResult?: boolean
   options: AppOptions
-}>(), { isRecentResult: false, searchInput: null })
+}>(), { isRecentResult: false, searchInput: '' })
 
 const emit = defineEmits<{
   (e: 'closeModal'): void,

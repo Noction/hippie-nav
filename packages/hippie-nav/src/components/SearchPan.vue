@@ -7,16 +7,16 @@
       class="search-panel-input"
       type="text"
       placeholder="Search"
-      @input="emits('update:model-value', ($event.target as HTMLInputElement).value)"
-      @keydown.esc.prevent="emits('close')"
-      @keydown.down.prevent="emits('next')"
-      @keydown.up.prevent="emits('previous')"
-      @keydown.enter.prevent="emits('goto')"
+      @input="emit('update:model-value', ($event.target as HTMLInputElement).value)"
+      @keydown.esc.prevent="emit('close')"
+      @keydown.down.prevent="emit('next')"
+      @keydown.up.prevent="emit('previous')"
+      @keydown.enter.prevent="emit('goto')"
     >
     <button
       v-if="props.modelValue"
       class="clear-btn"
-      @click="emits('update:model-value', '')"
+      @click="emit('update:model-value', '')"
     >
       <icon-crosshair />
     </button>
@@ -30,7 +30,7 @@ import { onMounted, ref } from 'vue'
 
 const props = defineProps<{ modelValue: string }>()
 
-const emits = defineEmits<{
+const emit = defineEmits<{
   (e: 'close'): void
   (e: 'update:model-value', value: string ): void
   (e: 'next'): void
