@@ -5,11 +5,11 @@ import { App, InjectionKey } from 'vue'
 export const HippieNav = PrivateHippieNav
 
 export const defaultOptions: AppOptions = {
-  excludedPaths: ['/register', '/login', '/signin', '/signup'],
   indexFields: {
     actions: ['name', 'aliases'],
-    routes: ['path', 'name', 'aliases']
-  }
+    routes: ['path', 'name']
+  },
+  resultsLimit: 7
 }
 
 export const hippieNavOptions: InjectionKey<AppOptions> = Symbol()
