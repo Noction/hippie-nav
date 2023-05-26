@@ -1,9 +1,15 @@
 import { ActionConfig } from '@/types'
 import { defineComponent } from 'vue'
-import { expect } from 'vitest'
 import { rand } from '@vueuse/core'
 import { RouteRecordNormalized, createRouter, createWebHistory } from 'vue-router'
-import { assignIdsArray, filterExcludedPaths, getValue, transformDataToResultData } from '@/util/helpers'
+import {
+  assignIdsArray,
+  filterExcludedPaths,
+  filterHiddenRoutes,
+  getValue,
+  transformDataToResultData
+} from '@/util/helpers'
+import { describe, expect } from 'vitest'
 
 const fakeComponent = defineComponent({
   name: 'FakeComponent',
@@ -11,8 +17,8 @@ const fakeComponent = defineComponent({
 })
 
 const routes = [
-  { component: fakeComponent, path: '/about' },
-  { component: fakeComponent, path: '/home' },
+  { component: fakeComponent, meta: { hidden: true }, path: '/about' },
+  { component: fakeComponent, meta: { hidden: true }, path: '/home' },
   { component: fakeComponent, path: '/some' }
 ]
 
@@ -138,6 +144,14 @@ describe('util `helpers`', () => {
       const results = transformDataToResultData(mixedWithIds)
 
       expect(results[rand(0, mixedWithIds.length -1 )]).toHaveProperty('type')
+    })
+  })
+
+  describe('filterHiddenRoutes', () => {
+    it('should have as result one route', function () {
+      const filteredRoutes = filterHiddenRoutes(router.getRoutes())
+
+      expect(filteredRoutes).toHaveLength(1)
     })
   })
 })
