@@ -74,7 +74,7 @@ import { useShortcut } from '@/util/keyboard'
 import { ActionConfig, AppOptions, HippieIndex, ResultItem, ResultWithId } from '@/types'
 import { Ref, computed, inject, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { addIndex, indexSetup } from '@/util/indexSetup'
-import { assignIdsArray, filterExcludedPaths, transformDataToResultData } from '@/util/helpers'
+import { assignIdsArray, filterExcludedPaths, filterHiddenRoutes, transformDataToResultData } from '@/util/helpers'
 import { defaultOptions, hippieNavOptions } from '@/index'
 
 const props = withDefaults(defineProps<{
@@ -95,9 +95,9 @@ const searchInput = ref('')
 const showModal = ref(false)
 const routes = router.getRoutes()
 const validRoutes = computed(() => {
-  if (!options.value.excludedPaths) return routes
+  if (!options.value.excludedPaths) return filterHiddenRoutes(routes)
 
-  return filterExcludedPaths(routes, options.value.excludedPaths)
+  return filterExcludedPaths(filterHiddenRoutes(routes), options.value.excludedPaths)
 })
 let cleanUp: () => void = null
 
