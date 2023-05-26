@@ -23,7 +23,15 @@ export function filterExcludedPaths (routes: RouteRecordNormalized[], excludedPa
   })
 
   return routes
-    .filter(route =>  !strings.includes(route.path) && !regExps.some(regExp => regExp.test(route.path)))
+    .filter(route => !strings.includes(route.path) && !regExps.some(regExp => regExp.test(route.path)))
+}
+
+export function filterHiddenRoutes (routes: RouteRecordNormalized[]) {
+  return routes.filter(route => {
+    const hidden= getValue(route, 'meta.hippieNavMeta.hidden') ?? getValue(route, 'meta.hidden')
+
+    return !hidden
+  })
 }
 
 export function getValue<T extends object> (object: T, path: string) {
