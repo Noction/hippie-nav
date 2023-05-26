@@ -1,26 +1,32 @@
 import { Document } from 'flexsearch'
+import { RouteMeta } from 'vue-router'
 import { isActionConfig } from '@/types/typePredicates'
-import { IndexFields, IndexOptionsHippieNav, IndexType, ResultWithId } from '@/types'
+import { IndexFields, IndexOptionsHippieNav, ResultWithId } from '@/types'
 
-export function indexAdd (index: Document<unknown>, data: ResultWithId[], type: IndexType) {
-  if (type === 'route') {
-    data.forEach(route => {
-      if (!isActionConfig(route) && route.meta.hippieNavMeta && typeof route.meta.hippieNavMeta === 'object') {
-        const { hippieNavMeta } = route.meta
+const isStringArray = (arr: unknown) =>  Array.isArray(arr) && arr.every(i => typeof i === 'string')
 
-        index.add(route.id, { name: route.name, path: route.path, ...hippieNavMeta })
-      } else if (!isActionConfig(route)) {
-        index.add(route.id, { name: route.name, path: route.path })
-      }
-    })
-    return
+function validateMeta (meta: RouteMeta): RouteMeta  {
+  for (const metaKey in meta) {
+    if (typeof meta[metaKey] !== 'string' && !isStringArray(meta[metaKey])) {
+      delete meta[metaKey]
+    }
   }
-  data.forEach(action => {
-    if (isActionConfig(action)) {
-      index.add(action.id, { aliases: action?.aliases ?? '', description: action.description ?? '', name: action.name })
+  return meta
+}
+
+export function addIndex (index: Document<unknown>, data: ResultWithId[]) {
+  data.forEach(item => {
+    if (isActionConfig(item)) {
+      index.add(item.id, { aliases: item?.aliases ?? '', description: item.description ?? '', name: item.name })
+    } else {
+      const { hippieNavMeta } = item.meta
+      const metaData = hippieNavMeta ?? validateMeta(item.meta)
+
+      if (typeof metaData === 'object') {
+        index.add(item.id, { name: item.name, path: item.path, ...metaData })
+      }
     }
   })
-
 }
 
 export function indexSetup (indexFields: IndexFields): Document<IndexOptionsHippieNav> {

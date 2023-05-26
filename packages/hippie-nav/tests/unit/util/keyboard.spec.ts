@@ -15,6 +15,7 @@ describe('keyboard', () => {
     const mockFn = vi.fn()
 
     cleanUp = useShortcut(mockFn, ['ctrl+k'])
+
     simulateShortcut('Control', 'K')
 
     expect(mockFn).toHaveBeenCalledOnce()
@@ -23,6 +24,7 @@ describe('keyboard', () => {
     const mockFn = vi.fn()
 
     cleanUp = useShortcut(mockFn, ['ctrl+k'])
+
     simulateShortcut('Control', 'K')
     simulateShortcut('Control', 'K')
 
@@ -50,6 +52,7 @@ describe('keyboard', () => {
     const mockFn = vi.fn()
 
     cleanUp = useShortcut(mockFn, ['meta+k'])
+
     simulateShortcut('Meta', 'K')
     simulateShortcut('Meta', 'K')
 
@@ -60,6 +63,7 @@ describe('keyboard', () => {
     const mockFn = vi.fn(() => 1)
 
     cleanUp = useShortcut(mockFn, ['meta+k'])
+
     simulateShortcut('Meta', 'M')
 
     expect(mockFn).not.toHaveBeenCalledOnce()

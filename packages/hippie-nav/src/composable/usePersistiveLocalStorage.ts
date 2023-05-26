@@ -29,14 +29,9 @@ function extractLocalStoreRecentResults (actions: ActionConfig[], routes: RouteR
   if (!Array.isArray(localStorageData)) return []
 
   const recentResults: (ActionConfig | RouteRecordNormalized)[] = localStorageData.map(item => {
-    if (item.type === 'action') {
-      const index = actions.findIndex(action => action.name === item.name)
+    if (item.type === 'action') { return actions.find(action => action.name === item.name) }
 
-      return actions[index]
-    }
-    const index = routes.findIndex(route => route.name === item.name)
-
-    return routes[index]
+    return routes.find(route => route.name === item.name)
   })
 
   return transformDataToResultData(assignIdsArray(recentResults))
@@ -51,9 +46,11 @@ function addItem (result: ResultItem, recentResults: Ref<ResultItem[]>) {
 
   if (~idx) {
     const elementZero = recentResults.value[idx]
-    const filteredRecentResults = recentResults.value.filter(rs => rs.data.name !== elementZero.data.name)
+    const filteredRecentResults = recentResults.value
+      .filter(rs => rs.data.name !== elementZero.data.name)
 
-    recentResults.value = [elementZero, ...filteredRecentResults].map((result, idx): ResultItem => ({ ...result, data: { ...result.data, id: idx } }))
+    recentResults.value = [elementZero, ...filteredRecentResults]
+      .map((result, idx): ResultItem => ({ ...result, data: { ...result.data, id: idx } }))
   } else {
     recentResults.value.unshift(result)
     if (recentResults.value.length > 3) recentResults.value.pop()
