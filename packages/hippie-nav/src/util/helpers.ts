@@ -1,5 +1,4 @@
 import { RouteRecordNormalized } from 'vue-router'
-import { isActionConfig } from '@/types/typePredicates'
 import { ActionConfig, ResultItem, ResultWithId } from '@/types'
 
 export function assignIdsArray (store: (ActionConfig | RouteRecordNormalized)[]) {
@@ -47,7 +46,7 @@ export function getValue<T extends object> (object: T, path: string) {
 export function transformDataToResultData (data: ResultWithId[]) {
   const resultData: ResultItem[] = data.map(item => ({
     data: item,
-    type: isActionConfig(item) ? 'action' : 'route'
+    type: 'action' in item ? 'action' : 'route'
   }))
 
   return resultData

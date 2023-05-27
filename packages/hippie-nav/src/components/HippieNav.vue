@@ -24,7 +24,7 @@
                 data-test="recentResults"
                 @mouse-over="handleMouseOver(resultItem, 'recentResults')"
                 @close-modal="closeModal"
-                @remove-recent-result="removeRecentResult(resultItem)"
+                @remove-recent-result="handleRemoveRecentResult(resultItem)"
               >
                 <template #resultItem="result">
                   <slot name="resultItem" v-bind="result" />
@@ -66,7 +66,6 @@ import NavButtons from './NavButtons.vue'
 import SearchModal from './SearchModal.vue'
 import SearchPan from './SearchPan.vue'
 import SearchResultItem from '@/components/SearchResultItem.vue'
-import { isActionConfig } from '@/types/typePredicates'
 import { useFlexSearch } from '@noction/vue-use-flexsearch'
 import { usePersistiveLocalStorage } from '@/composable/usePersistiveLocalStorage'
 import { useRouter } from 'vue-router'
@@ -99,25 +98,22 @@ const validRoutes = computed(() => {
 
   return filterExcludedPaths(filterHiddenRoutes(routes), options.value.excludedPaths)
 })
+const resultsLimit = options.value.resultsLimit ?? defaultOptions.resultsLimit
+const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
+  searchInput,
+  indexRoutes,
+  ref(assignIdsArray(validRoutes.value)),
+  { limit: resultsLimit }
+)
+const { results: actionsResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
+  searchInput,
+  indexActions,
+  ref(assignIdsArray(props.actions)),
+  { limit: resultsLimit }
+)
 let cleanUp: () => void = null
 
 watch([searchInput], () => {
-  results.value = []
-  const resultsLimit = options.value.resultsLimit ?? 7
-
-  const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
-    searchInput,
-    indexRoutes,
-    ref(assignIdsArray(validRoutes.value)),
-    { limit: resultsLimit }
-  )
-  const { results: actionsResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
-    searchInput,
-    indexActions,
-    ref(assignIdsArray(props.actions)),
-    { limit: resultsLimit }
-  )
-
   results.value = [
     ...transformDataToResultData(routesResults.value),
     ...transformDataToResultData(actionsResults.value)
@@ -151,7 +147,7 @@ function goto () {
     result = results.value[current.value]
   } else result = recentResults.value[current.value]
 
-  if (isActionConfig(result.data)) {
+  if ('action' in result.data) {
     result.data.action()
   } else {
     router.push(result.data.path)
@@ -171,7 +167,6 @@ function handleMouseOver (e: ResultItem, type: 'recentResults' | 'results') {
 }
 
 function move (direction: 'next' | 'previous') {
-
   if (direction === 'next') {
     const isNextResult = results.value.length - 1 > current.value && results.value.length !== 0
     const isNextRecentResult = recentResults.value.length - 1 > current.value && recentResults.value.length !== 0
@@ -214,6 +209,11 @@ function setupShortcuts () {
     cleanUpOpenModal()
     cleanUpTabPrevent()
   }
+}
+
+function handleRemoveRecentResult (resultItem: ResultItem) {
+  removeRecentResult(resultItem)
+  searchPan.value.focusInput()
 }
 
 const {

@@ -2,7 +2,7 @@
   <div
     v-if="props.shown"
     class="modal"
-    @click.stop="close"
+    @click.stop="emit('close')"
   >
     <div class="modal-content" @click.stop>
       <slot />
@@ -18,10 +18,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
-
-function close (): void {
-  emit('close')
-}
 </script>
 
 <style lang="scss" scoped>
