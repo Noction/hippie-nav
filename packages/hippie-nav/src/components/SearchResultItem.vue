@@ -8,9 +8,7 @@
       <slot name="resultItem" v-bind="result">
         <component :is="iconsComponents[result.type]" class="type-icon" />
         <div class="item-info">
-          <span v-highlight-search="{ keyword: searchInput }">
-            {{ displayText }}
-          </span>
+          <span v-highlight-search="{ keyword: searchInput }" v-text="displayText" />
           <span class="sub-title" v-text="subtitle" />
         </div>
       </slot>
@@ -31,7 +29,6 @@ import IconCrosshair from '../assets/icons/crosshair.svg?component'
 import IconPage from '../assets/icons/page.svg?component'
 import { computed } from 'vue'
 import { getValue } from '@/util/helpers'
-import { isActionConfig } from '@/types/typePredicates'
 import textHighlight from '@/directives/textHighlight'
 import { AppOptions, ResultItem } from '@/types'
 
@@ -57,7 +54,7 @@ const iconsComponents = {
 
 const vHighlightSearch = textHighlight
 const subtitle = computed(() => {
-  if (isActionConfig(props.result.data)) {
+  if ('action' in props.result.data) {
     return props.result.data.description
   }
 
