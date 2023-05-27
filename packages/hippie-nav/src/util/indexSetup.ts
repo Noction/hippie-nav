@@ -1,5 +1,4 @@
 import { Document } from 'flexsearch'
-import { isActionConfig } from '@/types/typePredicates'
 import { IndexFields, IndexOptionsHippieNav, ResultWithId } from '@/types'
 
 const isStringArray = (arr: unknown) =>  Array.isArray(arr) && arr.every(i => typeof i === 'string')
@@ -18,7 +17,7 @@ function validateMeta <T extends object> (meta: T): T  {
 
 export function addIndex (index: Document<unknown>, data: ResultWithId[]) {
   data.forEach(item => {
-    if (isActionConfig(item)) {
+    if ('action' in item) {
       index.add(item.id, { aliases: item?.aliases ?? '', description: item.description ?? '', name: item.name })
     } else {
       const { hippieNavMeta } = item.meta

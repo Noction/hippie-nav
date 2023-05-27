@@ -1,4 +1,5 @@
 import { IndexFields } from '@/util/indexSetup'
+import { Ref } from 'vue'
 import { ResultWithId } from '@/types/types'
 
 export interface ActionConfig {
@@ -35,4 +36,10 @@ export interface IndexOptionsHippieNav {
 export interface ResultItem {
   type: 'route' | 'action',
   data: ResultWithId
+}
+
+export interface UsePersistiveLocalStorage {
+  addItem: (result: ResultItem) => void;
+  recentResults: Ref<ResultItem[]>;
+  removeItem: (resultItem: ResultItem) => void;
 }
