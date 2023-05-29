@@ -42,23 +42,21 @@ import IconEscape from '../assets/icons/escape.svg?component'
     align-items: center;
     justify-content: flex-start;
     padding: var(--hippie-spacing-m) var(--hippie-spacing-l);
-    background-color: white;
 
     .key-cap-content {
       display: flex;
       column-gap: var(--hippie-spacing-xs);
       align-items: center;
-      font-size: var(--hippie-text-sm);
+      font-size: var(--hippie-text-xs);
 
       .key-cap-btn {
         display: flex;
         padding: var(--hippie-spacing-xs);
-        color: hsl(var(--hippie-secondary-color-base) 20%);
-        background-color: hsl(var(--hippie-secondary-color-base) 90%);
+        color: var(--hippie-footer-color);
         border-radius: 5px;
       }
 
-      span { color: hsl(var(--hippie-secondary-color-base) var(--hippie-primary-color-light)) }
+      span { color: var(--hippie-footer-color); }
     }
   }
 </style>

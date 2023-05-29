@@ -235,7 +235,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
-
   @import "src/assets/styles";
 
   .hippie-nav {
@@ -243,15 +242,6 @@ onBeforeUnmount(() => {
 
     box-sizing: border-box;
   }
-
-  hr {
-    height: 1px;
-    margin: 2px;
-    border: 3px;
-    box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
-  }
-
-  .hippie-font-color-main { color: var(--hippie-secondary-color); }
 
   .hippie-enter-active {
     animation: fade calc(var(--hippie-animate-duration) / 2);
@@ -269,17 +259,13 @@ onBeforeUnmount(() => {
 
   @keyframes pulse {
     0% { transform: scale3d(.9, .9, .9) }
-
     55% { transform: scale3d(.98, .98, .98) }
-
     100% { transform: scale3d(1, 1, 1) }
   }
 
   @keyframes fade {
     0% { opacity: 0 }
-
     50% { opacity: .75 }
-
     100% { opacity: 1 }
   }
 
@@ -288,6 +274,6 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     padding: var(--hippie-spacing-2xl);
-    color: hsl(var(--hippie-secondary-color-base) 20%)
+    color: var(--hippie-text-color)
   }
 </style>
