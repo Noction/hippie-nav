@@ -81,7 +81,7 @@ const props = withDefaults(defineProps<{
   options?: AppOptions
 }>(), { actions: () => [] as ActionConfig[], options: () => defaultOptions })
 
-defineExpose({ openModal, reindexRoutes })
+defineExpose({ openModal, reindexRoutes: setupIndexRoutes })
 
 const searchPan = ref<InstanceType<typeof SearchPan>>()
 const router = useRouter()
@@ -130,9 +130,9 @@ function closeModal () {
   searchInput.value = ''
 }
 
-function reindexRoutes () {
-  const routesIndexFields = options.value?.indexFields?.routes
-  const indexFields = { id: 'id', index: routesIndexFields ?? defaultOptions.indexFields.routes }
+function setupIndexRoutes () {
+  const routesIndexFields = options.value?.indexFields?.routes ?? defaultOptions.indexFields.routes
+  const indexFields = { id: 'id', index: routesIndexFields }
 
   indexRoutes.value = indexSetup(indexFields)
   addIndex(indexRoutes.value, assignIdsArray(validRoutes.value))
@@ -225,7 +225,7 @@ const {
 onMounted(() => {
   setupShortcuts()
   setupActionsIndex()
-  reindexRoutes()
+  setupIndexRoutes()
 })
 
 onBeforeUnmount(() => {

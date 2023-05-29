@@ -60,9 +60,8 @@ function removeItem (resultItem: ResultItem, recentResults: Ref<ResultItem[]>) {
   if (!Array.isArray(localStorageDataArray)) return
 
   const recentResultsLocalStorage: LocalStorageData[] = localStorageDataArray.filter(item => {
-    if (item.type === resultItem.type) {
-      return resultItem.data.name !== item.name
-    }
+    if (item.type === resultItem.type) { return resultItem.data.name !== item.name }
+
     return true
   })
 
