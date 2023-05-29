@@ -1,18 +1,150 @@
-# Vue 3 + TypeScript + Vite
+# hippie-nav
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+[![NPM version](https://img.shields.io/npm/v/@noction/vue-highcharts.svg?style=flat)](https://npmjs.com/package/@noction/vue-highcharts)
+[![NPM downloads](https://img.shields.io/npm/dm/@noction/vue-highcharts.svg?style=flat)](https://npmjs.com/package/@noction/vue-highcharts)
+[![codecov](https://codecov.io/gh/Noction/vue-highcharts/branch/main/graph/badge.svg?token=C5NGW1BC2N)](https://codecov.io/gh/Noction/vue-highcharts)
 
-## Recommended IDE Setup
+This modern searchbar offers an intuitive and efficient way for users to explore your application by vue routes and your defined actions, .
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Install
 
-## Type Support For `.vue` Imports in TS
+***npm***
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+```bash
+npm i @noction/hippie-nav
+```
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+***yarn***
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+```bash
+yarn add @noction/hippie-nav
+```
+
+***pnpm***
+
+```bash
+pnpm add @noction/hippie-nav
+```
+
+## Options object structure
+
+The plugin supports the following configuration options:
+
+| Option          | Description                                                             | Type                    |
+|-----------------|-------------------------------------------------------------------------|-------------------------|
+| `excludedPaths` | An array of paths to be excluded from processing.                       | Array<string \| RegExp> |
+| `indexFields`   | An object specifying index fields for different entities.               | object                  |
+|                 | - `routes`: An array of fields to be indexed for the 'routes' entity.   | Array<string>           |
+|                 | - `actions`: An array of fields to be indexed for the 'actions' entity. | Array<string>           |
+| `displayField`  | An object specifying the display field for the 'route' entity .         | object                  |
+|                 | - `route`: The string field from meta is used for display name.         | string                  |
+| `resultsLimit`  | A number indicating the maximum number of results to be returned.       | number                  |
+
+## Action object structure
+
+| Property      | Description                                                                                  | Type            |
+|---------------|----------------------------------------------------------------------------------------------|-----------------|
+| `name`        | The name of the action.                                                                      | `string`        |
+| `action`      | The function that will be executed when the action is triggered.                             | `function`      |
+| `aliases`     | (Optional) An array of alternative names or aliases for the action.                          | `Array<string>` |
+| `description` | (Optional) An array of strings providing additional description or details about the action. | `Array<string>` |
+
+## Usage as component
+
+```vue
+<template>
+  <hippie-nav :options="options" :actions="actions"/>
+</template>
+
+<script setup lang="ts">
+import { HippieNav } from 'hippie-nav'
+
+const options = {
+  excludedPaths: ['/login', '/register', /^\/admin$/],
+  indexFields: {
+    routes: ['name', 'path'],
+    actions: ['name'],
+  },
+  displayField: {
+    route: 'hippieNavMeta.title'
+  },
+  resultsLimit: 5
+}
+
+const actions = [
+  {
+    name: 'Show graph',
+    action: () => {
+      //handler
+    },
+  },
+  {
+    name: 'Log out',
+    action: () => {
+      //handler
+    }
+  }
+]
+
+
+</script>
+```
+
+### Props
+
+| Name    | Type   | Description                                       | Required |                                                                      
+|---------|--------|---------------------------------------------------|----------|
+| options | Object | The hippie-nav options structure                  | false    |
+| actions | Array  | The hippie-nav actions of action object structure | false    |
+
+## Usage as plugin
+```ts 
+const app = createApp(App)
+
+app.use(router)
+app.use(HippieNav, {
+  displayField: {
+    route: 'hippieNavMeta.title'
+  },
+  excludedPaths: ['/login', '/register', /^\/admin$/],
+  indexFields: {
+    actions: ['name'],
+    routes: ['name', 'path']
+  },
+  resultsLimit: 5
+})
+app.component('HippieBtnCollapse', HippieBtnCollapse)
+app.mount('#app')
+```
+
+```vue
+<template>
+  <hippie-nav :actions="actions"/>
+</template>
+
+<script setup lang="ts">
+import { HippieNav } from 'hippie-nav'
+
+const actions = [
+  {
+    name: 'Show graph',
+    action: () => {
+      //handler
+    },
+  },
+  {
+    name: 'Log out',
+    action: () => {
+      //handler
+    }
+  }
+]
+
+
+</script>
+```
+### Props
+
+| Name            | Type  | Description                                       | Required   |                                                                      
+|-----------------|-------|---------------------------------------------------|------------|
+| actions         | Array | The hippie-nav actions of action object structure | false      |
