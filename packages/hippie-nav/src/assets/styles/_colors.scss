@@ -1,8 +1,9 @@
 @mixin colors {
-  --hippie-primary-color-base: 31deg 100%;
-  --hippie-primary-color-light: 50%;
-  --hippie-secondary-color-base: 215deg 16%;
-  --hippie-secondary-color-light: 50%;
-  --hippie-font-color: hsl(143deg 100% 40%);
-  --hippie-hover: hsl(var(--hippie-primary-color-h) var(--hippie-primary-color-l) calc(var(--hippie-primary-color-l) - 10%));
+  --hippie-primary-color: #42b983;
+  --hippie-bg-color: hsl(0deg 0% 100%);
+  --hippie-text-color: hsl(215deg 16% 50%);
+  --hippie-backdrop-color: hsla(215deg 16% 50% / 50%);
+  --hippie-hit-color: #fff;
+  --hippie-hit-active-color: #fff;
+  --hippie-footer-color: hsla(215deg 16% 50% / 50%);
 }

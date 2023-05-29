@@ -66,39 +66,38 @@ onMounted(() => {
     display: grid;
     grid-template: 1fr / auto 1fr auto;
     column-gap: var(--hippie-spacing-l);
+    align-content: center;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 4rem;
     padding: var(--hippie-spacing-l);
-    background-color: white;
 
     .search-panel-icon {
       flex: none;
       height: var(--hippie-text-2xl);
-      color: hsl(var(--hippie-secondary-color-base) var(--btn-light));
+      color: var(--hippie-text-color);
+      opacity: .5;
     }
 
     .search-panel-input {
       font-size: var(--hippie-text-2xl);
-      color: hsl(var(--hippie-secondary-color-base) 20%);
+      color: var(--hippie-text-color);
       background-color: inherit;
-      border: 0 white;
+      border: 0;
       outline: none;
     }
 
     .clear-btn {
-      --btn-light: 50%;
-
       height: var(--hippie-text-2xl);
-      color: hsl(var(--hippie-secondary-color-base) var(--btn-light));
+      color: var(--hippie-text-color);
       background-color: transparent;
       border: 0;
-      transition: color .2s;
+      opacity: .5;
+      transition: opacity .2s;
 
       > * { height: var(--hippie-text-sm) }
-
-      &:hover { --btn-light: 20% }
+      &:hover { opacity: 1 }
     }
   }
 </style>

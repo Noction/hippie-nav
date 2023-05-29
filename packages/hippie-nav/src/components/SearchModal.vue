@@ -28,7 +28,7 @@ const emit = defineEmits<{
     display: flex;
     align-items: flex-start;
     padding: 150px;
-    background-color: hsla(var(--hippie-secondary-color-base) var(--hippie-secondary-color-light) / 50%);
+    background-color: var(--hippie-backdrop-color);
 
     .modal-content {
       position: relative;
@@ -37,9 +37,9 @@ const emit = defineEmits<{
       max-height: 100%;
       margin: 0 auto;
       overflow-y: auto;
-      background: #fff;
+      background-color: var(--hippie-bg-color);
       border-radius: 1rem;
+      box-shadow: 0 0 70px #0000004a;
     }
   }
-
 </style>
