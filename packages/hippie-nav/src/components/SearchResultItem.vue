@@ -8,7 +8,11 @@
       <slot name="resultItem" v-bind="result">
         <component :is="iconsComponents[result.type]" class="type-icon" />
         <div class="item-info">
-          <span v-highlight-search="{ keyword: searchInput }" v-text="displayText" />
+          <span
+            v-highlight-search="{ keyword: searchInput }"
+            class="title"
+            v-text="displayText"
+          />
           <span class="sub-title" v-text="subtitle" />
         </div>
       </slot>
@@ -87,21 +91,21 @@ const displayText = computed(() => {
     transition: .07s ease-in;
     transition-property: background-color;
 
-    .highlighted { color: hsl(var(--hippie-primary-color-base) var(--hippie-primary-color-light)) }
+    .highlighted { color: var(--hippie-primary-color); }
 
-    .title, .sub-title, .type-icon { color: hsl(var(--hippie-secondary-color-base) 20%) }
+    .title, .type-icon { color: var(--hippie-hit-color); }
 
     .title { font-size: var(--hippie-text-sm); }
 
     .sub-title {
       font-size: var(--hippie-text-xs);
-      opacity: .7;
+      opacity: .5;
     }
 
     &.selected {
-      background-color: hsl(var(--hippie-primary-color-base) var(--hippie-primary-color-light));
+      background-color: var(--hippie-primary-color);
 
-      .title, .sub-title, .type-icon { color: #fff; }
+      .title, .sub-title, .type-icon { color: var(--hippie-hit-active-color); }
 
       .highlighted {
         color: inherit;
@@ -125,17 +129,15 @@ const displayText = computed(() => {
     }
 
     .clear-btn {
-      --btn-light: 50%;
-
       height: var(--hippie-text-sm);
-      color: hsl(var(--hippie-secondary-color-base) var(--btn-light));
+      color: inherit;
       background-color: transparent;
       border: 0;
-      transition: color .2s;
+      opacity: .5;
+      transition: opacity .2s;
 
       > * { height: var(--hippie-text-sm) }
-
-      &:hover { --btn-light: 20% }
+      &:hover { opacity: .75 }
     }
   }
 </style>
