@@ -86,7 +86,12 @@ defineExpose({ openModal, reindexRoutes: setupIndexRoutes })
 const searchPan = ref<InstanceType<typeof SearchPan>>()
 const router = useRouter()
 const current = ref(0)
-const options = ref( props.options || inject(hippieNavOptions))
+const options = computed(() => {
+  if (typeof inject(hippieNavOptions) === 'object') {
+    return inject(hippieNavOptions)
+  }
+  return props.options
+})
 const indexActions = ref<HippieIndex>()
 const indexRoutes = ref<HippieIndex>()
 const results = shallowRef<ResultItem[]>([])
@@ -145,7 +150,7 @@ function goto () {
 
   if (results.value.length !== 0) {
     result = results.value[current.value]
-  } else result = recentResults.value[current.value]
+  } else { result = recentResults.value[current.value] }
 
   if ('action' in result.data) {
     result.data.action()
