@@ -15,7 +15,8 @@
     "hippie-nav": "workspace:^0.0.0",
     "postcss": "^8.4.23",
     "sass": "^1.62.1",
-    "vue": "^3.2.45"
+    "vue": "^3.2.45",
+    "vue-router": "^4.2.2"
   },
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.16",
