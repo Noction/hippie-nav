@@ -19,7 +19,7 @@
     </nav>
     <hippie-nav
       ref="hippieNavRef"
-      :options="{ displayField: { route: 'meta.title' } }"
+      :options="{ displayField: { route: 'meta.title' }, resultsLimit: 7 }"
     />
     <router-view class="view" />
   </div>
