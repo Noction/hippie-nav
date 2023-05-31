@@ -107,22 +107,21 @@ const resultsLimit = options.value.resultsLimit ?? defaultOptions.resultsLimit
 const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
   searchInput,
   indexRoutes,
-  ref(assignIdsArray(validRoutes.value)),
-  { limit: resultsLimit }
+  ref(assignIdsArray(validRoutes.value))
 )
 const { results: actionsResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
   searchInput,
   indexActions,
-  ref(assignIdsArray(props.actions)),
-  { limit: resultsLimit }
+  ref(assignIdsArray(props.actions))
 )
+
 let cleanUp: () => void = null
 
 watch([searchInput], () => {
   results.value = [
     ...transformDataToResultData(routesResults.value),
     ...transformDataToResultData(actionsResults.value)
-  ]
+  ].slice(0, resultsLimit)
   current.value = 0
 })
 
