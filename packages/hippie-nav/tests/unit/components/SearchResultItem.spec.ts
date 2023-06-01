@@ -19,8 +19,6 @@ const router = createRouter({
 })
 
 describe('SearchResultItem component', () => {
-  enableAutoUnmount(afterEach)
-
   it('should have removeButton', function () {
     const [resulItem] = transformDataToResultData(assignIdsArray(router.getRoutes()))
     const wrapper = shallowMount(SearchResultItem, {
