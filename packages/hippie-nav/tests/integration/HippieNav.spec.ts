@@ -1,7 +1,6 @@
 import { HippieNav } from '@/index'
 import SearchPan from '@/components/SearchPan.vue'
 import simulateShortcut from '../utils/simulateShorcut'
-import { afterEach, describe, expect } from 'vitest'
 import { createRouter, createWebHistory } from 'vue-router'
 import { defineComponent, nextTick } from 'vue'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
@@ -43,7 +42,7 @@ describe('HippieNav', () => {
 
       simulateShortcut('Meta', 'k')
 
-      expect(hippieNav.vm.showModal).toBe(true)
+      expect((hippieNav.vm as any).showModal).toBe(true)
     })
 
     it('should open on meta+K', async function () {
@@ -52,7 +51,7 @@ describe('HippieNav', () => {
 
       simulateShortcut('Control', 'k')
 
-      expect(hippieNav.vm.showModal).toBe(true)
+      expect((hippieNav.vm as any).showModal).toBe(true)
     })
 
     it('should not open on meta+P', async function () {
@@ -61,7 +60,7 @@ describe('HippieNav', () => {
 
       simulateShortcut('Meta', 'P')
 
-      expect(hippieNav.vm.showModal).toBe(false)
+      expect((hippieNav.vm as any).showModal).toBe(false)
     })
   })
 
@@ -77,11 +76,11 @@ describe('HippieNav', () => {
 
       await input.setValue('Home')
 
-      expect(hippieNav.vm.results).toHaveLength(1)
+      expect((hippieNav.vm as any).results ).toHaveLength(1)
     })
 
     it('should have three items in results', async function () {
-      const wrapper = mount(AppComponent, { global: { plugins: [router] } })
+      const wrapper = mount<typeof AppComponent>(AppComponent, { global: { plugins: [router] } })
 
       simulateShortcut('Meta', 'k')
       await nextTick()
@@ -91,7 +90,7 @@ describe('HippieNav', () => {
 
       await input.setValue('Page')
 
-      expect(hippieNav.vm.results).toHaveLength(3)
+      expect((hippieNav.vm as any).results).toHaveLength(3)
     })
   })
 
@@ -100,8 +99,11 @@ describe('HippieNav', () => {
       const wrapper = mount(AppComponent, { global: { plugins: [router] } })
 
       simulateShortcut('Meta', 'k')
+
       await nextTick()
-      wrapper.getComponent(HippieNav).vm.searchInput = 'Page'
+      const hippieVm = (wrapper.getComponent(HippieNav).vm as any & {searchInput: string})
+
+      hippieVm.saerchInput = 'Page'
       await nextTick()
       const results = wrapper.findAll('[data-test="results"]')
       const resultContent = results[0].find('.hippie-result-item-content')
@@ -128,7 +130,7 @@ describe('HippieNav', () => {
 
       await removeButton.trigger('click')
 
-      expect(wrapper.getComponent(HippieNav).vm.recentResults.length).toBe(0)
+      expect((wrapper.getComponent(HippieNav).vm as any).recentResults).toHaveLength(0)
     })
   })
 
