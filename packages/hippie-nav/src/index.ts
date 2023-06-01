@@ -12,7 +12,7 @@ export const defaultOptions: AppOptions = {
   resultsLimit: 7
 }
 
-export const hippieNavOptions: InjectionKey<AppOptions> = Symbol()
+export const hippieNavOptions: InjectionKey<AppOptions> = Symbol('hippieNavOptions')
 
 export function install (app: App, options = defaultOptions ) {
   app.component('HippieNav', PrivateHippieNav)

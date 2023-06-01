@@ -101,9 +101,11 @@ describe('HippieNav', () => {
       simulateShortcut('Meta', 'k')
 
       await nextTick()
-      const hippieVm = (wrapper.getComponent(HippieNav).vm as any & {searchInput: string})
 
-      hippieVm.saerchInput = 'Page'
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      wrapper.getComponent(HippieNav).vm.searchInput = 'Page'
+
       await nextTick()
       const results = wrapper.findAll('[data-test="results"]')
       const resultContent = results[0].find('.hippie-result-item-content')

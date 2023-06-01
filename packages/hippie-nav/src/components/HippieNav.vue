@@ -104,20 +104,21 @@ const validRoutes = computed(() => {
   return filterExcludedPaths(filterHiddenRoutes(routes), options.value.excludedPaths)
 })
 const resultsLimit = options.value.resultsLimit ?? defaultOptions.resultsLimit
-const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
-  searchInput,
-  indexRoutes,
-  ref(assignIdsArray(validRoutes.value))
-)
-const { results: actionsResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
-  searchInput,
-  indexActions,
-  ref(assignIdsArray(props.actions))
-)
 
 let cleanUp: () => void = null
 
 watch([searchInput], () => {
+  const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
+    searchInput,
+    indexRoutes,
+    ref(assignIdsArray(validRoutes.value))
+  )
+  const { results: actionsResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
+    searchInput,
+    indexActions,
+    ref(assignIdsArray(props.actions))
+  )
+
   results.value = [
     ...transformDataToResultData(routesResults.value),
     ...transformDataToResultData(actionsResults.value)
