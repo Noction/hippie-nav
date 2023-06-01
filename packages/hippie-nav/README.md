@@ -1,8 +1,8 @@
 # hippie-nav
 
-[![NPM version](https://img.shields.io/npm/v/@noction/vue-highcharts.svg?style=flat)](https://npmjs.com/package/@noction/vue-highcharts)
-[![NPM downloads](https://img.shields.io/npm/dm/@noction/vue-highcharts.svg?style=flat)](https://npmjs.com/package/@noction/vue-highcharts)
-[![codecov](https://codecov.io/gh/Noction/vue-highcharts/branch/main/graph/badge.svg?token=C5NGW1BC2N)](https://codecov.io/gh/Noction/vue-highcharts)
+[![NPM version](https://img.shields.io/npm/v/@noction/hippie-nav.svg?style=flat)](https://npmjs.com/package/@noction/hippie-nav)
+[![NPM downloads](https://img.shields.io/npm/dm/@noction/hippie-nav.svg?style=flat)](https://npmjs.com/package/@noction/hippie-nav)
+[![codecov](https://codecov.io/gh/Noction/hippie-nav/branch/main/graph/badge.svg?token=C5NGW1BC2N)](https://codecov.io/gh/Noction/hippie-nav)
 
 This modern searchbar offers an intuitive and efficient way for users to explore your application by vue routes and your defined actions, .
 

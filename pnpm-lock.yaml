@@ -72,7 +72,7 @@ importers:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.23)
       hippie-nav:
-        specifier: workspace:^0.0.0
+        specifier: workspace:*
         version: link:../hippie-nav
       postcss:
         specifier: ^8.4.23

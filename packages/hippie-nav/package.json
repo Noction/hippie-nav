@@ -1,6 +1,6 @@
 {
   "name": "hippie-nav",
-  "version": "0.0.0",
+  "version": "0.5.0",
   "main": "./dist/hippie-nav.umd.js",
   "module": "./dist/hippie-nav.mjs",
   "types": "./dist/index.d.ts",
@@ -12,10 +12,11 @@
     "dev": "NODE_ENV=development vite build --watch",
     "build:light": "NODE_ENV=development vite build && vue-docgen-web-types",
     "build": "NODE_ENV=production vite build && vue-tsc --project tsconfig.build.json -d --emitDeclarationOnly && vue-docgen-web-types ",
+    "prepublishOnly": "npm run build",
     "lint:es": "eslint \"src/**/*.{js,ts,vue}\"",
     "lint:style": "stylelint src/**/*.{css,scss,vue}",
     "type:check": "vue-tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {

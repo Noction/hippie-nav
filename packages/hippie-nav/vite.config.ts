@@ -18,7 +18,7 @@ export default defineConfig({
       }
     }
   },
-  plugins: [vue(), svgLoader()],
+  plugins: [vue(), svgLoader() as Plugin],
   resolve: {
     alias: {
       '@': resolve(__dirname, './src')
