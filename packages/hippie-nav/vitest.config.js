@@ -32,7 +32,7 @@ export default defineConfig({
     },
     environment: 'jsdom',
     globals: true,
-    include: ['tests/unit/**/*.spec.ts'],
+    include: ['tests/**/*.spec.ts'],
     outputFile: `${reportsDirectory}/junit.xml`,
     reporters: ['junit', 'verbose']
   }
