@@ -28,9 +28,12 @@ const HIGHLIGHTED_PARAGRAPH = '[data-test="highlightedParagraph"]'
 describe('textHighlight directive', () => {
   let wrapper = <VueWrapper>{}
 
-  enableAutoUnmount(afterEach)
   beforeEach(() => {
     wrapper = shallowMount(component)
+  })
+
+  afterEach(() => {
+    wrapper.unmount()
   })
 
   it('should contain highlighted span partial', async () => {
