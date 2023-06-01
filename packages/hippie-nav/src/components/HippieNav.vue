@@ -22,6 +22,7 @@
                 :result="resultItem"
                 :class="{ selected: index === current }"
                 data-test="recentResults"
+                @goto="goto"
                 @mouse-over="handleMouseOver(resultItem, 'recentResults')"
                 @close-modal="closeModal"
                 @remove-recent-result="handleRemoveRecentResult(resultItem)"
@@ -145,20 +146,19 @@ function setupIndexRoutes () {
 
 function goto () {
   if (current.value < 0 || (results.value.length === 0 && searchInput.value !== '')) return
-
   let result: ResultItem
 
   if (results.value.length !== 0) {
     result = results.value[current.value]
   } else { result = recentResults.value[current.value] }
 
+  closeModal()
   if ('action' in result.data) {
     result.data.action()
   } else {
     router.push(result.data.path)
   }
   addRecentResult(result)
-  closeModal()
 }
 
 function handleMouseOver (e: ResultItem, type: 'recentResults' | 'results') {
