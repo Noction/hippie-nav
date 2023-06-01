@@ -5,8 +5,8 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build --base=./ --emptyOutDir",
     "preview": "vite preview",
-    "lint:es": "eslint \"{src,ts,types}/**/*.{js,vue,ts}\" --fix --color",
-    "lint:style": "stylelint src/**/*.{scss,vue} --color --fix",
+    "lint:es": "eslint \"{src,ts,types}/**/*.{js,vue,ts}\"",
+    "lint:style": "stylelint src/**/*.{scss,vue}",
     "type:check": "vue-tsc --noEmit"
   },
   "dependencies": {
