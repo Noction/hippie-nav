@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "pnpm -F=hippie-nav run build:light && pnpm run -r --parallel dev",
     "build": "pnpm -r build",
-    "lint": "npm run lint:es; npm run lint:style",
-    "lint:es": "pnpm -r --parallel --no-bail lint:es",
-    "lint:style": "pnpm -r --parallel --no-bail lint:style",
-    "type:check": "pnpm -r --parallel --no-bail type:check",
+    "lint": "pnpm -r --parallel \"/^lint:.*/\"",
+    "lint:es": "pnpm -r --parallel lint:es",
+    "lint:style": "pnpm -r --parallel lint:style",
+    "type:check": "pnpm -r --parallel type:check",
     "test": "pnpm -r --parallel test",
     "test:coverage": "pnpm -r --parallel run test:coverage",
     "postinstall": "npx simple-git-hooks"
