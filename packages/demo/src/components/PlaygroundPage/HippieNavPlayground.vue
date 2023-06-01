@@ -26,10 +26,11 @@
 </template>
 
 <script lang="ts">
-import { HippieNav } from 'hippie-nav'
+import { HippieNav } from '@noction/hippie-nav'
 import { actions } from '../../pages/PlaygroundPage/PlaygroundPage.vue'
 import { useRouter } from 'vue-router'
 import { defineComponent, ref } from 'vue'
+
 export interface ActionConfig {
   name: string,
   action: () => void,

@@ -1,5 +1,5 @@
 {
-  "name": "hippie-nav",
+  "name": "@noction/hippie-nav",
   "version": "0.5.0",
   "main": "./dist/hippie-nav.umd.js",
   "module": "./dist/hippie-nav.mjs",
@@ -8,6 +8,27 @@
     "dist",
     "src"
   ],
+  "license": "MIT",
+  "description": "The \"hippie-nav\" module is a lightweight and dependency-free utility designed to navigate through routes in Vue.js applications using Vue Router. It enables seamless navigation and allows for the execution of custom actions associated with specific routes. With \"hippie-nav,\" you can easily create dynamic and interactive routing functionality within your Vue app without the need for external APIs or servers.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Noction/hippie-nav.git"
+  },
+  "keywords": [
+    "vue.js",
+    "vue router",
+    "navigation",
+    "routing",
+    "actions",
+    "search",
+    "flexsearch",
+    "utility",
+    "keyboard shortcut"
+  ],
+  "homepage": "https://github.com/Noction/hippie-nav",
+  "bugs": {
+    "url": "https://github.com/Noction/hippie-nav/issues"
+  },
   "scripts": {
     "dev": "NODE_ENV=development vite build --watch",
     "build:light": "NODE_ENV=development vite build && vue-docgen-web-types",

@@ -13,9 +13,13 @@
     "test:coverage": "pnpm -r --parallel run test:coverage",
     "postinstall": "npx simple-git-hooks"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Noction/hippie-nav"
+  },
+  "homepage": "https://github.com/Noction/hippie-nav",
+  "bugs": "https://github.com/Noction/hippie-nav/issues",
   "dependencies": {
     "@types/node": "^20.2.1",
     "eslint": "8.40.0"
