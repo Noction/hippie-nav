@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "scripts": {
     "dev": "pnpm -F=hippie-nav run build:light && pnpm run -r --parallel dev",
     "build": "pnpm -r build",
