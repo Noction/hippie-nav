@@ -25,39 +25,18 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { HippieNav } from '@noction/hippie-nav'
-import { actions } from '../../pages/PlaygroundPage/PlaygroundPage.vue'
-import { useRouter } from 'vue-router'
-import { defineComponent, ref } from 'vue'
+import {  ref } from 'vue'
 
-export interface ActionConfig {
-  name: string,
-  action: () => void,
-  description?: string,
-  aliases: string[]
+const hippieNavRef = ref<InstanceType<typeof HippieNav>>()
+
+function openModal () {
+  if (!hippieNavRef.value) return
+
+  hippieNavRef.value.openModal()
 }
-export default defineComponent({
-  name: 'HippieNavPlayground',
-  components: { HippieNav },
-  setup () {
-    const hippieNavRef = ref<InstanceType<typeof HippieNav>>()
-    const router = useRouter()
-    const routes = router.getRoutes()
 
-    return { hippieNavRef, routes }
-  },
-  data () {
-    return {
-      actions
-    }
-  },
-  methods: {
-    openModal () {
-      this.hippieNavRef?.openModal()
-    }
-  }
-})
 </script>
 
 <style scoped>

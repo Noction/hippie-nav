@@ -23,10 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import { ActionConfig } from './HippieNavPlayground.vue'
-
 defineProps<{
-  actions: ActionConfig[]
+  actions: {name: string, description?: string, aliases: string[]}[]
 }>()
 
 </script>

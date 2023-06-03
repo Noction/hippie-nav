@@ -21,7 +21,7 @@ export default defineConfig({
     svgLoader()
   ],
   resolve: {
-    alias: { vue: 'vue/dist/vue.esm-bundler.js' },
-    dedupe: ['vue']
+    alias: { vue: 'vue/dist/vue.esm-bundler.js', 'vue-router': 'vue-router/dist/vue-router.esm-bundler.js' },
+    dedupe: ['vue', 'vue-router']
   }
 })

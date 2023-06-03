@@ -16,7 +16,7 @@
       <box-routes
         v-if="!showAddRoute"
         :routes="routes"
-        @add-route="setShowAddRoute(true)"
+        @add-route="showAddRoute = true"
         @add-child-route="addChildRoute"
       />
       <add-route
@@ -36,23 +36,22 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import '@noction/hippie-nav/dist/style.css'
+import AddRoute from '../../components/PlaygroundPage/AddRoute.vue'
 import BoxActions from '../../components/PlaygroundPage/BoxActions.vue'
 import BoxRouteConfig from '../../components/PlaygroundPage/BoxRouteConfig.vue'
 import BoxRouteItems from '../../components/PlaygroundPage/BoxRouteItems.vue'
 import BoxRoutes from '../../components/PlaygroundPage/BoxRoutes/BoxRoutes.vue'
 import HippieNavPlayground from '../../components/PlaygroundPage/HippieNavPlayground.vue'
-import AddRoute, { ActionConfig } from '../../components/PlaygroundPage/HippieNavPlayground.vue'
-import { App, createApp, defineComponent } from 'vue'
+import { App, createApp, nextTick, onMounted, ref } from 'vue'
 import { RouteRecordNormalized, createMemoryHistory, createRouter } from 'vue-router'
-export const actions: ActionConfig[] = [
+const actions = [
   {
     action: () => {
       router.push('/')
     },
     aliases: ['logOut', 'signOut', 'exit'],
-    description: 'bunny hunter',
     name: 'Log out'
   },
   {
@@ -67,17 +66,11 @@ export const actions: ActionConfig[] = [
 const routes = [
   {
     component: { template: '<div>Home page</div>' },
-    meta: {
-      title: 'No home'
-    },
     name: 'Home Page',
     path: '/'
   },
   {
     component: { template: '<div>About Page</div>' },
-    meta: {
-      title: '!About page'
-    },
     name: 'About Page',
     path: '/about'
 
@@ -109,64 +102,42 @@ const routes = [
   }
 ]
 
+const excludedPaths =  ref(['/test', '/test1', /\/regex/] as (RegExp| string)[])
+const momRoute = ref<RouteRecordNormalized>()
+const showAddRoute = ref<boolean>(false)
+let playground: App
 const router = createRouter({
   history: createMemoryHistory(),
   routes
 })
 
-const regex = /\/regex/
-
-export default defineComponent({
-  name: 'PlaygroundPage',
-  components: {
-    AddRoute,
-    BoxActions,
-    BoxRouteConfig,
-    BoxRouteItems,
-    BoxRoutes
-  },
-  data () {
-    return {
-      actions,
-      excludedPaths: ['/test', '/test1', regex] as (RegExp| string)[],
-      momRoute: {} as RouteRecordNormalized,
-      playground: {} as App<Element>,
-      router,
-      routes: routes as unknown as RouteRecordNormalized[],
-      showAddRoute: false
-    }
-  },
-  mounted () {
-    this.initPlay()
-  },
-  methods: {
-    addChildRoute (e: RouteRecordNormalized) {
-      this.momRoute = e
-      this.showAddRoute = !this.showAddRoute
-    },
-    addExcludedPath (e: string) {
-      this.excludedPaths.push(e)
-    },
-    async forceRender () {
-      this.setShowAddRoute(false)
-      this.routes = this.router.getRoutes()
-      await this.$nextTick()
-      this.playground.unmount()
-      await this.$nextTick()
-      this.initPlay()
-    },
-    initPlay () {
-      this.playground = createApp(HippieNavPlayground) as unknown as typeof this.playground
-
-      this.playground.use(router)
-      this.playground.mount('#playground')
-    },
-    setShowAddRoute (value: boolean) {
-      this.showAddRoute = value
-    }
-  }
-
+onMounted(() => {
+  initPlay()
 })
+
+function addChildRoute (route: RouteRecordNormalized) {
+  momRoute.value = route
+  showAddRoute.value = !showAddRoute.value
+}
+
+function addExcludedPath (path: string) {
+  excludedPaths.value.push(path)
+}
+
+async function forceRender () {
+  showAddRoute.value = false
+  await nextTick()
+  playground.unmount()
+  await nextTick()
+  initPlay()
+}
+
+function initPlay () {
+  playground = createApp(HippieNavPlayground)
+
+  playground.use(router)
+  playground.mount('#playground')
+}
 
 </script>
 
