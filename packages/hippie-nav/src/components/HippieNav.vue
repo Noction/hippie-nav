@@ -87,12 +87,7 @@ defineExpose({ openModal, reindexRoutes: setupIndexRoutes })
 const searchPan = ref<InstanceType<typeof SearchPan>>()
 const router = useRouter()
 const current = ref(0)
-const options = computed(() => {
-  if (typeof inject(hippieNavOptions) === 'object') {
-    return inject(hippieNavOptions)
-  }
-  return props.options
-})
+const options = inject(hippieNavOptions, props.options)
 const indexActions = ref<HippieIndex>()
 const indexRoutes = ref<HippieIndex>()
 const results = shallowRef<ResultItem[]>([])
@@ -100,11 +95,11 @@ const searchInput = ref('')
 const showModal = ref(false)
 const routes = router.getRoutes()
 const validRoutes = computed(() => {
-  if (!options.value.excludedPaths) return filterHiddenRoutes(routes)
+  if (!options.excludedPaths) return filterHiddenRoutes(routes)
 
-  return filterExcludedPaths(filterHiddenRoutes(routes), options.value.excludedPaths)
+  return filterExcludedPaths(filterHiddenRoutes(routes), options.excludedPaths)
 })
-const resultsLimit = options.value.resultsLimit ?? defaultOptions.resultsLimit
+const resultsLimit = options.resultsLimit ?? defaultOptions.resultsLimit
 
 let cleanUp: () => void = null
 
@@ -137,7 +132,7 @@ function closeModal () {
 }
 
 function setupIndexRoutes () {
-  const routesIndexFields = options.value?.indexFields?.routes ?? defaultOptions.indexFields.routes
+  const routesIndexFields = options?.indexFields?.routes ?? defaultOptions.indexFields.routes
   const indexFields = { id: 'id', index: routesIndexFields }
 
   indexRoutes.value = indexSetup(indexFields)
@@ -188,7 +183,7 @@ function move (direction: 'next' | 'previous') {
 }
 
 function setupActionsIndex () {
-  const actionsIndexFields = options.value?.indexFields?.actions ?? defaultOptions.indexFields.actions
+  const actionsIndexFields = options?.indexFields?.actions ?? defaultOptions.indexFields.actions
   const indexFields = { id: 'id', index: actionsIndexFields }
 
   indexActions.value = indexSetup(indexFields)

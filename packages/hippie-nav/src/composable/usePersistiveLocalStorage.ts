@@ -16,7 +16,7 @@ function addLocalStorageRecentResults (recentResults: ResultItem[]) {
 
   localStorage.setItem(HippieLocalStorageKey, JSON.stringify(localStorageData))
 }
-function extractLocalStoreRecentResults (actions: ActionConfig[], routes: RouteRecordNormalized[]): ResultItem[] {
+function extractLocalStoreRecentResults (actions: ActionConfig[], routes: RouteRecordNormalized[]) {
   const localStorageData: LocalStorageData[] | null = JSON.parse(localStorage.getItem(HippieLocalStorageKey))
 
   if (!Array.isArray(localStorageData)) return []
