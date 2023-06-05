@@ -1,5 +1,5 @@
 <template>
-  <div
+  <li
     class="hippie-result-item"
     @mouseover="$emit('mouseOver')"
     @mouseout="$emit('mouseOut')"
@@ -24,7 +24,7 @@
     >
       <icon-crosshair />
     </button>
-  </div>
+  </li>
 </template>
 
 <script setup lang="ts">

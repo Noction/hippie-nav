@@ -12,7 +12,11 @@
         />
         <div class="search-results">
           <expand-transition>
-            <div v-if="recentResults.length && !searchInput">
+            <transition-group
+              v-if="recentResults.length && !searchInput"
+              name="list"
+              tag="ul"
+            >
               <search-result-item
                 v-for="(resultItem, index) in recentResults"
                 :key="index"
@@ -31,8 +35,12 @@
                   <slot name="resultItem" v-bind="result" />
                 </template>
               </search-result-item>
-            </div>
-            <div v-else-if="results.length">
+            </transition-group>
+            <transition-group
+              v-else-if="results.length"
+              name="list"
+              tag="ul"
+            >
               <search-result-item
                 v-for="(resultItem, index) in results"
                 :key="resultItem.data.id"
@@ -41,6 +49,7 @@
                 :search-input="searchInput"
                 :class="{ selected: index === current }"
                 :result="resultItem"
+                :style="{ transitionDelay:`${index * 0.025}s` }"
                 @goto="goto"
                 @mouse-over="handleMouseOver(resultItem, 'results')"
                 @close-modal="closeModal"
@@ -49,13 +58,13 @@
                   <slot name="resultItem" v-bind="result" />
                 </template>
               </search-result-item>
-            </div>
+            </transition-group>
           </expand-transition>
         </div>
         <div v-if="results.length === 0 && searchInput !== ''" class="no-result">
           No results for&nbsp;<b>“{{ searchInput }}“</b>
         </div>
-        <nav-buttons v-if="searchInput" />
+        <nav-buttons v-if="recentResults.length || results.length" />
       </search-modal>
     </transition>
   </div>
@@ -276,4 +285,16 @@ onBeforeUnmount(() => {
     padding: var(--hippie-spacing-2xl);
     color: var(--hippie-text-color)
   }
+
+  .list-enter-active,
+  .list-leave-active {
+    transition: all 0.2s ease;
+  }
+
+  .list-enter-from,
+  .list-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
 </style>

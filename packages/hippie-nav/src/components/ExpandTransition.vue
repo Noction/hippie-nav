@@ -14,11 +14,15 @@ import { ref } from 'vue'
 
 const lastHeight = ref<string>('')
 
-function afterEnter (element: HTMLElement) {
+function afterEnter (element: Element) {
+  if (!(element instanceof HTMLElement)) return
+
   element.style.height = 'auto'
 }
 
-function enter (element: HTMLElement) {
+function enter (element: Element) {
+  if (!(element instanceof HTMLElement)) return
+
   const { width } = getComputedStyle(element)
 
   element.style.width = width
@@ -38,7 +42,9 @@ function enter (element: HTMLElement) {
   })
 }
 
-function leave (element: HTMLElement) {
+function leave (element: Element) {
+  if (!(element instanceof HTMLElement)) return
+
   const { height } = getComputedStyle(element)
 
   element.style.height = height
