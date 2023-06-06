@@ -148,6 +148,7 @@ function initPlay () {
     row-gap: 20px;
     height: 100%;
     padding-bottom: 20px;
+    margin-top: 60px;
 
     .playground-wrapper {
       display: grid;

@@ -1,17 +1,10 @@
 <template>
-  <div id="nav">
-    <router-link to="/">
-      Home
-    </router-link>
-    <router-link to="/play">
-      Playground
-    </router-link>
-    <router-link to="/about">
-      About
-    </router-link>
-  </div>
-  <router-view />
+  <playground-page />
 </template>
+
+<script setup lang="ts">
+import PlaygroundPage from './pages/PlaygroundPage/PlaygroundPage.vue'
+</script>
 
 <style lang="scss">
 
