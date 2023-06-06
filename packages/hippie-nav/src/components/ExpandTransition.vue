@@ -1,6 +1,6 @@
 <template>
   <transition
-    name="expand"
+    name="hippie-expand"
     @after-enter="afterEnter"
     @enter="enter"
     @leave="leave"
@@ -20,6 +20,7 @@ function afterEnter (element: Element) {
 
     return
   }
+
   throw new Error('Element should be HTMLElement')
 }
 
@@ -60,26 +61,35 @@ function leave (element: Element) {
 
     return
   }
+
   throw new Error('Element should be HTMLElement')
 }
 </script>
 
 <style>
-.expand-enter-active, .expand-leave-active {
+.hippie-expand-enter-active,
+.hippie-expand-leave-active {
   overflow: hidden;
-  transition: height .2s ease-in-out .1s;
+  transition: .2s ease-in-out .1s, .2s ease-in-out;
+  transition-property: height, opacity;
 }
 
-.expand-enter, .expand-leave-to {
+.hippie-expand-enter,
+.hippie-expand-leave-to {
   height: 0;
+}
+
+.hippie-expand-enter-from,
+.hippie-expand-leave-to {
+  opacity: 0;
 }
 </style>
 
 <style scoped>
-* {
-  will-change: height;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
+  * {
+    will-change: height;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
 </style>
