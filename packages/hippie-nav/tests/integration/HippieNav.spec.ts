@@ -64,6 +64,15 @@ describe('HippieNav', () => {
     })
   })
 
+  it('should open by function openModal', async function () {
+    const wrapper = mount(AppComponent, { global: { plugins: [router] } })
+    const hippieNav = wrapper.findComponent(HippieNav)
+
+    if (hippieNav.vm.openModal) (hippieNav.vm as any).openModal()
+
+    expect((hippieNav.vm as any).showModal).toBe(true)
+  })
+
   describe('searchPan', () => {
     it('should have one item in results', async function () {
       const wrapper = mount(AppComponent, { global: { plugins: [router] } })

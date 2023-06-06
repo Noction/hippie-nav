@@ -15,43 +15,52 @@ import { ref } from 'vue'
 const lastHeight = ref<string>('')
 
 function afterEnter (element: Element) {
-  if (!(element instanceof HTMLElement)) return
+  if (element instanceof HTMLElement) {
+    element.style.height = 'auto'
 
-  element.style.height = 'auto'
+    return
+  }
+  throw new Error('Element should be HTMLElement')
 }
 
 function enter (element: Element) {
-  if (!(element instanceof HTMLElement)) return
+  if (element instanceof HTMLElement) {
+    const { width } = getComputedStyle(element)
 
-  const { width } = getComputedStyle(element)
+    element.style.width = width
+    element.style.position = 'absolute'
+    element.style.visibility = 'hidden'
+    element.style.height = 'auto'
+    const { height } = getComputedStyle(element)
 
-  element.style.width = width
-  element.style.position = 'absolute'
-  element.style.visibility = 'hidden'
-  element.style.height = 'auto'
-  const { height } = getComputedStyle(element)
+    element.style.width = null
+    element.style.position = null
+    element.style.visibility = null
+    element.style.height = lastHeight.value ?? '0'
+    getComputedStyle(element).height
+    requestAnimationFrame(() => {
+      element.style.height = height
+      lastHeight.value = height
+    })
 
-  element.style.width = null
-  element.style.position = null
-  element.style.visibility = null
-  element.style.height = lastHeight.value ?? '0'
-  getComputedStyle(element).height
-  requestAnimationFrame(() => {
-    element.style.height = height
-    lastHeight.value = height
-  })
+    return
+  }
+  throw new Error('Element should be HTMLElement')
 }
 
 function leave (element: Element) {
-  if (!(element instanceof HTMLElement)) return
+  if (element instanceof HTMLElement) {
+    const { height } = getComputedStyle(element)
 
-  const { height } = getComputedStyle(element)
+    element.style.height = height
+    getComputedStyle(element).height
+    requestAnimationFrame(() => {
+      element.style.height = '0'
+    })
 
-  element.style.height = height
-  getComputedStyle(element).height
-  requestAnimationFrame(() => {
-    element.style.height = '0'
-  })
+    return
+  }
+  throw new Error('Element should be HTMLElement')
 }
 </script>
 
