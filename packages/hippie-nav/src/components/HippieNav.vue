@@ -17,6 +17,7 @@
               name="list"
               tag="ul"
             >
+              <span class="recent-title">Recent</span>
               <search-result-item
                 v-for="(resultItem, index) in recentResults"
                 :key="index"
@@ -276,6 +277,13 @@ onBeforeUnmount(() => {
     0% { opacity: 0 }
     50% { opacity: .75 }
     100% { opacity: 1 }
+  }
+
+  .recent-title {
+    padding: var(--hippie-spacing-s) var(--hippie-spacing-l);
+    font-size: var(--hippie-text-xs);
+    font-weight: 700;
+    opacity: .5;
   }
 
   .no-result {
