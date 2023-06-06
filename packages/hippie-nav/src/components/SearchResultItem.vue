@@ -31,7 +31,7 @@
 import IconAction from '../assets/icons/action.svg?component'
 import IconCrosshair from '../assets/icons/crosshair.svg?component'
 import IconPage from '../assets/icons/page.svg?component'
-import { computed } from 'vue'
+import { computed } from 'vue-demi'
 import { getValue } from '@/util/helpers'
 import textHighlight from '@/directives/textHighlight'
 import { AppOptions, ResultItem } from '@/types'

@@ -1,7 +1,7 @@
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue-demi'
 import { faker } from '@faker-js/faker'
 import textHighlight from '@/directives/textHighlight'
-import { VueWrapper, enableAutoUnmount, shallowMount } from '@vue/test-utils'
+import { VueWrapper, shallowMount } from '@vue/test-utils'
 
 const component = defineComponent({
   name: 'TextHighLight',

@@ -1,4 +1,4 @@
-import { VNode } from 'vue'
+import { VNode } from 'vue-demi'
 
 const replaceWithOriginal = (original: string, newText: string) => `<span style="display:none;">${original}</span>${newText}`
 

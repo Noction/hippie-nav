@@ -82,7 +82,7 @@ import { usePersistiveLocalStorage } from '@/composable/usePersistiveLocalStorag
 import { useRouter } from 'vue-router'
 import { useShortcut } from '@/util/keyboard'
 import { ActionConfig, AppOptions, HippieIndex, ResultItem, ResultWithId } from '@/types'
-import { Ref, computed, inject, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { Ref, computed, inject, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue-demi'
 import { addIndex, indexSetup } from '@/util/indexSetup'
 import { assignIdsArray, filterExcludedPaths, filterHiddenRoutes, transformDataToResultData } from '@/util/helpers'
 import { defaultOptions, hippieNavOptions } from '@/index'
@@ -251,6 +251,25 @@ onBeforeUnmount(() => {
     --hippie-animate-duration: .225s;
 
     box-sizing: border-box;
+
+    .search-results {
+      ul { padding: 0 }
+
+      .recent-title {
+        padding: var(--hippie-spacing-s) var(--hippie-spacing-l);
+        font-size: var(--hippie-text-xs);
+        font-weight: 700;
+        opacity: .5;
+      }
+    }
+
+    .no-result {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--hippie-spacing-2xl);
+      color: var(--hippie-text-color)
+    }
   }
 
   .hippie-enter-active {
@@ -277,21 +296,6 @@ onBeforeUnmount(() => {
     0% { opacity: 0 }
     50% { opacity: .75 }
     100% { opacity: 1 }
-  }
-
-  .recent-title {
-    padding: var(--hippie-spacing-s) var(--hippie-spacing-l);
-    font-size: var(--hippie-text-xs);
-    font-weight: 700;
-    opacity: .5;
-  }
-
-  .no-result {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--hippie-spacing-2xl);
-    color: var(--hippie-text-color)
   }
 
   .list-enter-active,

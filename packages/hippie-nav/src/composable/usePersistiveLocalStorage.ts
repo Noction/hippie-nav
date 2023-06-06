@@ -2,7 +2,7 @@ import { assignIdsArray } from '@/util/helpers'
 import { transformDataToResultData } from '@/util/helpers'
 import { useLocalStorage } from '@vueuse/core'
 import { ActionConfig, LocalStorageData, ResultItem, UsePersistiveLocalStorage } from '@/types'
-import { Ref, ref } from 'vue'
+import { Ref, ref } from 'vue-demi'
 import { RouteRecordNormalized, useRouter } from 'vue-router'
 
 export const HippieLocalStorageKey = 'hippieLocalStorage'

@@ -2,7 +2,7 @@ import { HippieNav } from '@/index'
 import SearchPan from '@/components/SearchPan.vue'
 import simulateShortcut from '../utils/simulateShorcut'
 import { createRouter, createWebHistory } from 'vue-router'
-import { defineComponent, nextTick } from 'vue'
+import { defineComponent, nextTick } from 'vue-demi'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 
 const AppComponent = defineComponent({

@@ -1,5 +1,5 @@
 import { ActionConfig } from '@/types'
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue-demi'
 import { rand } from '@vueuse/core'
 import { usePersistiveLocalStorage } from '@/composable/usePersistiveLocalStorage'
 import { VueWrapper, mount } from '@vue/test-utils'

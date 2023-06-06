@@ -1,5 +1,5 @@
 import { IndexFields } from '@/util/indexSetup'
-import { Ref } from 'vue'
+import { Ref } from 'vue-demi'
 import { ResultWithId } from '@/types/types'
 
 export interface ActionConfig {

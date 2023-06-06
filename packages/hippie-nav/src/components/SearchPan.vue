@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import IconCrosshair from '@/assets/icons/crosshair.svg?component'
 import IconGlass from '@/assets/icons/glass.svg?component'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue-demi'
 
 const props = defineProps<{ modelValue: string }>()
 

@@ -1,5 +1,5 @@
 import ExpandTransition from '@/components/ExpandTransition.vue'
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue-demi'
 import { mount } from '@vue/test-utils'
 
 const component = defineComponent({

@@ -1,8 +1,8 @@
 import SearchResultItem from '@/components/SearchResultItem.vue'
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue-demi'
+import { shallowMount } from '@vue/test-utils'
 import { assignIdsArray, transformDataToResultData } from '@/util/helpers'
 import { createRouter, createWebHistory } from 'vue-router'
-import { enableAutoUnmount, shallowMount } from '@vue/test-utils'
 
 const AppComponent = defineComponent({
   name: 'AppComponent',

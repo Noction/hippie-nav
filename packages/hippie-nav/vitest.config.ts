@@ -6,6 +6,9 @@ import { configDefaults, defineConfig } from 'vitest/config'
 const reportsDirectory = process.env.REPORTS_DIR ? process.env.REPORTS_DIR : './coverage'
 
 export default defineConfig({
+  optimizeDeps: {
+    exclude: ['vue-demi']
+  },
   plugins: [vue(), svgLoader() as Plugin],
   resolve: {
     alias: {
