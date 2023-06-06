@@ -1,6 +1,6 @@
 {
   "name": "@noction/hippie-nav",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "main": "./dist/hippie-nav.umd.js",
   "module": "./dist/hippie-nav.mjs",
   "types": "./dist/index.d.ts",
