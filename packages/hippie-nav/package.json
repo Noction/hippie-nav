@@ -41,15 +41,15 @@
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.1",
+    "@faker-js/faker": "^8.0.2",
     "@types/flexsearch": "^0.7.3",
     "@typescript/lib-dom": "npm:@types/web@^0.0.99",
     "@vitejs/plugin-vue": "^4.2.1",
     "@vitest/coverage-c8": "^0.31.4",
     "@vue/test-utils": "2.4.0-alpha.1",
-    "jsdom": "^22.0.0",
+    "jsdom": "^22.1.0",
     "minimist": "^1.2.8",
-    "typescript": "^4.9.5",
+    "typescript": "^5.1.3",
     "vite": "^4.3.7",
     "vite-svg-loader": "^4.0.0",
     "vitest": "^0.31.4",
@@ -62,12 +62,12 @@
     "@noction/vue-use-flexsearch": "^1.0.2",
     "@vueuse/core": "^10.1.2",
     "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.23",
+    "postcss": "^8.4.24",
     "sass": "^1.62.1"
   },
   "peerDependencies": {
     "flexsearch": "0.7.21",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.2.2"
   },
   "web-types": "./dist/web-types.json"
 }
