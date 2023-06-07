@@ -150,12 +150,13 @@ function setupIndexRoutes () {
 }
 
 function goto () {
-  if (current.value < 0 || (results.value.length === 0 && searchInput.value !== '')) return
   let result: ResultItem
 
   if (results.value.length !== 0) {
     result = results.value[current.value]
   } else { result = recentResults.value[current.value] }
+
+  if (result === undefined || (results.value.length === 0 && searchInput.value !== '')) return
 
   closeModal()
   if ('action' in result.data) {
