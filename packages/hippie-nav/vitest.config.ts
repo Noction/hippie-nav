@@ -28,10 +28,9 @@ export default defineConfig({
         '*rc.ts',
         '*rc.js'
       ],
-      provider: 'c8',
+      provider: 'v8',
       reporter: ['text', 'lcov', 'cobertura'],
-      reportsDirectory,
-      src: ['src']
+      reportsDirectory
     },
     environment: 'jsdom',
     globals: true,

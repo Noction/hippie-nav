@@ -1,11 +1,11 @@
 <template>
   <div class="hippie-nav">
     <transition name="hippie">
-      <search-modal :shown="showModal" @close="closeModal">
+      <search-modal :shown="showModal" @close="toggleModal">
         <search-pan
           ref="searchPan"
           v-model="searchInput"
-          @close="closeModal"
+          @close="toggleModal"
           @next="move('next')"
           @previous="move('previous')"
           @goto="goto"
@@ -28,8 +28,8 @@
                 :class="{ selected: index === current }"
                 data-test="recentResults"
                 @goto="goto"
-                @mouse-over="handleMouseOver(resultItem, 'recentResults')"
-                @close-modal="closeModal"
+                @mouse-over="handleMouseOver(resultItem, 'recentResult')"
+                @close-modal="toggleModal"
                 @remove-recent-result="handleRemoveRecentResult(resultItem)"
               >
                 <template #resultItem="result">
@@ -52,8 +52,8 @@
                 :result="resultItem"
                 :style="{ transitionDelay:`${index * 0.025}s` }"
                 @goto="goto"
-                @mouse-over="handleMouseOver(resultItem, 'results')"
-                @close-modal="closeModal"
+                @mouse-over="handleMouseOver(resultItem, 'result')"
+                @close-modal="toggleModal"
               >
                 <template #resultItem="result">
                   <slot name="resultItem" v-bind="result" />
@@ -92,7 +92,7 @@ const props = withDefaults(defineProps<{
   options?: AppOptions
 }>(), { actions: () => [] as ActionConfig[], options: () => defaultOptions })
 
-defineExpose({ openModal, reindexRoutes: setupIndexRoutes })
+defineExpose({ openModal: toggleModal, reindexRoutes: setupIndexRoutes })
 
 const searchPan = ref<InstanceType<typeof SearchPan>>()
 const router = useRouter()
@@ -112,6 +112,7 @@ const validRoutes = computed(() => {
 const resultsLimit = options.resultsLimit ?? defaultOptions.resultsLimit
 
 let cleanUp: () => void = null
+let cleanUpTabEvent: () => void
 
 watch([searchInput], () => {
   const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
@@ -132,15 +133,6 @@ watch([searchInput], () => {
   current.value = 0
 })
 
-function openModal () {
-  showModal.value = true
-}
-
-function closeModal () {
-  showModal.value = false
-  searchInput.value = ''
-}
-
 function setupIndexRoutes () {
   const routesIndexFields = options?.indexFields?.routes ?? defaultOptions.indexFields.routes
   const indexFields = { id: 'id', index: routesIndexFields }
@@ -158,7 +150,9 @@ function goto () {
 
   if (result === undefined || (results.value.length === 0 && searchInput.value !== '')) return
 
-  closeModal()
+  showModal.value = false
+  searchInput.value = ''
+
   if ('action' in result.data) {
     result.data.action()
   } else {
@@ -167,8 +161,8 @@ function goto () {
   addRecentResult(result)
 }
 
-function handleMouseOver (e: ResultItem, type: 'recentResults' | 'results') {
-  if (type === 'results') {
+function handleMouseOver (e: ResultItem, type: 'recentResult' | 'result') {
+  if (type === 'result') {
     current.value = results.value?.findIndex(r => r.data.id === e.data.id)
 
     return
@@ -201,25 +195,20 @@ function setupActionsIndex () {
   addIndex(indexActions.value, assignIdsArray(props.actions))
 }
 
-function handlerModalShortCut () {
+function toggleModal () {
   current.value = 0
   showModal.value = !showModal.value
+  searchInput.value = ''
 
-  if (showModal.value === false) searchInput.value = ''
-}
-
-function handlerTabPreventShortCut () {
-  if (showModal.value === true) searchPan.value.focusInput()
-}
-
-function setupShortcuts () {
-  const cleanUpOpenModal = useShortcut(handlerModalShortCut, ['ctrl+k', 'meta+k'])
-  const cleanUpTabPrevent = useShortcut(handlerTabPreventShortCut, ['tab'])
-
-  cleanUp = function () {
-    cleanUpOpenModal()
-    cleanUpTabPrevent()
+  if (showModal.value) {
+    cleanUpTabEvent = useShortcut(() => { searchPan.value.focusInput() }, ['tab'])
+  } else {
+    cleanUpTabEvent()
   }
+}
+
+function setupToggleModalShortcut () {
+  cleanUp = useShortcut(toggleModal, ['ctrl+k', 'meta+k'])
 }
 
 function handleRemoveRecentResult (resultItem: ResultItem) {
@@ -234,7 +223,7 @@ const {
 } = usePersistiveLocalStorage(props.actions)
 
 onMounted(() => {
-  setupShortcuts()
+  setupToggleModalShortcut()
   setupActionsIndex()
   setupIndexRoutes()
 })
