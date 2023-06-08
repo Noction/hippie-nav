@@ -64,11 +64,11 @@ describe('HippieNav', () => {
     })
   })
 
-  it('should open by function openModal', async function () {
+  it('should open by function toggleModal', async function () {
     const wrapper = mount(AppComponent, { global: { plugins: [router] } })
     const hippieNav = wrapper.findComponent(HippieNav)
 
-    if (hippieNav.vm.openModal) (hippieNav.vm as any).openModal()
+    if ((hippieNav.vm as any).toggleModal) (hippieNav.vm as any).toggleModal()
 
     expect((hippieNav.vm as any).showModal).toBe(true)
   })
@@ -111,9 +111,7 @@ describe('HippieNav', () => {
 
       await nextTick()
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      wrapper.getComponent(HippieNav).vm.searchInput = 'Page'
+      await wrapper.find('.search-panel-input').setValue('Page')
 
       await nextTick()
       const results = wrapper.findAll('[data-test="results"]')
