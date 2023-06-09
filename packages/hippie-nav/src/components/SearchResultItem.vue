@@ -91,7 +91,10 @@ const displayText = computed(() => {
     transition: .07s ease-in;
     transition-property: background-color;
 
-    .highlighted { color: var(--hippie-primary-color); }
+    .highlighted {
+      color: var(--hippie-hit-highlighted-text-color);
+      text-decoration-thickness: 2px;
+    }
 
     .title, .type-icon { color: var(--hippie-hit-color); }
 
@@ -110,7 +113,6 @@ const displayText = computed(() => {
       .highlighted {
         color: inherit;
         text-decoration: underline;
-        text-decoration-thickness: 1px;
         text-underline-offset: 2px;
       }
     }

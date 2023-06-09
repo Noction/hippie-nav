@@ -23,7 +23,7 @@ function unescapeHtml (safe: string) {
 }
 
 const highlightSearch = function (message: string, keyword: string) {
-  const styleString = 'style="text-decoration: underline"'
+  const styleString = 'style="text-decoration-line: underline"'
   const newKeyword = keyword
   let regexWord = ''
 
