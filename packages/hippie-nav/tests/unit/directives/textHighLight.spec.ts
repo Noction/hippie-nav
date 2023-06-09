@@ -20,7 +20,7 @@ const component = defineComponent({
 })
 
 const highlightedSpan = (keyword: string) => {
-  return `<span class="highlighted" style="text-decoration: underline">${keyword}</span>`
+  return `<span class="highlighted" style="text-decoration-line: underline">${keyword}</span>`
 }
 
 const HIGHLIGHTED_PARAGRAPH = '[data-test="highlightedParagraph"]'
