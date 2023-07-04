@@ -1,13 +1,13 @@
 <template>
   <div class="hippie-nav">
     <transition name="hippie">
-      <search-modal :shown="showModal" @close="toggleModal">
+      <search-modal :shown="showModal" @close="handleToggleModal">
         <search-pan
           ref="searchPan"
           v-model="searchInput"
-          @close="toggleModal"
-          @next="move('next')"
-          @previous="move('previous')"
+          @close="handleToggleModal"
+          @next="handleMove('next')"
+          @previous="handleMove('previous')"
           @goto="goto"
         />
         <div class="search-results">
@@ -29,7 +29,7 @@
                 data-test="recentResults"
                 @goto="goto"
                 @mouse-over="handleMouseOver(resultItem, 'recentResult')"
-                @close-modal="toggleModal"
+                @close-modal="handleToggleModal"
                 @remove-recent-result="handleRemoveRecentResult(resultItem)"
               >
                 <template #resultItem="result">
@@ -53,7 +53,7 @@
                 :style="{ transitionDelay:`${index * 0.025}s` }"
                 @goto="goto"
                 @mouse-over="handleMouseOver(resultItem, 'result')"
-                @close-modal="toggleModal"
+                @close-modal="handleToggleModal"
               >
                 <template #resultItem="result">
                   <slot name="resultItem" v-bind="result" />
@@ -92,7 +92,7 @@ const props = withDefaults(defineProps<{
   options?: AppOptions
 }>(), { actions: () => [] as ActionConfig[], options: () => defaultOptions })
 
-defineExpose({ openModal: toggleModal, reindexRoutes: setupIndexRoutes })
+defineExpose({ openModal: handleToggleModal, reindexRoutes: setupIndexRoutes })
 
 const searchPan = ref<InstanceType<typeof SearchPan>>()
 const router = useRouter()
@@ -112,7 +112,6 @@ const validRoutes = computed(() => {
 const resultsLimit = options.resultsLimit ?? defaultOptions.resultsLimit
 
 let cleanUp: () => void = null
-let cleanUpTabEvent: () => void
 
 watch([searchInput], () => {
   const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
@@ -171,20 +170,17 @@ function handleMouseOver (e: ResultItem, type: 'recentResult' | 'result') {
   current.value = recentResults.value?.findIndex(r => r.data.id === e.data.id)
 }
 
-function move (direction: 'next' | 'previous') {
-  if (direction === 'next') {
-    const isNextResult = results.value.length - 1 > current.value && results.value.length !== 0
-    const isNextRecentResult = recentResults.value.length - 1 > current.value && recentResults.value.length !== 0
+function handleMove (direction: 'next' | 'previous') {
+  const isRecentResult = results.value.length === 0
+  const maxCurrentValue = (isRecentResult ? recentResults.value.length : results.value.length) - 1
 
-    if (isNextResult || isNextRecentResult) {
-      current.value++
+  if (direction === 'next' && current.value === maxCurrentValue) return current.value = 0
 
-      return
-    }
-  }
-  const isPrevious = direction === 'previous' && current.value > 0
+  if (direction === 'previous' && current.value === 0) return current.value = maxCurrentValue
 
-  if (isPrevious) current.value--
+  if (direction === 'next') return current.value++
+
+  current.value--
 }
 
 function setupActionsIndex () {
@@ -195,20 +191,14 @@ function setupActionsIndex () {
   addIndex(indexActions.value, assignIdsArray(props.actions))
 }
 
-function toggleModal () {
+function handleToggleModal () {
   current.value = 0
   showModal.value = !showModal.value
   searchInput.value = ''
-
-  if (showModal.value) {
-    cleanUpTabEvent = useShortcut(() => { searchPan.value.focusInput() }, ['tab'])
-  } else {
-    cleanUpTabEvent()
-  }
 }
 
 function setupToggleModalShortcut () {
-  cleanUp = useShortcut(toggleModal, ['ctrl+k', 'meta+k'])
+  cleanUp = useShortcut(handleToggleModal, ['ctrl+k', 'meta+k'])
 }
 
 function handleRemoveRecentResult (resultItem: ResultItem) {

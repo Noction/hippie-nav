@@ -64,11 +64,11 @@ describe('HippieNav', () => {
     })
   })
 
-  it('should open by function toggleModal', async function () {
+  it('should open by function handleToggleModal', async function () {
     const wrapper = mount(AppComponent, { global: { plugins: [router] } })
     const hippieNav = wrapper.findComponent(HippieNav)
 
-    if ((hippieNav.vm as any).toggleModal) (hippieNav.vm as any).toggleModal()
+    if ((hippieNav.vm as any).handleToggleModal) (hippieNav.vm as any).handleToggleModal()
 
     expect((hippieNav.vm as any).showModal).toBe(true)
   })
