@@ -2,6 +2,9 @@
   <footer class="key-caps">
     <div class="key-cap-content">
       <div class="key-cap-btn">
+        <icon-tab />
+      </div>
+      <div class="key-cap-btn">
         <icon-arrow-down />
       </div>
       <div class="key-cap-btn">
@@ -29,6 +32,7 @@ import IconArrowDown from '../assets/icons/arrow-down.svg?component'
 import IconArrowUp from '../assets/icons/arrow-up.svg?component'
 import IconEnter from '../assets/icons/enter.svg?component'
 import IconEscape from '../assets/icons/escape.svg?component'
+import IconTab from '../assets/icons/tab.svg?component'
 
 </script>
 

@@ -13,6 +13,7 @@
       @keydown.down.prevent="emit('next')"
       @keydown.up.prevent="emit('previous')"
       @keydown.enter.prevent="emit('goto')"
+      @keydown.tab.prevent="emit('next')"
     >
     <button
       v-if="props.modelValue"
