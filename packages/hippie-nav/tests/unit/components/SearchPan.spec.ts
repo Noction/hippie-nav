@@ -44,6 +44,19 @@ describe('SearchPan component', () => {
     expect(wrapper.emitted()).toHaveProperty('next')
   })
 
+  it('should emit next on tab', async function () {
+    const wrapper = shallowMount(SearchPan, {
+      props: {
+        modelValue: ''
+      }
+    })
+    const input = wrapper.find({ ref: 'input' })
+
+    await input.trigger('keydown.tab')
+
+    expect(wrapper.emitted()).toHaveProperty('next')
+  })
+
   it('should emit previous', async function () {
     const wrapper = shallowMount(SearchPan, {
       props: {
