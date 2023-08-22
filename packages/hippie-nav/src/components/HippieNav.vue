@@ -11,13 +11,13 @@
           @goto="goto"
         />
         <div class="search-results">
+          <span v-if="recentResults.length" class="recent-title">Recent</span>
           <expand-transition>
             <transition-group
               v-if="recentResults.length && !searchInput"
               name="list"
               tag="ul"
             >
-              <span class="recent-title">Recent</span>
               <search-result-item
                 v-for="(resultItem, index) in recentResults"
                 :key="index"
@@ -27,7 +27,7 @@
                 :result="resultItem"
                 :class="{ selected: index === current }"
                 data-test="recentResults"
-                @goto="goto"
+                @goto="goto(index)"
                 @mouse-over="handleMouseOver(resultItem, 'recentResult')"
                 @close-modal="handleToggleModal"
                 @remove-recent-result="handleRemoveRecentResult(resultItem)"
@@ -51,7 +51,7 @@
                 :class="{ selected: index === current }"
                 :result="resultItem"
                 :style="{ transitionDelay:`${index * 0.025}s` }"
-                @goto="goto"
+                @goto="goto(index)"
                 @mouse-over="handleMouseOver(resultItem, 'result')"
                 @close-modal="handleToggleModal"
               >
@@ -75,14 +75,14 @@
 import ExpandTransition from '@/components/ExpandTransition.vue'
 import NavButtons from './NavButtons.vue'
 import SearchModal from './SearchModal.vue'
-import SearchPan from './SearchPan.vue'
+import SearchPan from './SearchPanel.vue'
 import SearchResultItem from '@/components/SearchResultItem.vue'
 import { useFlexSearch } from '@noction/vue-use-flexsearch'
 import { usePersistiveLocalStorage } from '@/composable/usePersistiveLocalStorage'
 import { useRouter } from 'vue-router'
 import { useShortcut } from '@/util/keyboard'
 import { ActionConfig, AppOptions, HippieIndex, ResultItem, ResultWithId } from '@/types'
-import { Ref, computed, inject, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue-demi'
+import { Ref, computed, inject, onMounted, ref, shallowRef, watch } from 'vue-demi'
 import { addIndex, indexSetup } from '@/util/indexSetup'
 import { assignIdsArray, filterExcludedPaths, filterHiddenRoutes, transformDataToResultData } from '@/util/helpers'
 import { defaultOptions, hippieNavOptions } from '@/index'
@@ -111,8 +111,6 @@ const validRoutes = computed(() => {
 })
 const resultsLimit = options.resultsLimit ?? defaultOptions.resultsLimit
 
-let cleanUp: () => void = null
-
 watch([searchInput], () => {
   const { results: routesResults }: { results: Ref<ResultWithId[]> } = useFlexSearch(
     searchInput,
@@ -129,6 +127,7 @@ watch([searchInput], () => {
     ...transformDataToResultData(routesResults.value),
     ...transformDataToResultData(actionsResults.value)
   ].slice(0, resultsLimit)
+
   current.value = 0
 })
 
@@ -140,12 +139,15 @@ function setupIndexRoutes () {
   addIndex(indexRoutes.value, assignIdsArray(validRoutes.value))
 }
 
-function goto () {
+function goto (index?: number) {
+
   let result: ResultItem
 
   if (results.value.length !== 0) {
-    result = results.value[current.value]
-  } else { result = recentResults.value[current.value] }
+    result = results.value[index ?? current.value]
+  } else {
+    result = recentResults.value[index ?? current.value]
+  }
 
   if (result === undefined || (results.value.length === 0 && searchInput.value !== '')) return
 
@@ -157,10 +159,12 @@ function goto () {
   } else {
     router.push(result.data.path)
   }
+
   addRecentResult(result)
 }
 
 function handleMouseOver (e: ResultItem, type: 'recentResult' | 'result') {
+
   if (type === 'result') {
     current.value = results.value?.findIndex(r => r.data.id === e.data.id)
 
@@ -198,7 +202,7 @@ function handleToggleModal () {
 }
 
 function setupToggleModalShortcut () {
-  cleanUp = useShortcut(handleToggleModal, ['ctrl+k', 'meta+k'])
+  useShortcut(handleToggleModal, ['ctrl+k', 'meta+k'])
 }
 
 function handleRemoveRecentResult (resultItem: ResultItem) {
@@ -216,10 +220,6 @@ onMounted(() => {
   setupToggleModalShortcut()
   setupActionsIndex()
   setupIndexRoutes()
-})
-
-onBeforeUnmount(() => {
-  if (cleanUp) cleanUp()
 })
 
 </script>

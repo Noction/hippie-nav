@@ -1,5 +1,5 @@
 import { HippieNav } from '@/index'
-import SearchPan from '@/components/SearchPan.vue'
+import SearchPan from '@/components/SearchPanel.vue'
 import simulateShortcut from '../utils/simulateShorcut'
 import { createRouter, createWebHistory } from 'vue-router'
 import { defineComponent, nextTick } from 'vue-demi'

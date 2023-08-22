@@ -72,7 +72,6 @@ function isMatchingCombination (combination: string) {
 }
 
 export function useShortcut (handler: () => void, shortcut: string[]): () => void {
-
   return useEventListener('keydown', event => {
     if (isMatchingShortcut(shortcut)) {
       handler()
