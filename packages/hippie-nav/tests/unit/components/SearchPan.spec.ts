@@ -1,4 +1,4 @@
-import SearchPan from '@/components/SearchPan.vue'
+import SearchPan from '@/components/SearchPanel.vue'
 import { expect } from 'vitest'
 import { enableAutoUnmount, shallowMount } from '@vue/test-utils'
 
