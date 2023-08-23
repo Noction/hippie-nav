@@ -1,6 +1,6 @@
 {
   "name": "demo",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build --base=./ --emptyOutDir",

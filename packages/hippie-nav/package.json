@@ -1,16 +1,45 @@
 {
+  "name": "@noction/hippie-nav",
+  "version": "0.7.6",
+  "main": "./dist/hippie-nav.umd.js",
+  "module": "./dist/hippie-nav.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "MIT",
+  "description": "The \"hippie-nav\" module is a lightweight and dependency-free utility designed to navigate through routes in Vue.js applications using Vue Router. It enables seamless navigation and allows for the execution of custom actions associated with specific routes. With \"hippie-nav,\" you can easily create dynamic and interactive routing functionality within your Vue app without the need for external APIs or servers.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Noction/hippie-nav.git"
+  },
+  "keywords": [
+    "vue.js",
+    "vue router",
+    "navigation",
+    "routing",
+    "actions",
+    "search",
+    "flexsearch",
+    "utility",
+    "keyboard shortcut"
+  ],
+  "homepage": "https://github.com/Noction/hippie-nav",
   "bugs": {
     "url": "https://github.com/Noction/hippie-nav/issues"
   },
-  "dependencies": {
-    "@noction/vue-use-flexsearch": "^1.0.3",
-    "@vueuse/core": "^10.1.2",
-    "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.24",
-    "sass": "^1.63.2",
-    "vue-demi": "^0.14.5"
+  "scripts": {
+    "dev": "NODE_ENV=development vite build --watch",
+    "build:light": "NODE_ENV=development vite build && vue-docgen-web-types",
+    "build": "NODE_ENV=production vite build && vue-tsc --project tsconfig.build.json -d --emitDeclarationOnly && vue-docgen-web-types ",
+    "prepublishOnly": "npm run build",
+    "lint:es": "eslint \"src/**/*.{js,ts,vue}\"",
+    "lint:style": "stylelint src/**/*.{css,scss,vue}",
+    "type:check": "vue-tsc --noEmit",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
-  "description": "The \"hippie-nav\" module is a lightweight and dependency-free utility designed to navigate through routes in Vue.js applications using Vue Router. It enables seamless navigation and allows for the execution of custom actions associated with specific routes. With \"hippie-nav,\" you can easily create dynamic and interactive routing functionality within your Vue app without the need for external APIs or servers.",
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
     "@types/flexsearch": "^0.7.3",
@@ -29,53 +58,24 @@
     "vue-tsc": "^1.6.5",
     "vue-typegen": "^0.2.0"
   },
-  "files": [
-    "dist",
-    "src"
-  ],
-  "homepage": "https://github.com/Noction/hippie-nav",
-  "keywords": [
-    "vue.js",
-    "vue router",
-    "navigation",
-    "routing",
-    "actions",
-    "search",
-    "flexsearch",
-    "utility",
-    "keyboard shortcut"
-  ],
-  "license": "MIT",
-  "main": "./dist/hippie-nav.umd.js",
-  "module": "./dist/hippie-nav.mjs",
-  "name": "@noction/hippie-nav",
+  "dependencies": {
+    "@noction/vue-use-flexsearch": "^1.0.3",
+    "@vueuse/core": "^10.1.2",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "sass": "^1.63.2",
+    "vue-demi": "^0.14.5"
+  },
   "peerDependencies": {
-    "@vue/composition-api": "^1.0.0-rc.1",
     "flexsearch": "0.7.21",
-    "vue": "^2.0.0 || >=3.0.0",
-    "vue-router": "^4.2.2"
+    "vue-router": "^4.2.2",
+    "@vue/composition-api": "^1.0.0-rc.1",
+    "vue": "^2.0.0 || >=3.0.0"
   },
   "peerDependenciesMeta": {
     "@vue/composition-api": {
       "optional": true
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Noction/hippie-nav.git"
-  },
-  "scripts": {
-    "build": "NODE_ENV=production vite build && vue-tsc --project tsconfig.build.json -d --emitDeclarationOnly && vue-docgen-web-types ",
-    "build:light": "NODE_ENV=development vite build && vue-docgen-web-types",
-    "dev": "NODE_ENV=development vite build --watch",
-    "lint:es": "eslint \"src/**/*.{js,ts,vue}\"",
-    "lint:style": "stylelint src/**/*.{css,scss,vue}",
-    "prepublishOnly": "npm run build",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "type:check": "vue-tsc --noEmit"
-  },
-  "types": "./dist/index.d.ts",
-  "version": "0.7.5",
   "web-types": "./dist/web-types.json"
 }
