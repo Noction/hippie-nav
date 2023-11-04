@@ -36,8 +36,7 @@ const emit = defineEmits<{
       min-height: 50px;
       max-height: 100%;
       margin: 0 auto;
-      overflow-x: hidden;
-      overflow-y: auto;
+      overflow: hidden auto;
       background-color: var(--hippie-bg-color);
       border-radius: 1rem;
       box-shadow: 0 0 70px #0000004a;

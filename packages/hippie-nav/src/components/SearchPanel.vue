@@ -67,9 +67,8 @@ onMounted(() => {
     display: grid;
     grid-template: 1fr / auto 1fr auto;
     column-gap: var(--hippie-spacing-l);
-    align-content: center;
+    place-content: center center;
     align-items: center;
-    justify-content: center;
     width: 100%;
     height: 4rem;
     padding: var(--hippie-spacing-l);
