@@ -1,40 +1,39 @@
-<template>
-  <footer class="key-caps">
-    <div class="key-cap-content">
-      <div class="key-cap-btn">
-        <icon-tab />
-      </div>
-      <div class="key-cap-btn">
-        <icon-arrow-down />
-      </div>
-      <div class="key-cap-btn">
-        <icon-arrow-up />
-      </div>
-      <span>to navigate</span>
-    </div>
-    <div class="key-cap-content">
-      <div class="key-cap-btn">
-        <icon-enter />
-      </div>
-      <span>to select</span>
-    </div>
-    <div class="key-cap-content">
-      <div class="key-cap-btn">
-        <icon-escape />
-      </div>
-      <span>to close</span>
-    </div>
-  </footer>
-</template>
-
 <script setup lang="ts">
 import IconArrowDown from '../assets/icons/arrow-down.svg?component'
 import IconArrowUp from '../assets/icons/arrow-up.svg?component'
 import IconEnter from '../assets/icons/enter.svg?component'
 import IconEscape from '../assets/icons/escape.svg?component'
 import IconTab from '../assets/icons/tab.svg?component'
-
 </script>
+
+<template>
+  <footer class="key-caps">
+    <div class="key-cap-content">
+      <div class="key-cap-btn">
+        <IconTab />
+      </div>
+      <div class="key-cap-btn">
+        <IconArrowDown />
+      </div>
+      <div class="key-cap-btn">
+        <IconArrowUp />
+      </div>
+      <span>to navigate</span>
+    </div>
+    <div class="key-cap-content">
+      <div class="key-cap-btn">
+        <IconEnter />
+      </div>
+      <span>to select</span>
+    </div>
+    <div class="key-cap-content">
+      <div class="key-cap-btn">
+        <IconEscape />
+      </div>
+      <span>to close</span>
+    </div>
+  </footer>
+</template>
 
 <style lang="scss">
   .key-caps {

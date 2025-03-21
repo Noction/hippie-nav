@@ -1,20 +1,9 @@
-<template>
-  <transition
-    name="hippie-expand"
-    @after-enter="afterEnter"
-    @enter="enter"
-    @leave="leave"
-  >
-    <slot />
-  </transition>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue-demi'
 
 const lastHeight = ref<string>('')
 
-function afterEnter (element: Element) {
+function afterEnter(element: Element) {
   if (element instanceof HTMLElement) {
     element.style.height = 'auto'
 
@@ -24,7 +13,7 @@ function afterEnter (element: Element) {
   throw new Error('Element should be HTMLElement')
 }
 
-function enter (element: Element) {
+function enter(element: Element) {
   if (element instanceof HTMLElement) {
     const { width } = getComputedStyle(element)
 
@@ -38,7 +27,6 @@ function enter (element: Element) {
     element.style.position = null
     element.style.visibility = null
     element.style.height = lastHeight.value ?? '0'
-    getComputedStyle(element).height
     requestAnimationFrame(() => {
       element.style.height = height
       lastHeight.value = height
@@ -49,12 +37,11 @@ function enter (element: Element) {
   throw new Error('Element should be HTMLElement')
 }
 
-function leave (element: Element) {
+function leave(element: Element) {
   if (element instanceof HTMLElement) {
     const { height } = getComputedStyle(element)
 
     element.style.height = height
-    getComputedStyle(element).height
     requestAnimationFrame(() => {
       element.style.height = '0'
     })
@@ -65,6 +52,17 @@ function leave (element: Element) {
   throw new Error('Element should be HTMLElement')
 }
 </script>
+
+<template>
+  <Transition
+    name="hippie-expand"
+    @after-enter="afterEnter"
+    @enter="enter"
+    @leave="leave"
+  >
+    <slot />
+  </Transition>
+</template>
 
 <style>
 .hippie-expand-enter-active,
@@ -87,9 +85,9 @@ function leave (element: Element) {
 
 <style scoped>
   * {
-    will-change: height;
     transform: translateZ(0);
-    backface-visibility: hidden;
     perspective: 1000px;
+    will-change: height;
+    backface-visibility: hidden;
   }
 </style>

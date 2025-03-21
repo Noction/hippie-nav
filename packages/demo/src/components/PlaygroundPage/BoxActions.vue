@@ -1,8 +1,14 @@
+<script setup lang="ts">
+defineProps<{
+  actions: { name: string, description?: string, aliases: string[] }[]
+}>()
+</script>
+
 <template>
   <div class="route-actions">
     <div class="title">
       <span class="name">
-        <i-carbon-function-math />
+        <ICarbonFunctionMath />
         Route Actions
       </span>
     </div>
@@ -21,10 +27,3 @@
     </ul>
   </div>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  actions: {name: string, description?: string, aliases: string[]}[]
-}>()
-
-</script>

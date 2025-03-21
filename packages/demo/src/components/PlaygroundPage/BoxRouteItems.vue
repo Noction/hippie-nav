@@ -1,8 +1,34 @@
+<script setup lang="ts">
+import type { RouteRecordRaw } from 'vue-router'
+import { computed, ref } from 'vue'
+import { flattenRoutes, normalizeRoutes } from '../../util/helpers'
+import HippieButton from '../common/HippieBtnCollapse.vue'
+
+const props = defineProps<{
+  routes: RouteRecordRaw[]
+}>()
+
+const showRouteConfig = ref('' as RouteRecordRaw['name'])
+const routesFlatten = computed(() => {
+  const routesWithoutChildPaths = normalizeRoutes(props.routes)
+
+  return flattenRoutes(flattenRoutes(routesWithoutChildPaths))
+})
+
+function setShowRouteConfig(routeName: RouteRecordRaw['name']) {
+  if (routeName === showRouteConfig.value) {
+    showRouteConfig.value = ''
+    return
+  }
+  showRouteConfig.value = routeName
+}
+</script>
+
 <template>
   <div class="route-items">
     <div class="title">
       <span class="name">
-        <i-carbon-branch />
+        <ICarbonBranch />
         Route Items
       </span>
     </div>
@@ -11,7 +37,7 @@
         <li class="box-list">
           <div class="box-list-main">
             <h5>{{ route.name }}</h5>
-            <hippie-button :collapsed="route.name === showRouteConfig" @action="setShowRouteConfig(route.name)" />
+            <HippieButton :collapsed="route.name === showRouteConfig" @action="setShowRouteConfig(route.name)" />
           </div>
           <ul v-if="route.name === showRouteConfig" class="box-list-secondary">
             <li>displayName: {{ route.name }}</li>
@@ -25,33 +51,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import HippieButton from '../common/HippieBtnCollapse.vue'
-import { RouteRecordRaw } from 'vue-router'
-import { flattenRoutes } from '../../util/helpers'
-import { normalizeRoutes } from '../../util/helpers'
-import { computed, ref } from 'vue'
-
-const props = defineProps<{
-  routes: RouteRecordRaw[]
-}>()
-
-const showRouteConfig = ref('' as RouteRecordRaw['name'])
-const routesFlatten = computed(() => {
-  const routesWithoutChildPaths = normalizeRoutes(props.routes)
-
-  return flattenRoutes(flattenRoutes(routesWithoutChildPaths))
-})
-
-function setShowRouteConfig (routeName: RouteRecordRaw['name']) {
-  if (routeName === showRouteConfig.value) {
-    showRouteConfig.value = ''
-    return
-  }
-  showRouteConfig.value = routeName
-}
-</script>
 
 <style scoped>
   .box-list {

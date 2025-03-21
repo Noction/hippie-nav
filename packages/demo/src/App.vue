@@ -1,13 +1,12 @@
-<template>
-  <playground-page />
-</template>
-
 <script setup lang="ts">
 import PlaygroundPage from './pages/PlaygroundPage/PlaygroundPage.vue'
 </script>
 
-<style lang="scss">
+<template>
+  <PlaygroundPage />
+</template>
 
+<style lang="scss">
   html, body {
     display: block;
     height: 100%;
