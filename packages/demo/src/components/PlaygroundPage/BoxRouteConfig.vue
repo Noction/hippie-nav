@@ -1,8 +1,27 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+
+defineProps<{
+  excludedPaths: (string | RegExp)[]
+}>()
+
+const emits = defineEmits<{
+  (e: 'addExcludedPath', excludedPath: string): void
+}>()
+
+const newExcludedPath = ref('')
+
+function addExcludedPath() {
+  emits('addExcludedPath', newExcludedPath.value)
+  newExcludedPath.value = ''
+}
+</script>
+
 <template>
   <div class="route-config">
     <div class="title">
       <span class="name">
-        <i-carbon-settings />
+        <ICarbonSettings />
         Route Config
       </span>
     </div>
@@ -23,23 +42,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-
-defineProps<{
-  excludedPaths: (string | RegExp)[]
-}>()
-
-const emits = defineEmits<{
-  (e: 'addExcludedPath', excludedPath: string): void
-}>()
-
-const newExcludedPath = ref('')
-
-function addExcludedPath () {
-  emits('addExcludedPath', newExcludedPath.value)
-  newExcludedPath.value = ''
-}
-
-</script>

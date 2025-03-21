@@ -1,3 +1,112 @@
+<script setup lang="ts">
+import type { App } from 'vue'
+import type { RouteRecordNormalized } from 'vue-router'
+import { createApp, nextTick, onMounted, ref } from 'vue'
+import { createMemoryHistory, createRouter } from 'vue-router'
+import AddRoute from '../../components/PlaygroundPage/AddRoute.vue'
+import BoxActions from '../../components/PlaygroundPage/BoxActions.vue'
+import BoxRouteConfig from '../../components/PlaygroundPage/BoxRouteConfig.vue'
+import BoxRouteItems from '../../components/PlaygroundPage/BoxRouteItems.vue'
+import BoxRoutes from '../../components/PlaygroundPage/BoxRoutes/BoxRoutes.vue'
+import HippieNavPlayground from '../../components/PlaygroundPage/HippieNavPlayground.vue'
+import '@noction/hippie-nav/dist/style.css'
+
+const routes = [
+  {
+    component: { template: '<div>Home page</div>' },
+    name: 'Home Page',
+    path: '/',
+  },
+  {
+    component: { template: '<div>About Page</div>' },
+    name: 'About Page',
+    path: '/about',
+
+  },
+  {
+    children: [
+      {
+        children: [
+          {
+            component: { template: '<div>Child of child 2</div>' },
+            name: 'Child of child',
+            path: 'childOfChild',
+          },
+        ],
+        component: { template: '<div>Child Page 1</div>' },
+        name: 'Child Page 1',
+        path: 'child1',
+      },
+      {
+        component: { template: '<div>Child Page 2</div>' },
+        name: 'Child Page 2',
+        path: 'child2',
+      },
+    ],
+    meta: {
+      title: '!Child page',
+    },
+    name: 'Child page ',
+    path: '/child',
+  },
+]
+
+const router = createRouter({
+  history: createMemoryHistory(),
+  routes,
+})
+
+const actions = [
+  {
+    action: () => {
+      router.push('/')
+    },
+    aliases: ['logOut', 'signOut', 'exit'],
+    name: 'Log out',
+  },
+  {
+    action: () => {
+      router.push('/')
+    },
+    aliases: ['show', 'graph'],
+    name: 'Show graph',
+  },
+]
+
+const excludedPaths = ref(['/test', '/test1', /\/regex/] as (RegExp | string)[])
+const momRoute = ref<RouteRecordNormalized>()
+const showAddRoute = ref<boolean>(false)
+let playground: App
+
+onMounted(() => {
+  initPlay()
+})
+
+function addChildRoute(route: RouteRecordNormalized) {
+  momRoute.value = route
+  showAddRoute.value = !showAddRoute.value
+}
+
+function addExcludedPath(path: string) {
+  excludedPaths.value.push(path)
+}
+
+async function forceRender() {
+  showAddRoute.value = false
+  await nextTick()
+  playground.unmount()
+  await nextTick()
+  initPlay()
+}
+
+function initPlay() {
+  playground = createApp(HippieNavPlayground)
+
+  playground.use(router)
+  playground.mount('#playground')
+}
+</script>
+
 <template>
   <div class="playground-page">
     <div class="intro">
@@ -13,133 +122,28 @@
       <div class="playground">
         <div id="playground" />
       </div>
-      <box-routes
+      <BoxRoutes
         v-if="!showAddRoute"
         :routes="routes"
         @add-route="showAddRoute = true"
         @add-child-route="addChildRoute"
       />
-      <add-route
+      <AddRoute
         v-if="showAddRoute"
         :router="router"
         :mom-route="momRoute"
         @close="forceRender"
       />
-      <box-route-items :routes="routes" />
-      <box-route-config
+      <BoxRouteItems :routes="routes" />
+      <BoxRouteConfig
         :routes="routes"
         :excluded-paths="excludedPaths"
         @add-excluded-path="addExcludedPath"
       />
-      <box-actions :actions="actions" />
+      <BoxActions :actions="actions" />
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import '@noction/hippie-nav/dist/style.css'
-import AddRoute from '../../components/PlaygroundPage/AddRoute.vue'
-import BoxActions from '../../components/PlaygroundPage/BoxActions.vue'
-import BoxRouteConfig from '../../components/PlaygroundPage/BoxRouteConfig.vue'
-import BoxRouteItems from '../../components/PlaygroundPage/BoxRouteItems.vue'
-import BoxRoutes from '../../components/PlaygroundPage/BoxRoutes/BoxRoutes.vue'
-import HippieNavPlayground from '../../components/PlaygroundPage/HippieNavPlayground.vue'
-import { App, createApp, nextTick, onMounted, ref } from 'vue'
-import { RouteRecordNormalized, createMemoryHistory, createRouter } from 'vue-router'
-const actions = [
-  {
-    action: () => {
-      router.push('/')
-    },
-    aliases: ['logOut', 'signOut', 'exit'],
-    name: 'Log out'
-  },
-  {
-    action: () => {
-      router.push('/')
-    },
-    aliases: ['show', 'graph'],
-    name: 'Show graph'
-  }
-]
-
-const routes = [
-  {
-    component: { template: '<div>Home page</div>' },
-    name: 'Home Page',
-    path: '/'
-  },
-  {
-    component: { template: '<div>About Page</div>' },
-    name: 'About Page',
-    path: '/about'
-
-  },
-  {
-    children: [
-      {
-        children: [
-          {
-            component: { template: '<div>Child of child 2</div>' },
-            name: 'Child of child',
-            path: 'childOfChild'
-          }
-        ],
-        component: { template: '<div>Child Page 1</div>' },
-        name: 'Child Page 1',
-        path: 'child1'
-      }, {
-        component: { template: '<div>Child Page 2</div>' },
-        name: 'Child Page 2',
-        path: 'child2'
-      }
-    ],
-    meta: {
-      title: '!Child page'
-    },
-    name: 'Child page ',
-    path: '/child'
-  }
-]
-
-const excludedPaths =  ref(['/test', '/test1', /\/regex/] as (RegExp| string)[])
-const momRoute = ref<RouteRecordNormalized>()
-const showAddRoute = ref<boolean>(false)
-let playground: App
-const router = createRouter({
-  history: createMemoryHistory(),
-  routes
-})
-
-onMounted(() => {
-  initPlay()
-})
-
-function addChildRoute (route: RouteRecordNormalized) {
-  momRoute.value = route
-  showAddRoute.value = !showAddRoute.value
-}
-
-function addExcludedPath (path: string) {
-  excludedPaths.value.push(path)
-}
-
-async function forceRender () {
-  showAddRoute.value = false
-  await nextTick()
-  playground.unmount()
-  await nextTick()
-  initPlay()
-}
-
-function initPlay () {
-  playground = createApp(HippieNavPlayground)
-
-  playground.use(router)
-  playground.mount('#playground')
-}
-
-</script>
 
 <style lang="scss">
   .playground-page {

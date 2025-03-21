@@ -1,9 +1,3 @@
-<template>
-  <button class="button-39" @click="$emit('action')">
-    <icon-triangle class="triangle-icon" :class="{ 'button-collapsed': collapsed }" />
-  </button>
-</template>
-
 <script setup lang="ts">
 import IconTriangle from '../../assets/icons/triangle.svg?component'
 
@@ -14,8 +8,13 @@ defineProps<{
 defineEmits<{
   (e: 'action'): void
 }>()
-
 </script>
+
+<template>
+  <button class="button-39" @click="$emit('action')">
+    <IconTriangle class="triangle-icon" :class="{ 'button-collapsed': collapsed }" />
+  </button>
+</template>
 
 <style scoped>
   button {

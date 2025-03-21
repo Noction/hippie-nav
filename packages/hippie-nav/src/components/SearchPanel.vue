@@ -1,6 +1,39 @@
+<script setup lang="ts">
+import IconCrosshair from '@/assets/icons/crosshair.svg?component'
+import IconGlass from '@/assets/icons/glass.svg?component'
+import { onMounted, ref } from 'vue-demi'
+
+const props = defineProps<{ modelValue: string }>()
+
+const emit = defineEmits<{
+  (e: 'close'): void
+  (e: 'update:model-value', value: string): void
+  (e: 'next'): void
+  (e: 'previous'): void
+  (e: 'goto'): void
+}>()
+
+const input = ref<HTMLInputElement | null>()
+
+defineExpose({ focusInput })
+
+function focusInput() {
+  input.value.focus()
+}
+
+function clearInput() {
+  emit('update:model-value', '')
+  focusInput()
+}
+
+onMounted(() => {
+  focusInput()
+})
+</script>
+
 <template>
   <div class="search-panel">
-    <icon-glass class="search-panel-icon" />
+    <IconGlass class="search-panel-icon" />
     <input
       ref="input"
       :value="props.modelValue"
@@ -20,44 +53,10 @@
       class="clear-btn"
       @click="clearInput"
     >
-      <icon-crosshair />
+      <IconCrosshair />
     </button>
   </div>
 </template>
-
-<script setup lang="ts">
-import IconCrosshair from '@/assets/icons/crosshair.svg?component'
-import IconGlass from '@/assets/icons/glass.svg?component'
-import { onMounted, ref } from 'vue-demi'
-
-const props = defineProps<{ modelValue: string }>()
-
-const emit = defineEmits<{
-  (e: 'close'): void
-  (e: 'update:model-value', value: string ): void
-  (e: 'next'): void
-  (e: 'previous'): void
-  (e: 'goto'): void
-}>()
-
-const input = ref<HTMLInputElement | null>()
-
-defineExpose({ focusInput } )
-
-function focusInput () {
-  input.value.focus()
-}
-
-function clearInput () {
-  emit('update:model-value', '')
-  focusInput()
-}
-
-onMounted(() => {
-  focusInput()
-})
-
-</script>
 
 <style lang="scss">
   .search-panel {
@@ -83,9 +82,9 @@ onMounted(() => {
     .search-panel-input {
       font-size: var(--hippie-text-2xl);
       color: var(--hippie-text-color);
+      outline: none;
       background-color: inherit;
       border: 0;
-      outline: none;
     }
 
     .clear-btn {

@@ -4,11 +4,11 @@
 import 'vue-router'
 
 declare module 'vue-router' {
-  export interface RouteMeta {
+  export type RouteMeta = {
     hippieNavMeta?: HippieNavMeta
   }
 }
 
-interface HippieNavMeta {
+type HippieNavMeta = {
   [k: string]: string | string[]
 }

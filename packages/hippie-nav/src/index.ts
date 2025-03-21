@@ -1,20 +1,21 @@
-import { AppOptions } from '@/types'
+import type { AppOptions } from '@/types'
+import type { App, InjectionKey } from 'vue-demi'
+import { install as compositionInstall, isVue2 } from 'vue-demi'
 import PrivateHippieNav from './components/HippieNav.vue'
-import { App, InjectionKey, install as compositionInstall, isVue2 } from 'vue-demi'
 
 export const HippieNav = PrivateHippieNav
 
 export const defaultOptions: AppOptions = {
   indexFields: {
     actions: ['name', 'aliases'],
-    routes: ['path', 'name']
+    routes: ['path', 'name'],
   },
-  resultsLimit: 7
+  resultsLimit: 7,
 }
 
 export const hippieNavOptions: InjectionKey<AppOptions> = Symbol('hippieNavOptions')
 
-export function install (app: App, options = defaultOptions ) {
+export function install(app: App, options = defaultOptions) {
   app.component('HippieNav', PrivateHippieNav)
   app.provide(hippieNavOptions, options)
 

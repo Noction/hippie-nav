@@ -1,10 +1,49 @@
+<script lang="ts">
+import type { PropType } from 'vue'
+import type { RouteRecordRaw } from 'vue-router'
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'BoxRoutesItem',
+  props: {
+    boxType: {
+      type: String as PropType<'parent' | 'child' | 'grand-child'>,
+      required: true,
+    },
+    collapsed: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    hasChildren: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    route: {
+      type: Object as PropType<RouteRecordRaw>,
+      required: true,
+    },
+  },
+  emits: ['setShowChildPath', 'addChildRoute'],
+  methods: {
+    addChildRoute(route: RouteRecordRaw) {
+      this.$emit('addChildRoute', route)
+    },
+    setShowChildPath(path: string) {
+      this.$emit('setShowChildPath', path)
+    },
+  },
+})
+</script>
+
 <template>
   <div class="flex">
     <h4 :class="boxType">
       {{ route.name }}
     </h4>
     <div class="flex box-routes-btns">
-      <hippie-btn-collapse
+      <HippieBtnCollapse
         v-if="hasChildren"
         :collapsed="Boolean(collapsed)"
         @click="setShowChildPath(route.path)"
@@ -19,48 +58,10 @@
       </button>
     </div>
   </div>
-  <h5 :class="boxType + '-path'">
+  <h5 :class="`${boxType}-path`">
     {{ boxType !== 'parent' ? `/${route.path}` : route.path }}
   </h5>
 </template>
-
-<script lang="ts">
-import {  RouteRecordRaw } from 'vue-router'
-import { PropType, defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'BoxRoutesItem',
-  props: {
-    boxType: {
-      type: String as PropType<'parent' | 'child' | 'grand-child'>,
-      required: true
-    },
-    collapsed: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    hasChildren: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    route: {
-      type: Object as PropType<RouteRecordRaw>,
-      required: true
-    }
-  },
-  emits: ['setShowChildPath', 'addChildRoute'],
-  methods: {
-    addChildRoute (route: RouteRecordRaw) {
-      this.$emit('addChildRoute', route)
-    },
-    setShowChildPath (path: string) {
-      this.$emit('setShowChildPath', path)
-    }
-  }
-})
-</script>
 
 <style scoped>
   .box-routes-btns {
@@ -93,5 +94,4 @@ export default defineComponent({
     font-size: 10px;
     font-weight: 300;
   }
-
 </style>

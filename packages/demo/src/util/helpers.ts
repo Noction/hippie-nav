@@ -1,13 +1,13 @@
-import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
+import type { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 
-export function countSlashes  (path: string) {
+export function countSlashes(path: string) {
   return path.split('/').length - 1
 }
 
-export function flattenRoutes (nestedRoutes: RouteRecordRaw[]): RouteRecordRaw[] {
+export function flattenRoutes(nestedRoutes: RouteRecordRaw[]): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = []
 
-  nestedRoutes.forEach(nestedRoute => {
+  nestedRoutes.forEach((nestedRoute) => {
     routes.push(nestedRoute)
     if (nestedRoute.children) {
       nestedRoute.children.forEach(child =>
@@ -22,7 +22,7 @@ export function flattenRoutes (nestedRoutes: RouteRecordRaw[]): RouteRecordRaw[]
   })
 }
 
-export function normalizeRoutes (routes: RouteRecordRaw[]) {
+export function normalizeRoutes(routes: RouteRecordRaw[]) {
   return routes
     .filter(r => (countSlashes(r.path) === 1))
     .sort((a, b) => {

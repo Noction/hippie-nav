@@ -1,9 +1,9 @@
+import type { IndexFields, IndexOptionsHippieNav, ResultWithId } from '@/types'
 import { Document } from 'flexsearch'
-import { IndexFields, IndexOptionsHippieNav, ResultWithId } from '@/types'
 
-const isStringArray = (arr: unknown) =>  Array.isArray(arr) && arr.every(i => typeof i === 'string')
+const isStringArray = (arr: unknown) => Array.isArray(arr) && arr.every(i => typeof i === 'string')
 
-function validateMeta <T extends object> (meta: T): T  {
+function validateMeta<T extends object>(meta: T): T {
   const metaClone = { ...meta }
 
   for (const metaKey in metaClone) {
@@ -15,11 +15,12 @@ function validateMeta <T extends object> (meta: T): T  {
   return metaClone
 }
 
-export function addIndex (index: Document<unknown>, data: ResultWithId[]) {
-  data.forEach(item => {
+export function addIndex(index: Document<unknown>, data: ResultWithId[]) {
+  data.forEach((item) => {
     if ('action' in item) {
       index.add(item.id, { aliases: item?.aliases ?? '', description: item.description ?? '', name: item.name })
-    } else {
+    }
+    else {
       const { hippieNavMeta } = item.meta
       const metaData = hippieNavMeta ?? item.meta
 
@@ -32,11 +33,11 @@ export function addIndex (index: Document<unknown>, data: ResultWithId[]) {
   })
 }
 
-export function indexSetup (indexFields: IndexFields): Document<IndexOptionsHippieNav> {
+export function indexSetup(indexFields: IndexFields): Document<IndexOptionsHippieNav> {
   return new Document({
     charset: 'latin:extra',
     document: indexFields,
     preset: 'match',
-    tokenize: 'forward'
+    tokenize: 'forward',
   })
 }

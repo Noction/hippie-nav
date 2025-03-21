@@ -1,3 +1,18 @@
+<script setup lang="ts">
+import { HippieNav } from '@noction/hippie-nav'
+import { ref } from 'vue'
+
+const hippieNavRef = ref<InstanceType<typeof HippieNav>>()
+
+function openModal() {
+  if (!hippieNavRef.value) {
+    return
+  }
+
+  hippieNavRef.value.openModal()
+}
+</script>
+
 <template>
   <div class="container">
     <nav>
@@ -17,27 +32,13 @@
         </button>
       </ul>
     </nav>
-    <hippie-nav
+    <HippieNav
       ref="hippieNavRef"
       :options="{ displayField: { route: 'meta.title' }, resultsLimit: 7 }"
     />
-    <router-view class="view" />
+    <RouterView class="view" />
   </div>
 </template>
-
-<script setup lang="ts">
-import { HippieNav } from '@noction/hippie-nav'
-import {  ref } from 'vue'
-
-const hippieNavRef = ref<InstanceType<typeof HippieNav>>()
-
-function openModal () {
-  if (!hippieNavRef.value) return
-
-  hippieNavRef.value.openModal()
-}
-
-</script>
 
 <style scoped>
   .home-page {

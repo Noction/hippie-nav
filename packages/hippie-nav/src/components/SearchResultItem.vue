@@ -1,3 +1,56 @@
+<script setup lang="ts">
+import type { AppOptions, ResultItem } from '@/types'
+import textHighlight from '@/directives/textHighlight'
+import { getValue } from '@/util/helpers'
+import { computed } from 'vue-demi'
+import IconAction from '../assets/icons/action.svg?component'
+import IconCrosshair from '../assets/icons/crosshair.svg?component'
+import IconPage from '../assets/icons/page.svg?component'
+
+const props = withDefaults(defineProps<{
+  result: ResultItem
+  searchInput?: string
+  isRecentResult?: boolean
+  options: AppOptions
+}>(), { isRecentResult: false, searchInput: '' })
+
+const emit = defineEmits<{
+  (e: 'closeModal'): void
+  (e: 'mouseOver'): void
+  (e: 'mouseOut'): void
+  (e: 'removeRecentResult'): void
+  (e: 'goto'): void
+}>()
+
+const iconsComponents = {
+  action: IconAction,
+  route: IconPage,
+}
+
+const vHighlightSearch = textHighlight
+const subtitle = computed(() => {
+  if ('action' in props.result.data) {
+    return props.result.data.description
+  }
+
+  return props.result.data.path
+})
+
+function handleOnClick() {
+  emit('closeModal')
+  emit('goto')
+}
+
+const displayText = computed(() => {
+  if (props.result.type === 'action')
+    return props.result.data.name
+
+  const displayNamePath = props.options?.displayField?.route
+
+  return getValue(props.result.data, displayNamePath) ?? props.result.data.name
+})
+</script>
+
 <template>
   <li
     class="hippie-result-item"
@@ -22,63 +75,10 @@
       class="clear-btn"
       @click="emit('removeRecentResult')"
     >
-      <icon-crosshair />
+      <IconCrosshair />
     </button>
   </li>
 </template>
-
-<script setup lang="ts">
-import IconAction from '../assets/icons/action.svg?component'
-import IconCrosshair from '../assets/icons/crosshair.svg?component'
-import IconPage from '../assets/icons/page.svg?component'
-import { computed } from 'vue-demi'
-import { getValue } from '@/util/helpers'
-import textHighlight from '@/directives/textHighlight'
-import { AppOptions, ResultItem } from '@/types'
-
-const props = withDefaults(defineProps<{
-  result: ResultItem
-  searchInput: string
-  isRecentResult?: boolean
-  options: AppOptions
-}>(), { isRecentResult: false, searchInput: '' })
-
-const emit = defineEmits<{
-  (e: 'closeModal'): void,
-  (e: 'mouseOver'): void,
-  (e: 'mouseOut'): void,
-  (e: 'removeRecentResult'): void
-  (e: 'goto'): void
-}>()
-
-const iconsComponents = {
-  action: IconAction,
-  route: IconPage
-}
-
-const vHighlightSearch = textHighlight
-const subtitle = computed(() => {
-  if ('action' in props.result.data) {
-    return props.result.data.description
-  }
-
-  return props.result.data.path
-})
-
-function handleOnClick () {
-  emit('closeModal')
-  emit('goto')
-}
-
-const displayText = computed(() => {
-  if (props.result.type === 'action') return props.result.data.name
-
-  const displayNamePath = props.options?.displayField?.route
-
-  return getValue(props.result.data, displayNamePath) ?? props.result.data.name
-})
-
-</script>
 
 <style lang="scss">
 .hippie-result-item {

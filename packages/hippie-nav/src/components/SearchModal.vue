@@ -1,3 +1,13 @@
+<script lang="ts" setup>
+const props = defineProps<{
+  shown: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
+</script>
+
 <template>
   <div
     v-if="props.shown"
@@ -9,16 +19,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts" setup>
-const props = defineProps<{
-  shown: boolean
-}>()
-
-const emit = defineEmits<{
-  (e: 'close'): void
-}>()
-</script>
 
 <style lang="scss" scoped>
   .modal {
