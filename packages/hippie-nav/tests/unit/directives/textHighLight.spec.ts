@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue-demi'
+import { defineComponent } from 'vue'
 import { faker } from '@faker-js/faker'
 import textHighlight from '@/directives/textHighlight'
 import { VueWrapper, shallowMount } from '@vue/test-utils'

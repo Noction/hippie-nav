@@ -1,5 +1,5 @@
 import SearchResultItem from '@/components/SearchResultItem.vue'
-import { defineComponent } from 'vue-demi'
+import { defineComponent } from 'vue'
 import { shallowMount } from '@vue/test-utils'
 import { assignIdsArray, transformDataToResultData } from '@/util/helpers'
 import { createRouter, createWebHistory } from 'vue-router'

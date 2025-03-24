@@ -1,4 +1,4 @@
-import type { Ref } from 'vue-demi'
+import type { Ref } from 'vue'
 import type { ResultWithId } from './types'
 
 export type ActionConfig = {
