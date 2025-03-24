@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ActionConfig, AppOptions, HippieIndex, ResultItem, ResultWithId } from '@/types'
 import type { Ref } from 'vue-demi'
-import type SearchPan from './SearchPanel.vue'
 import ExpandTransition from '@/components/ExpandTransition.vue'
 import SearchResultItem from '@/components/SearchResultItem.vue'
 import { usePersistiveLocalStorage } from '@/composable/usePersistiveLocalStorage'
@@ -14,6 +13,7 @@ import { computed, inject, onMounted, ref, shallowRef, watch } from 'vue-demi'
 import { useRouter } from 'vue-router'
 import NavButtons from './NavButtons.vue'
 import SearchModal from './SearchModal.vue'
+import SearchPan from './SearchPanel.vue'
 
 const props = withDefaults(defineProps<{
   actions?: ActionConfig[]

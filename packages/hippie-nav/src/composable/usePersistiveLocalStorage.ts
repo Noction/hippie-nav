@@ -1,6 +1,5 @@
 import type { ActionConfig, LocalStorageData, ResultItem, UsePersistiveLocalStorage } from '@/types'
 import type { Ref } from 'vue'
-// import type { Ref } from 'vue-demi'
 import type { RouteRecordNormalized } from 'vue-router'
 import { assignIdsArray, transformDataToResultData } from '@/util/helpers'
 import { useLocalStorage } from '@vueuse/core'
