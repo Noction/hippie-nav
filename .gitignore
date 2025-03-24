@@ -7,3 +7,4 @@ coverage/
 vue3-sfc-transitions/dist
 /docs/
 dist
+*.junit.xml
