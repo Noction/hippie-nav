@@ -2,7 +2,7 @@
 import type { AppOptions, ResultItem } from '@/types'
 import textHighlight from '@/directives/textHighlight'
 import { getValue } from '@/util/helpers'
-import { computed } from 'vue-demi'
+import { computed } from 'vue'
 import IconAction from '../assets/icons/action.svg?component'
 import IconCrosshair from '../assets/icons/crosshair.svg?component'
 import IconPage from '../assets/icons/page.svg?component'

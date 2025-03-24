@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ActionConfig, AppOptions, HippieIndex, ResultItem, ResultWithId } from '@/types'
-import type { Ref } from 'vue-demi'
+import type { Ref } from 'vue'
 import ExpandTransition from '@/components/ExpandTransition.vue'
 import SearchResultItem from '@/components/SearchResultItem.vue'
 import { usePersistiveLocalStorage } from '@/composable/usePersistiveLocalStorage'
@@ -9,7 +9,7 @@ import { assignIdsArray, filterExcludedPaths, filterHiddenRoutes, transformDataT
 import { addIndex, indexSetup } from '@/util/indexSetup'
 import { useShortcut } from '@/util/keyboard'
 import { useFlexSearch } from '@noction/vue-use-flexsearch'
-import { computed, inject, onMounted, ref, shallowRef, watch } from 'vue-demi'
+import { computed, inject, onMounted, ref, shallowRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import NavButtons from './NavButtons.vue'
 import SearchModal from './SearchModal.vue'

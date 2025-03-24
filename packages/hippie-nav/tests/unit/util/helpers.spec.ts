@@ -1,5 +1,5 @@
 import { ActionConfig } from '@/types'
-import { defineComponent } from 'vue-demi'
+import { defineComponent } from 'vue'
 import { rand } from '@vueuse/core'
 import { RouteRecordNormalized, createRouter, createWebHistory } from 'vue-router'
 import {

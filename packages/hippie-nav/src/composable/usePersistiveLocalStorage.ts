@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import type { RouteRecordNormalized } from 'vue-router'
 import { assignIdsArray, transformDataToResultData } from '@/util/helpers'
 import { useLocalStorage } from '@vueuse/core'
-import { ref } from 'vue-demi'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 export const HippieLocalStorageKey = 'hippieLocalStorage'

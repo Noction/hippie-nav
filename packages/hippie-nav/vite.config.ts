@@ -18,9 +18,6 @@ export default defineConfig({
       }
     }
   },
-  optimizeDeps: {
-    exclude: ['vue-demi']
-  },
   plugins: [vue(), svgLoader() as Plugin],
   resolve: {
     alias: {
