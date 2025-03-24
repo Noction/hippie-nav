@@ -1,18 +1,18 @@
 import { resolve } from 'node:path'
-import svgLoader from 'vite-svg-loader'
 import vue from '@vitejs/plugin-vue'
+import svgLoader from 'vite-svg-loader'
 import { configDefaults, defineConfig } from 'vitest/config'
-
-const reportsDirectory = process.env.REPORTS_DIR ? process.env.REPORTS_DIR : './coverage'
 
 export default defineConfig({
   plugins: [vue(), svgLoader() as Plugin],
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src')
-    }
+      '@': resolve(__dirname, './src'),
+    },
   },
   test: {
+    outputFile: './test-report.junit.xml',
+    reporters: ['junit', 'verbose'],
     coverage: {
       all: true,
       exclude: [
@@ -23,14 +23,13 @@ export default defineConfig({
         'src/*.d.ts',
         'tests',
         '*rc.ts',
-        '*rc.js'
+        '*rc.js',
       ],
       provider: 'v8',
-      reporter: ['text', 'lcov', 'cobertura'],
-      reportsDirectory
+      reporter: ['cobertura', 'text'],
     },
     environment: 'jsdom',
     globals: true,
-    include: ['tests/unit/**/*.spec.ts', 'tests/integration/**/*.spec.ts']
-  }
+    include: ['tests/unit/**/*.spec.ts', 'tests/integration/**/*.spec.ts'],
+  },
 })
