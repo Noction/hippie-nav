@@ -64,7 +64,7 @@ describe('usePersistiveLocalStorage', () => {
 
     wrapper.vm.addItem(itemToAdd)
 
-    expect(wrapper.vm.recentResults).toContain(itemToAdd)
+    expect(wrapper.vm.recentResults).toEqual(expect.arrayContaining([itemToAdd]))
   })
 
   it('should add two item to recentResults', function () {

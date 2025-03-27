@@ -2,8 +2,8 @@
   "name": "@noction/hippie-nav",
   "type": "module",
   "version": "0.7.7",
-  "main": "./dist/hippie-nav.umd.js",
-  "module": "./dist/hippie-nav.mjs",
+  "main": "./dist/hippie-nav.umd.cjs",
+  "module": "./dist/hippie-nav.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
@@ -42,35 +42,35 @@
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.2.0",
-    "@typescript/lib-dom": "npm:@types/web@^0.0.119",
-    "@vitejs/plugin-vue": "^4.4.0",
-    "@vitest/coverage-v8": "0.32.0",
-    "@vue/test-utils": "2.4.0-alpha.1",
-    "jsdom": "^22.1.0",
+    "@faker-js/faker": "^9.6.0",
+    "@typescript/lib-dom": "npm:@types/web@^0.0.213",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitest/coverage-v8": "3.0.9",
+    "@vue/test-utils": "2.4.6",
+    "jsdom": "^26.0.0",
     "minimist": "^1.2.8",
-    "typescript": "^5.2.2",
-    "vite": "^4.5.0",
-    "vite-svg-loader": "^4.0.0",
-    "vitest": "^0.34.6",
-    "vue": "^3.3.7",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.3",
+    "vite-svg-loader": "^5.1.0",
+    "vitest": "^3.0.9",
+    "vue": "^3.5.13",
     "vue-docgen-web-types": "^0.1.8",
     "vue-tsc": "^2.2.8",
     "vue-typegen": "^0.2.0"
   },
   "dependencies": {
-    "@noction/vue-use-flexsearch": "^1.0.5",
-    "@types/flexsearch": "0.7.3",
-    "@vueuse/core": "^10.5.0",
-    "autoprefixer": "^10.4.16",
+    "@noction/vue-use-flexsearch": "^1.1.2",
+    "@types/flexsearch": "^0.7.3",
+    "@vueuse/core": "^13.0.0",
+    "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
     "sass": "^1.86.0"
   },
   "peerDependencies": {
-    "@vue/composition-api": "^1.0.0-rc.1",
+    "@vue/composition-api": "^1.7.2",
     "flexsearch": "0.7.21",
-    "vue": "^2.0.0 || >=3.0.0",
-    "vue-router": "^4.2.2"
+    "vue": "^2.0.0 || >=3.5.13",
+    "vue-router": "^4.5.0"
   },
   "peerDependenciesMeta": {
     "@vue/composition-api": {
