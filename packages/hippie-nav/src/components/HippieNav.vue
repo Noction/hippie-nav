@@ -231,7 +231,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
-  @import "src/assets/styles";
+  @import "@/assets/styles/index";
 
   .hippie-nav {
     --hippie-animate-duration: .225s;
