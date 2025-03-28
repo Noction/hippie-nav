@@ -55,8 +55,7 @@
     "vitest": "^3.0.9",
     "vue": "^3.5.13",
     "vue-docgen-web-types": "^0.1.8",
-    "vue-tsc": "^2.2.8",
-    "vue-typegen": "^0.2.0"
+    "vue-tsc": "^2.2.8"
   },
   "dependencies": {
     "@noction/vue-use-flexsearch": "^1.1.2",
@@ -67,15 +66,9 @@
     "sass": "^1.86.0"
   },
   "peerDependencies": {
-    "@vue/composition-api": "^1.7.2",
     "flexsearch": "0.7.21",
     "vue": "^2.0.0 || >=3.5.13",
     "vue-router": "^4.5.0"
-  },
-  "peerDependenciesMeta": {
-    "@vue/composition-api": {
-      "optional": true
-    }
   },
   "web-types": "./dist/web-types.json"
 }

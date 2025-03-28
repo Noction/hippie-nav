@@ -20,8 +20,8 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "^1.1.21",
-    "@iconify-json/mdi": "^1.1.55",
+    "@iconify-json/carbon": "^1.2.8",
+    "@iconify-json/mdi": "^1.2.3",
     "@vitejs/plugin-vue": "^5.2.3",
     "typescript": "^5.8.2",
     "unplugin-icons": "^22.1.0",
